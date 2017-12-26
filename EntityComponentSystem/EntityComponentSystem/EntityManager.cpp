@@ -5,7 +5,7 @@ namespace ECS
 	{
 	}
 
-	Entity EntityManager::Create()
+	Entity EntityManager::Create()noexcept
 	{
 		if (freeIndices.size())
 		{
@@ -14,18 +14,18 @@ namespace ECS
 			return Entity(generation[top], top);
 		}
 
-		uint32_t index = generation.size();
+		uint32_t index = static_cast<uint32_t>(generation.size());
 		generation.push_back(0);
 		return Entity(0, index);
 	}
 
-	bool EntityManager::IsAlive(Entity entity)
+	bool EntityManager::IsAlive(Entity entity)noexcept
 	{
 		if (generation.size() <= entity.Index())
 			return false;
 		return generation[entity.Index()] == entity.Gen();
 	}
-	void EntityManager::Destroy(Entity entity)
+	void EntityManager::Destroy(Entity entity)noexcept
 	{
 		if (generation.size() <= entity.Index())
 			return;
@@ -35,7 +35,7 @@ namespace ECS
 			freeIndices.push(entity.Index());
 		}
 	}
-	void EntityManager::DestroyNow(Entity entity)
+	void EntityManager::DestroyNow(Entity entity)noexcept
 	{
 		if (generation.size() <= entity.Index())
 			return;
@@ -47,7 +47,7 @@ namespace ECS
 			freeIndices.push(entity.Index());
 		}
 	}
-	void EntityManager::DestroyAll(bool immediate)
+	void EntityManager::DestroyAll(bool immediate)noexcept
 	{
 		if (immediate)
 		{
@@ -56,24 +56,24 @@ namespace ECS
 			{
 				entities[i] = Entity(generation[i], i);
 				for (auto m : managers)
-					m->DestroyEntities(entities, generation.size());
+					m->DestroyEntities(entities, static_cast<uint32_t>(generation.size()));
 			}
 		}
 		generation.clear();
 		freeIndices = std::stack<decltype(Entity::id)>();
 	}
-	uint32_t EntityManager::GetNumberOfAliveEntities() const
+	uint32_t EntityManager::GetNumberOfAliveEntities() const noexcept
 	{
-		return generation.size() - freeIndices.size();
+		return static_cast<uint32_t>(generation.size()) - static_cast<uint32_t>(freeIndices.size());
 	}
-	void EntityManager::RegisterManagerForDestroyNow(Manager_Base * manager)
+	void EntityManager::RegisterManagerForDestroyNow(Manager_Base * manager)noexcept
 	{
 		for (auto& m : managers)
 			if (m == manager)
 				return;
 		managers.push_back(manager);
 	}
-	void EntityManager::UnregisterManagerForDestroyNow(Manager_Base * manager)
+	void EntityManager::UnregisterManagerForDestroyNow(Manager_Base * manager)noexcept
 	{
 		for(size_t i = 0; i < managers.size(); i++)
 			if (managers[i] == manager)
@@ -82,7 +82,7 @@ namespace ECS
 				managers.pop_back();
 			}
 	}
-	uint64_t EntityManager::GetMemoryUsage() const
+	uint64_t EntityManager::GetMemoryUsage() const noexcept
 	{
 		uint64_t size = 0;
 		size += generation.size() * sizeof(Entity::GENERATION_TYPE);
@@ -90,7 +90,7 @@ namespace ECS
 		size += managers.size() * sizeof(Manager_Base*);
 		return  size;
 	}
-	void EntityManager::ShrinkToFit()
+	void EntityManager::ShrinkToFit()noexcept
 	{
 		generation.shrink_to_fit();
 		managers.shrink_to_fit();

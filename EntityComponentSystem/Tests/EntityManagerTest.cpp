@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
-
+#include <EntityManager_Interface.h>
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace Tests
@@ -9,9 +9,9 @@ namespace Tests
 	{
 	public:
 		
-		TEST_METHOD(EntityManagerTest1)
+		TEST_METHOD(CreateAndDestroy)
 		{
-			// TODO: Your test code here
+			
 		}
 
 	};
