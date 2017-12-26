@@ -11,6 +11,9 @@
     <Filter Include="Entity">
       <UniqueIdentifier>{d4c9fe39-d26d-4181-9ebb-7178e4c078e0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Managers\TransformManager">
+      <UniqueIdentifier>{5fab2126-365a-4d70-9785-98af2736d6e3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Entity.h">
@@ -27,6 +30,12 @@
     <ClInclude Include="..\Include\Managers\Manager_Base.h">
       <Filter>Managers</Filter>
     </ClInclude>
+    <ClInclude Include="TransformManager.h">
+      <Filter>Managers\TransformManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Managers\TransformManager_Interface.h">
+      <Filter>Managers\TransformManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EntityManager.cpp">
@@ -36,5 +45,14 @@
       <Filter>Entity</Filter>
     </ClCompile>
     <ClCompile Include="Memory_Base.cpp" />
+    <ClCompile Include="TransformManager_Interface.cpp">
+      <Filter>Managers\TransformManager</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformManager.cpp">
+      <Filter>Managers\TransformManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Include\Managers\Manager_Base.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

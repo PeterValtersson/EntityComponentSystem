@@ -11,8 +11,11 @@ namespace ECS
 		EntityManager();
 
 		virtual Entity Create()noexcept override;
+		virtual void CreateMultiple(Entity entities[], uint32_t numEntities)noexcept override;
 		virtual bool IsAlive(Entity entity)noexcept  override;
 		virtual void Destroy(Entity entity)noexcept  override;
+		virtual void DestroyMultiple(const Entity entities[], uint32_t numEntities)noexcept override;
+		virtual void DestroyMultipleNow(const Entity entities[], uint32_t numEntities)noexcept override;
 		virtual void DestroyNow(Entity entity)noexcept  override;
 		virtual void DestroyAll(bool immediate = false)noexcept  override;
 		virtual uint32_t GetNumberOfAliveEntities()const  noexcept override;

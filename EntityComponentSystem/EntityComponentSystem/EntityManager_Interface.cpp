@@ -15,9 +15,24 @@ uint32_t EntityManager_Create_C(ECS::EntityManager_Interface* em)
 	return em->Create();
 }
 
+DECLDIR void EntityManager_CreateMultiple_C(ECS::EntityManager_Interface * em, uint32_t * entities, uint32_t numEntities)
+{
+	 em->CreateMultiple((ECS::Entity*)entities, numEntities);
+}
+
 DECLDIR void EntityManager_Destroy_C(ECS::EntityManager_Interface* em, uint32_t entity)
 {
 	em->Destroy(entity);
+}
+
+DECLDIR void EntityManager_DestroyMultiple_C(ECS::EntityManager_Interface * em, const uint32_t * entities, uint32_t numEntities)
+{
+	em->DestroyMultiple((ECS::Entity*)entities, numEntities);
+}
+
+DECLDIR void EntityManager_DestroyMultipleNow_C(ECS::EntityManager_Interface * em, const uint32_t * entities, uint32_t numEntities)
+{
+	em->DestroyMultipleNow((ECS::Entity*)entities, numEntities);
 }
 
 DECLDIR void EntityManager_DestroyNow_C(ECS::EntityManager_Interface* em, uint32_t entity)

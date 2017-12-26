@@ -23,13 +23,18 @@
     <ClInclude Include="..\Include\Entity.h" />
     <ClInclude Include="..\Include\EntityManager_Interface.h" />
     <ClInclude Include="..\Include\Managers\Manager_Base.h" />
+    <ClInclude Include="..\Include\Managers\TransformManager_Interface.h" />
     <ClInclude Include="..\Include\Memory_Base.h" />
     <ClInclude Include="EntityManager.h" />
+    <ClInclude Include="TransformManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Include\Managers\Manager_Base.cpp" />
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="EntityManager_Interface.cpp" />
     <ClCompile Include="Memory_Base.cpp" />
+    <ClCompile Include="TransformManager.cpp" />
+    <ClCompile Include="TransformManager_Interface.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -86,25 +91,25 @@
     <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
     <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
     <TargetExt>.dll</TargetExt>
-    <IncludePath>$(SolutionDir)Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../../Sofa/Sofa/;$(SolutionDir)../../Profiler/Profiler/Profiler/;$(SolutionDir)Include/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
     <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
     <TargetExt>.dll</TargetExt>
-    <IncludePath>$(SolutionDir)Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../../Sofa/Sofa/;$(SolutionDir)../../Profiler/Profiler/Profiler/;$(SolutionDir)Include/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
     <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
     <TargetExt>.dll</TargetExt>
-    <IncludePath>$(SolutionDir)Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../../Sofa/Sofa/;$(SolutionDir)../../Profiler/Profiler/Profiler/;$(SolutionDir)Include/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
     <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
     <TargetExt>.dll</TargetExt>
-    <IncludePath>$(SolutionDir)Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../../Sofa/Sofa/;$(SolutionDir)../../Profiler/Profiler/Profiler/;$(SolutionDir)Include/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -114,6 +119,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);DLL_EXPORT_ECS</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
@@ -127,6 +133,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);DLL_EXPORT_ECS</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
@@ -142,6 +149,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);DLL_EXPORT_ECS</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -159,6 +167,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);DLL_EXPORT_ECS</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>

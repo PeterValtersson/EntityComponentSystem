@@ -5,6 +5,13 @@ namespace ECS
 {
 	struct Entity
 	{
+		struct Hasher
+		{
+			uint32_t operator()(const Entity entity)const
+			{
+				return entity.id;
+			}
+		};
 		using GENERATION_TYPE = uint8_t;
 		uint32_t id;
 		static const uint32_t ENTITY_INDEX_BITS = 22;
