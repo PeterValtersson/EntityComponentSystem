@@ -13,8 +13,13 @@ namespace ECS
 	public:
 		TransformManager(ECS::TransformManagerInitializationInfo initInfo);
 		~TransformManager();
-		virtual void Create(Entity entity, const Vector& position = Vector(), const Vector& rotaiton = Vector(), const Vector& scale = Vector())noexcept override;
+		virtual void Create(Entity entity,
+			const Vector& position = Vector(), 
+			const Vector& rotaiton = Vector(), 
+			const Vector& scale = Vector())noexcept override;
 		
+		virtual void BindChild(Entity parent, Entity child, TransformFlags flags)noexcept override;
+
 		virtual void SetPosition(Entity entity, const Vector& position)noexcept override;
 		virtual Vector GetPosition(Entity entity)const noexcept override;
 
@@ -56,7 +61,11 @@ namespace ECS
 			XMFLOAT3,
 			XMFLOAT3,
 			XMFLOAT4X4,
-			bool>
+			bool,
+			TransformFlags,
+			uint32_t,
+			uint32_t,
+			uint32_t>
 			entries;
 		struct EntryNames
 		{
@@ -67,7 +76,11 @@ namespace ECS
 				Rotation,
 				Scale,
 				Transform,
-				Dirty
+				Dirty,
+				Flags,
+				Child,
+				Sibling,
+				Parent
 			};
 		};
 	};

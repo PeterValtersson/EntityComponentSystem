@@ -10,6 +10,11 @@ DECLDIR void TransformManager_Create_C(ECS::TransformManager_Interface * tm, uin
 	tm->Create(entity, position, rotation, scale);
 }
 
+DECLDIR void TransformManager_BindChild_C(ECS::TransformManager_Interface * tm, uint32_t parent, uint32_t child, uint8_t flags)
+{
+	tm->BindChild(parent, child, ECS::TransformFlags(flags));
+}
+
 DECLDIR void TransformManager_SetPosition_C(ECS::TransformManager_Interface * tm, uint32_t entity, ECS::Vector position)
 {
 	tm->SetPosition(entity, position);
@@ -30,6 +35,16 @@ DECLDIR ECS::Matrix TransformManager_GetTransform_C(ECS::TransformManager_Interf
 	return tm->GetTransform(entity);
 }
 
+DECLDIR void TransformManager_RegisterTransformUser(ECS::TransformManager_Interface * tm, ECS::Manager_TransformUser * tu)
+{
+	tm->RegisterTransformUser(tu);
+}
+
+DECLDIR void TransformManager_UnregisterTransformUser(ECS::TransformManager_Interface * tm, ECS::Manager_TransformUser * tu)
+{
+	tm->UnregisterTransformUser(tu);
+}
+
 DECLDIR ECS::Vector TransformManager_GetRotation_C(ECS::TransformManager_Interface * tm, uint32_t entity)
 {
 	return tm->GetRotation(entity);
@@ -39,6 +54,7 @@ DECLDIR void TransformManager_SetScale_C(ECS::TransformManager_Interface * tm, u
 {
 	tm->SetScale(entity, scale);
 }
+
 
 DECLDIR ECS::Vector TransformManager_GetPosition_C(ECS::TransformManager_Interface * tm, uint32_t entity)
 {

@@ -25,6 +25,8 @@ namespace ECS
 		initInfo.entityManager->UnregisterManagerForDestroyNow(this);
 	}
 
+
+
 	void TransformManager::Create(Entity entity, const Vector & position, const Vector & rotaiton, const Vector & scale)noexcept
 	{
 		StartProfile;
@@ -41,7 +43,9 @@ namespace ECS
 		XMStoreFloat4x4(&entries.get<EntryNames::Transform>(index), XMMatrixIdentity());
 		entries.get<EntryNames::Dirty>(index) = true;
 	}
-
+	void TransformManager::BindChild(Entity parent, Entity child, TransformFlags flags)noexcept
+	{
+	}
 	void TransformManager::SetPosition(Entity entity, const Vector & position)noexcept
 	{
 		StartProfile;
@@ -111,8 +115,10 @@ namespace ECS
 			XMVECTOR pos;
 			XMVECTOR rot;
 			XMMatrixDecompose(&scale, &rot, &pos, trans);
-			/*entries.get<EntryNames::Scale>(find->second) = ToXMFLOAT3(scale);
-			entries.get<EntryNames::Dirty>(find->second) = true;*/
+			XMStoreFloat3(&entries.get<EntryNames::Scale>(find->second), scale);
+			XMStoreFloat3(&entries.get<EntryNames::Position>(find->second), pos);
+			XMStoreFloat3(&entries.get<EntryNames::Rotation>(find->second), rot);
+			entries.get<EntryNames::Dirty>(find->second) = true;
 		}
 		
 	}
