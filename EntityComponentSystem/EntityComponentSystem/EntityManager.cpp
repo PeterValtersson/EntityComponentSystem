@@ -151,6 +151,7 @@ namespace ECS
 		size += generation.size() * sizeof(Entity::GENERATION_TYPE);
 		size += freeIndices.size() * sizeof(decltype(Entity::id));
 		size += managers.size() * sizeof(Manager_Base*);
+		size += sizeof(*this);
 		return  size;
 	}
 	void EntityManager::ShrinkToFit()noexcept

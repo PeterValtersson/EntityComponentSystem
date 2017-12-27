@@ -60,5 +60,44 @@ namespace Tests
 			Delete_C(tm);
 			Delete_C(em);
 		}
+
+		TEST_METHOD(PosRotScale)
+		{
+			auto em = EntityManager_CreateEntityManager_C();
+			TransformManagerInitializationInfo tmii;
+			tmii.entityManager = em;
+			auto tm = TransformManager_CreateTransformManager_C(tmii);
+			std::vector<Entity> ents;
+			ents.resize(10000);
+			EntityManager_CreateMultiple_C(em, (uint32_t*)ents.data(), (uint32_t)ents.size());
+			Assert::AreEqual(EntityManager_GetNumberOfAliveEntities_C(em), 10000u, L"Could not create 10000 entities", LINE_INFO());
+
+			for (size_t i = 0; i < ents.size(); i++)
+				TransformManager_Create_C(tm, ents[i], {float(i)}, {float(i)}, {float(i)});
+
+			Manager_Base_Frame(tm);
+
+			for (size_t i = 0; i < ents.size(); i++)
+			{
+				Assert::AreEqual(TransformManager_GetPosition_C(tm, ents[i]).x, float(i), L"Position not the same", LINE_INFO());
+				Assert::AreEqual(TransformManager_GetRotation_C(tm, ents[i]).x, float(i), L"Rotation not the same", LINE_INFO());
+				Assert::AreEqual(TransformManager_GetScale_C(tm, ents[i]).x, float(i), L"Scale not the same", LINE_INFO());
+
+				TransformManager_SetPosition_C(tm, ents[i], { float(i + 1) });
+				TransformManager_SetRotation_C(tm, ents[i], { float(i + 1) });
+				TransformManager_SetScale_C(tm, ents[i], { float(i + 1) });
+			}
+			Manager_Base_Frame(tm);
+			for (size_t i = 0; i < ents.size(); i++)
+			{
+				Assert::AreEqual(TransformManager_GetPosition_C(tm, ents[i]).x, float(i+1), L"Position not the same", LINE_INFO());
+				Assert::AreEqual(TransformManager_GetRotation_C(tm, ents[i]).x, float(i+1), L"Rotation not the same", LINE_INFO());
+				Assert::AreEqual(TransformManager_GetScale_C(tm, ents[i]).x, float(i+1), L"Scale not the same", LINE_INFO());
+
+			}
+
+			Delete_C(tm);
+			Delete_C(em);
+		}
 	};
 }

@@ -14,6 +14,22 @@ namespace ECS
 	{
 		float x = 0.0f, y = 0.0f, z= 0.0f;
 	};
+	struct Matrix
+	{
+		float m[4][4] = 
+		{
+			{1.0f, 0.0f, 0.0f, 0.0f},
+			{0.0f, 1.0f, 0.0f, 0.0f},
+			{0.0f, 0.0f, 1.0f, 0.0f},
+			{0.0f, 0.0f, 0.0f, 1.0f}
+		};
+	};
+
+	class Manager_TransformUser
+	{
+	public:
+		virtual void UpdateEntityTransforms(const Matrix transforms[], const Entity entities[], uint32_t numEntities)noexcept = 0;
+	};
 
 	class TransformManager_Interface : public Manager_Base
 	{
@@ -30,6 +46,13 @@ namespace ECS
 
 		virtual void SetScale(Entity entity, const Vector& scale)noexcept = 0;
 		virtual Vector GetScale(Entity entity)const noexcept = 0;
+
+		virtual void SetTransform(Entity entity, const Matrix& transform)noexcept = 0;
+		virtual Matrix GetTransform(Entity entity)noexcept = 0;
+
+		virtual void RegisterTransformUser(Manager_TransformUser* tUser)noexcept = 0;
+		virtual void UnregisterTransformUser(Manager_TransformUser* tUser)noexcept = 0;
+		
 	protected:
 		TransformManager_Interface() {};
 	};
@@ -43,4 +66,6 @@ DECLDIR void TransformManager_SetRotation_C(ECS::TransformManager_Interface*tm, 
 DECLDIR ECS::Vector TransformManager_GetRotation_C(ECS::TransformManager_Interface*tm, uint32_t entity);
 DECLDIR void TransformManager_SetScale_C(ECS::TransformManager_Interface*tm, uint32_t entity, ECS::Vector scale);
 DECLDIR ECS::Vector TransformManager_GetScale_C(ECS::TransformManager_Interface*tm, uint32_t entity);
+DECLDIR void TransformManager_SetTransform_C(ECS::TransformManager_Interface*tm, uint32_t entity, ECS::Matrix transform);
+DECLDIR ECS::Matrix TransformManager_GetTransform_C(ECS::TransformManager_Interface*tm, uint32_t entity);
 #endif

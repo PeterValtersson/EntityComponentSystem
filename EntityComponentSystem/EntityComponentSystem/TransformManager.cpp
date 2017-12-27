@@ -13,6 +13,7 @@ namespace ECS
 	{
 		return { f.x, f.y, f.z };
 	}
+	
 	TransformManager::TransformManager(ECS::TransformManagerInitializationInfo initInfo)
 		: initInfo(initInfo)
 	{
@@ -23,6 +24,7 @@ namespace ECS
 	{
 		initInfo.entityManager->UnregisterManagerForDestroyNow(this);
 	}
+
 	void TransformManager::Create(Entity entity, const Vector & position, const Vector & rotaiton, const Vector & scale)noexcept
 	{
 		StartProfile;
@@ -97,6 +99,60 @@ namespace ECS
 		else
 			return ToVector(entries.getConst<EntryNames::Scale>(find->second));
 	}
+	void TransformManager::SetTransform(Entity entity, const Matrix & transform)noexcept
+	{
+		StartProfile;
+		if (auto find = entries.find(entity); !find.has_value())
+			return;
+		else
+		{
+			XMMATRIX trans = XMLoadFloat4x4((XMFLOAT4X4*)&transform);
+			XMVECTOR scale;
+			XMVECTOR pos;
+			XMVECTOR rot;
+			XMMatrixDecompose(&scale, &rot, &pos, trans);
+			/*entries.get<EntryNames::Scale>(find->second) = ToXMFLOAT3(scale);
+			entries.get<EntryNames::Dirty>(find->second) = true;*/
+		}
+		
+	}
+	Matrix TransformManager::GetTransform(Entity entity)noexcept
+	{
+		StartProfile;
+		if (auto find = entries.find(entity); !find.has_value())
+			return Matrix();
+		else
+		{
+			Matrix mat;
+			XMStoreFloat4x4((XMFLOAT4X4*)&mat, XMLoadFloat4x4(&entries.getConst<EntryNames::Transform>(find->second)));
+			return mat;
+		}
+		
+	}
+
+	void TransformManager::RegisterTransformUser(Manager_TransformUser * tUser)noexcept
+	{
+		StartProfile;
+		for (auto tu : transformUsers)
+			if (tu == tUser)
+				return;
+
+		transformUsers.push_back(tUser);
+	}
+
+	void TransformManager::UnregisterTransformUser(Manager_TransformUser * tUser)noexcept
+	{
+		StartProfile;
+		for(auto& tu : transformUsers)
+			if (tu == tUser)
+			{
+				tu = transformUsers[transformUsers.size() - 1];
+				transformUsers.pop_back();
+				break;
+			}
+	}
+
+
 
 	void TransformManager::Destroy(Entity entity)noexcept
 	{
@@ -119,7 +175,7 @@ namespace ECS
 	}
 	uint64_t TransformManager::GetMemoryUsage() const noexcept
 	{
-		return entries.GetMemoryUsage();
+		return entries.GetMemoryUsage() + sizeof(*this);
 	}
 	void TransformManager::ShrinkToFit()noexcept
 	{
@@ -144,7 +200,6 @@ namespace ECS
 		GarbageCollection();
 		UpdateDirtyEntities();
 	}
-
 
 	void TransformManager::WriteToFile(std::ofstream & file) const
 	{
@@ -176,6 +231,7 @@ namespace ECS
 	}
 	void TransformManager::UpdateDirtyEntities()noexcept
 	{
+		auto transforms = (Matrix*)entries.getConst<EntryNames::Transform>();
 		for (size_t i = 0; i < entries.size(); i++)
 		{
 			if (entries.get<EntryNames::Dirty>(i))
@@ -183,9 +239,12 @@ namespace ECS
 				const auto& translation = XMMatrixTranslationFromVector(XMLoadFloat3(&entries.get<EntryNames::Position>(i)));
 				const auto& rotation = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&entries.get<EntryNames::Rotation>(i)));
 				const auto& scale = XMMatrixScalingFromVector(XMLoadFloat3(&entries.get<EntryNames::Scale>(i)));
-				XMStoreFloat4x4(&entries.get<EntryNames::Transform>(i), scale*rotation*translation);
+				XMStoreFloat4x4((XMFLOAT4X4*)&transforms[i], scale*rotation*translation);
 			}
 		}
+		auto entities = entries.get<EntryNames::Entity>();
+		for(auto tu : transformUsers)
+			tu->UpdateEntityTransforms(transforms, entities, static_cast<uint32_t>(entries.size()));
 	}
 	void TransformManager::GarbageCollection()noexcept
 	{

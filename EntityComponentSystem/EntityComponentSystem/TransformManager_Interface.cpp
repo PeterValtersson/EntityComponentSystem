@@ -20,6 +20,16 @@ DECLDIR ECS::Vector TransformManager_GetScale_C(ECS::TransformManager_Interface 
 	return tm->GetScale(entity);
 }
 
+DECLDIR void TransformManager_SetTransform_C(ECS::TransformManager_Interface * tm, uint32_t entity, ECS::Matrix transform)
+{
+	tm->SetTransform(entity, transform);
+}
+
+DECLDIR ECS::Matrix TransformManager_GetTransform_C(ECS::TransformManager_Interface * tm, uint32_t entity)
+{
+	return tm->GetTransform(entity);
+}
+
 DECLDIR ECS::Vector TransformManager_GetRotation_C(ECS::TransformManager_Interface * tm, uint32_t entity)
 {
 	return tm->GetRotation(entity);

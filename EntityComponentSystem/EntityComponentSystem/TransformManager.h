@@ -24,6 +24,11 @@ namespace ECS
 		virtual void SetScale(Entity entity, const Vector& scale)noexcept override;
 		virtual Vector GetScale(Entity entity)const noexcept override;
 
+		virtual void SetTransform(Entity entity, const Matrix& transform)noexcept override;
+		virtual Matrix GetTransform(Entity entity)noexcept override;
+
+		virtual void RegisterTransformUser(Manager_TransformUser* tUser)noexcept override;
+		virtual void UnregisterTransformUser(Manager_TransformUser* tUser)noexcept override;
 
 		virtual void Destroy(Entity entity)noexcept override;
 		virtual void DestroyEntities(const Entity entities[], uint32_t numEntities)noexcept override;
@@ -44,7 +49,7 @@ namespace ECS
 		TransformManagerInitializationInfo initInfo;
 		uint32_t version = 0;
 		std::default_random_engine generator;
-
+		std::vector<Manager_TransformUser*> transformUsers;
 		Sofa<
 			Entity, Entity::Hasher,
 			XMFLOAT3,
