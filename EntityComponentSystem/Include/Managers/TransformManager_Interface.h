@@ -18,10 +18,11 @@ namespace ECS
 {
 	enum class TransformFlags : uint8_t
 	{
+		NONE = 0,
 		INHERIT_TRANSLATION = 1 << 0,
 		INHERIT_SCALE = 1 << 1,
 		INHERIT_ROTATION = 1 << 2,
-		TRANSLATE_TO_PARENT = 1 << 3,
+		KEEP_CURRENT_POSITION = 1 << 3,
 		INHERIT_ALL = INHERIT_TRANSLATION | INHERIT_SCALE | INHERIT_ROTATION,
 	};
 	struct TransformManagerInitializationInfo
@@ -61,7 +62,12 @@ namespace ECS
 			const Vector& scale = Vector())noexcept = 0;
 		
 		virtual void BindChild(Entity parent, Entity child, TransformFlags flags)noexcept = 0;
-		
+		virtual void UnbindParent(Entity entity, TransformFlags flags)noexcept = 0;
+		virtual void UnbindAllChildren(Entity entity, TransformFlags flags)noexcept = 0;
+		virtual bool GetParent(Entity entity, Entity& parent)const noexcept = 0;
+		virtual uint32_t GetNumberOfChildren(Entity entity)const noexcept = 0;
+		virtual void GetChildren(Entity parent, Entity children[])const noexcept = 0;
+
 		virtual void SetPosition(Entity entity, const Vector& position)noexcept = 0;
 		virtual Vector GetPosition(Entity entity)const noexcept = 0;
 
@@ -87,6 +93,11 @@ ENUM_FLAGS(ECS::TransformFlags);
 DECLDIR ECS::TransformManager_Interface* TransformManager_CreateTransformManager_C(ECS::TransformManagerInitializationInfo initinfo);
 DECLDIR void TransformManager_Create_C(ECS::TransformManager_Interface* tm, uint32_t entity, ECS::Vector position, ECS::Vector rotation, ECS::Vector scale);
 DECLDIR void TransformManager_BindChild_C(ECS::TransformManager_Interface*tm, uint32_t parent, uint32_t child, uint8_t flags);
+DECLDIR void TransformManager_UnbindParent_C(ECS::TransformManager_Interface*tm, uint32_t child, uint8_t flags);
+DECLDIR void TransformManager_UnbindAllChildren_C(ECS::TransformManager_Interface*tm, uint32_t entity, uint8_t flags);
+DECLDIR bool TransformManager_GetParent_C(ECS::TransformManager_Interface*tm, uint32_t entity, uint32_t* parent);
+DECLDIR uint32_t TransformManager_GetNumberOfChildren_C(ECS::TransformManager_Interface*tm, uint32_t entity);
+DECLDIR void TransformManager_GetChildren_C(ECS::TransformManager_Interface*tm, uint32_t entity, uint32_t* children);
 DECLDIR void TransformManager_SetPosition_C(ECS::TransformManager_Interface*tm, uint32_t entity, ECS::Vector position);
 DECLDIR ECS::Vector TransformManager_GetPosition_C(ECS::TransformManager_Interface*tm, uint32_t entity);
 DECLDIR void TransformManager_SetRotation_C(ECS::TransformManager_Interface*tm, uint32_t entity, ECS::Vector rotation);

@@ -15,6 +15,32 @@ DECLDIR void TransformManager_BindChild_C(ECS::TransformManager_Interface * tm, 
 	tm->BindChild(parent, child, ECS::TransformFlags(flags));
 }
 
+
+DECLDIR void TransformManager_UnbindParent_C(ECS::TransformManager_Interface * tm, uint32_t child, uint8_t flags)
+{
+	tm->UnbindParent(child, ECS::TransformFlags(flags));
+}
+
+DECLDIR void TransformManager_UnbindAllChildren_C(ECS::TransformManager_Interface * tm, uint32_t entity, uint8_t flags)
+{
+	tm->UnbindAllChildren(entity, ECS::TransformFlags(flags));
+}
+
+DECLDIR bool TransformManager_GetParent_C(ECS::TransformManager_Interface * tm, uint32_t entity, uint32_t * parent)
+{
+	return tm->GetParent(entity, *(ECS::Entity*)parent);
+}
+
+DECLDIR uint32_t TransformManager_GetNumberOfChildren_C(ECS::TransformManager_Interface * tm, uint32_t entity)
+{
+	return tm->GetNumberOfChildren(entity);
+}
+
+DECLDIR void TransformManager_GetChildren_C(ECS::TransformManager_Interface * tm, uint32_t entity, uint32_t * children)
+{
+	tm->GetChildren(entity, (ECS::Entity*)children);
+}
+
 DECLDIR void TransformManager_SetPosition_C(ECS::TransformManager_Interface * tm, uint32_t entity, ECS::Vector position)
 {
 	tm->SetPosition(entity, position);

@@ -27,6 +27,8 @@ namespace ECS
 
 
 
+
+
 	void TransformManager::Create(Entity entity, const Vector & position, const Vector & rotaiton, const Vector & scale)noexcept
 	{
 		StartProfile;
@@ -42,6 +44,10 @@ namespace ECS
 		entries.get<EntryNames::Scale>(index) = ToXMFLOAT3(scale);
 		XMStoreFloat4x4(&entries.get<EntryNames::Transform>(index), XMMatrixIdentity());
 		entries.get<EntryNames::Dirty>(index) = true;
+		entries.get<EntryNames::Parent>(index) = -1;
+		entries.get<EntryNames::Child>(index) = -1;
+		entries.get<EntryNames::Sibling>(index) = -1;
+		entries.get<EntryNames::Flags>(index) = TransformFlags::NONE;
 	}
 	void TransformManager::BindChild(Entity parent, Entity child, TransformFlags flags)noexcept
 	{
@@ -54,11 +60,127 @@ namespace ECS
 				return;
 			else
 			{
-
+				entries.get<EntryNames::Parent>(findChild->second) = findParent->second;
+				auto parentChild = entries.get<EntryNames::Child>(findParent->second);
+				if (parentChild == -1)
+				{
+					entries.get<EntryNames::Child>(findParent->second) = findChild->second;
+				}
+				else
+				{
+					auto sibling = entries.get<EntryNames::Sibling>(parentChild);
+					while (sibling != -1)
+					{
+						parentChild = sibling;
+						sibling = entries.get<EntryNames::Sibling>(sibling);
+					}
+					entries.get<EntryNames::Sibling>(parentChild) = findChild->second;
+				}
 			}
 		}
 
 	}
+	void TransformManager::GetChildren(Entity parent, Entity children[]) const noexcept
+	{
+		StartProfile;
+		auto find = entries.find(parent);
+		_ASSERT_EXPR(find.has_value(), "Can't get children from non exitent parent");
+
+		auto childIndex = entries.getConst<EntryNames::Child>(find->second);
+		size_t i = 0;
+
+		while(childIndex != -1)
+		{
+			children[i++] = entries.getConst<EntryNames::Entity>(childIndex);
+			childIndex = entries.getConst<EntryNames::Sibling>(childIndex);
+		}
+	}
+
+	uint32_t TransformManager::GetNumberOfChildren(Entity entity) const noexcept
+	{
+		StartProfile;
+		if (auto find = entries.find(entity); !find.has_value())
+			return 0;
+		else
+		{
+			auto childIndex = entries.getConst<EntryNames::Child>(find->second);
+			uint32_t i = 0;
+
+			while (childIndex != -1)
+			{
+				i++;
+				childIndex = entries.getConst<EntryNames::Sibling>(childIndex);
+			}
+			return i;
+		}
+	}
+
+	bool TransformManager::GetParent(Entity entity, Entity & parent) const noexcept
+	{
+		StartProfile;
+		if (auto find = entries.find(entity); !find.has_value())
+			return false;
+		else
+		{
+			auto parentIndex = entries.getConst<EntryNames::Parent>(find->second);
+			if (parentIndex == -1)
+				return false;
+			parent = entries.getConst<EntryNames::Entity>(parentIndex);
+			return true;
+		}
+	}
+
+	void TransformManager::UnbindAllChildren(Entity entity, TransformFlags flags)noexcept
+	{
+		StartProfile;
+		if (auto find = entries.find(entity); !find.has_value())
+			return;
+		else
+		{
+			auto childIndex = entries.get<EntryNames::Child>(find->second);
+			entries.get<EntryNames::Child>(find->second) = -1;
+			while (childIndex != -1)
+			{
+				entries.get<EntryNames::Parent>(childIndex) = -1;
+				auto temp = entries.get<EntryNames::Sibling>(childIndex);
+				entries.get<EntryNames::Sibling>(childIndex) = -1;
+				childIndex = temp;
+			}
+		}
+	}
+
+	void TransformManager::UnbindParent(Entity entity, TransformFlags flags)
+	{
+		StartProfile;
+		if (auto find = entries.find(entity); !find.has_value())
+			return;
+		else
+		{
+			auto parentIndex = entries.get<EntryNames::Parent>(find->second);
+			if (parentIndex == -1)
+				return;
+
+			entries.get<EntryNames::Parent>(find->second) = -1;
+
+			auto childIndex = entries.get<EntryNames::Child>(parentIndex);
+			if (childIndex == find->second)
+			{
+				entries.get<EntryNames::Child>(parentIndex) = -1;
+			}
+			else
+			{
+				auto sibling = entries.get<EntryNames::Sibling>(childIndex);
+				while (sibling != find->second)
+				{
+					childIndex = sibling;
+					sibling = entries.get<EntryNames::Sibling>(childIndex);
+				}
+
+				entries.get<EntryNames::Sibling>(childIndex) = entries.get<EntryNames::Sibling>(sibling);
+			}
+		}
+	}
+
 	void TransformManager::SetPosition(Entity entity, const Vector & position)noexcept
 	{
 		StartProfile;

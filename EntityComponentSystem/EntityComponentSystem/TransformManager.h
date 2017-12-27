@@ -19,6 +19,11 @@ namespace ECS
 			const Vector& scale = Vector())noexcept override;
 		
 		virtual void BindChild(Entity parent, Entity child, TransformFlags flags)noexcept override;
+		virtual void UnbindParent(Entity entity, TransformFlags flags)noexcept override;
+		virtual void UnbindAllChildren(Entity entity, TransformFlags flags)noexcept override;
+		virtual bool GetParent(Entity entity, Entity& parent)const noexcept override;
+		virtual uint32_t GetNumberOfChildren(Entity entity)const noexcept override;
+		virtual void GetChildren(Entity parent, Entity children[])const noexcept override;
 
 		virtual void SetPosition(Entity entity, const Vector& position)noexcept override;
 		virtual Vector GetPosition(Entity entity)const noexcept override;
