@@ -45,6 +45,19 @@ namespace ECS
 	}
 	void TransformManager::BindChild(Entity parent, Entity child, TransformFlags flags)noexcept
 	{
+		StartProfile;
+		if (auto findParent = entries.find(parent); !findParent.has_value())
+			return;
+		else
+		{
+			if (auto findChild = entries.find(child); !findChild.has_value())
+				return;
+			else
+			{
+
+			}
+		}
+
 	}
 	void TransformManager::SetPosition(Entity entity, const Vector & position)noexcept
 	{
