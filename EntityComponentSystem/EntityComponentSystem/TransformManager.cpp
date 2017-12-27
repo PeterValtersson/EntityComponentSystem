@@ -165,7 +165,7 @@ namespace ECS
 			auto childIndex = entries.get<EntryNames::Child>(parentIndex);
 			if (childIndex == find->second)
 			{
-				entries.get<EntryNames::Child>(parentIndex) = -1;
+				entries.get<EntryNames::Child>(parentIndex) = entries.get<EntryNames::Sibling>(childIndex);
 			}
 			else
 			{

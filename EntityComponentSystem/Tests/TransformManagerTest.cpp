@@ -32,7 +32,7 @@ namespace Tests
 			{
 				Manager_Base_Frame(tm);
 				count++;
-				Assert::AreNotEqual(count, 10000u, L"Entities not destroyed with 10000 calls to Frame", LINE_INFO());
+				Assert::AreNotEqual(count, 33u, L"Entities not destroyed with 33 calls to Frame", LINE_INFO());
 			}
 
 			Delete_C(tm);
@@ -95,6 +95,75 @@ namespace Tests
 				Assert::AreEqual(TransformManager_GetScale_C(tm, ents[i]).x, float(i+1), L"Scale not the same", LINE_INFO());
 
 			}
+
+			Delete_C(tm);
+			Delete_C(em);
+		}
+		/*bool MatE(const Matrix& a, const Matrix& b)
+		{
+			for(int x = 0; x < 4; x++)
+				for(int y = 0; y < 4; y++)
+					if()
+			return true;
+		}*/
+		TEST_METHOD(ParentChild)
+		{
+			auto em = EntityManager_CreateEntityManager_C();
+			TransformManagerInitializationInfo tmii;
+			tmii.entityManager = em;
+			auto tm = TransformManager_CreateTransformManager_C(tmii);
+			std::vector<Entity> ents;
+			ents.resize(10000);
+			EntityManager_CreateMultiple_C(em, (uint32_t*)ents.data(), (uint32_t)ents.size());
+			Assert::AreEqual(EntityManager_GetNumberOfAliveEntities_C(em), 10000u, L"Could not create 10000 entities", LINE_INFO());
+
+			for (size_t i = 0; i < ents.size(); i++)
+				TransformManager_Create_C(tm, ents[i], { float(i) }, { float(i) }, { float(i) });
+
+			Manager_Base_Frame(tm);
+
+			for (size_t i = 1; i < 1001; i++)
+				TransformManager_BindChild_C(tm, ents[0], ents[i], 0);
+
+			Assert::AreEqual(1000u, TransformManager_GetNumberOfChildren_C(tm, ents[0]), L"Entity did not have 1000 children", LINE_INFO());
+			Entity children[10000];
+			TransformManager_GetChildren_C(tm, ents[0], (uint32_t*)children);
+			for (uint32_t i = 0; i < TransformManager_GetNumberOfChildren_C(tm, ents[0]); i++)
+			{
+				Assert::AreEqual((uint32_t)ents[i+1], (uint32_t)children[i], L"A child was not correct", LINE_INFO());
+			}
+			
+			TransformManager_UnbindParent_C(tm, children[999], 0);
+			Assert::AreEqual(999u, TransformManager_GetNumberOfChildren_C(tm, ents[0]), L"Entity did not have 999 children", LINE_INFO());
+
+			TransformManager_GetChildren_C(tm, ents[0], (uint32_t*)children);
+			for (uint32_t i = 0; i < TransformManager_GetNumberOfChildren_C(tm, ents[0]); i++)
+			{
+				Assert::AreEqual((uint32_t)ents[i + 1], (uint32_t)children[i], L"A child was not correct", LINE_INFO());
+			}
+
+			TransformManager_UnbindParent_C(tm, children[0], 0);
+			Assert::AreEqual(998u, TransformManager_GetNumberOfChildren_C(tm, ents[0]), L"Entity did not have 998 children", LINE_INFO());
+			TransformManager_GetChildren_C(tm, ents[0], (uint32_t*)children);
+			for (uint32_t i = 0; i < TransformManager_GetNumberOfChildren_C(tm, ents[0]); i++)
+			{
+				Assert::AreEqual((uint32_t)ents[i + 2], (uint32_t)children[i], L"A child was not correct", LINE_INFO());
+			}
+
+			TransformManager_UnbindParent_C(tm, children[200], 0);
+			Assert::AreEqual(997u, TransformManager_GetNumberOfChildren_C(tm, ents[0]), L"Entity did not have 998 children", LINE_INFO());
+			TransformManager_GetChildren_C(tm, ents[0], (uint32_t*)children);
+			uint32_t add = 2;
+			for (uint32_t i = 0; i < TransformManager_GetNumberOfChildren_C(tm, ents[0]); i++)
+			{
+				if (i == 200)
+					add++;
+				Assert::AreEqual((uint32_t)ents[i + add], (uint32_t)children[i], L"A child was not correct", LINE_INFO());
+			}
+
+			TransformManager_UnbindAllChildren_C(tm, ents[0], 0);
+			Assert::AreEqual(0u, TransformManager_GetNumberOfChildren_C(tm, ents[0]), L"Entity did not have 0 children", LINE_INFO());
+
 
 			Delete_C(tm);
 			Delete_C(em);
