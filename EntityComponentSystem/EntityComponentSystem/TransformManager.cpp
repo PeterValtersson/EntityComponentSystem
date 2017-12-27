@@ -356,8 +356,11 @@ namespace ECS
 		file.write((char*)&used, sizeof(used));
 		file.write((char*)entries.getConst<EntryNames::Entity>(), sizeof(Entity)*used);
 		file.write((char*)entries.getConst<EntryNames::Position>(), sizeof(XMFLOAT3)*used);
-		file.write((char*)entries.getConst<EntryNames::Rotation>(), sizeof(XMFLOAT3)*used);
+		file.write((char*)entries.getConst<EntryNames::Rotation>(), sizeof(XMFLOAT4)*used);
 		file.write((char*)entries.getConst<EntryNames::Scale>(), sizeof(XMFLOAT3)*used);
+		file.write((char*)entries.getConst<EntryNames::Parent>(), sizeof(uint32_t)*used);
+		file.write((char*)entries.getConst<EntryNames::Child>(), sizeof(uint32_t)*used);
+		file.write((char*)entries.getConst<EntryNames::Sibling>(), sizeof(uint32_t)*used);
 	}
 	void TransformManager::CreateFromFile(std::ifstream & file)
 	{
@@ -370,6 +373,9 @@ namespace ECS
 		file.read((char*)entries.getConst<EntryNames::Position>(), sizeof(XMFLOAT3)*used);
 		file.read((char*)entries.getConst<EntryNames::Rotation>(), sizeof(XMFLOAT3)*used);
 		file.read((char*)entries.getConst<EntryNames::Scale>(), sizeof(XMFLOAT3)*used);
+		file.read((char*)entries.getConst<EntryNames::Parent>(), sizeof(uint32_t)*used);
+		file.read((char*)entries.getConst<EntryNames::Child>(), sizeof(uint32_t)*used);
+		file.read((char*)entries.getConst<EntryNames::Sibling>(), sizeof(uint32_t)*used);
 		entries.Reinit(used);
 		for (uint32_t i = 0; i < used; i++)
 		{
