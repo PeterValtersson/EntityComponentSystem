@@ -40,7 +40,8 @@ namespace ECS
 
 		auto index = entries.add(entity);
 		entries.get<EntryNames::Position>(index) = ToXMFLOAT3(position);
-		XMStoreFloat4(&entries.get<EntryNames::Rotation>(index), XMQuaternionIdentity());
+		auto quat = XMQuaternionRotationRollPitchYawFromVector(XMLoadFloat3((XMFLOAT3*)&rotaiton));
+		XMStoreFloat4(&entries.get<EntryNames::Rotation>(index), quat);
 		entries.get<EntryNames::Scale>(index) = ToXMFLOAT3(scale);
 		XMStoreFloat4x4(&entries.get<EntryNames::Transform>(index), XMMatrixIdentity());
 		entries.get<EntryNames::Dirty>(index) = true;
@@ -60,6 +61,7 @@ namespace ECS
 				return;
 			else
 			{
+				entries.get<EntryNames::Dirty>(findChild->second) = true;
 				entries.get<EntryNames::Parent>(findChild->second) = static_cast<uint32_t>(findParent->second);
 				auto parentChild = entries.get<EntryNames::Child>(findParent->second);
 				if (parentChild == -1)
@@ -141,6 +143,7 @@ namespace ECS
 			entries.get<EntryNames::Child>(find->second) = -1;
 			while (childIndex != -1)
 			{
+				entries.get<EntryNames::Dirty>(childIndex) = true;
 				entries.get<EntryNames::Parent>(childIndex) = -1;
 				auto temp = entries.get<EntryNames::Sibling>(childIndex);
 				entries.get<EntryNames::Sibling>(childIndex) = -1;
@@ -161,7 +164,7 @@ namespace ECS
 				return;
 
 			entries.get<EntryNames::Parent>(find->second) = -1;
-
+			entries.get<EntryNames::Dirty>(find->second) = true;
 			auto childIndex = entries.get<EntryNames::Child>(parentIndex);
 			if (childIndex == find->second)
 			{
@@ -397,7 +400,7 @@ namespace ECS
 				const auto& rotation = XMMatrixRotationQuaternion(XMLoadFloat4(&entries.get<EntryNames::Rotation>(i)));
 				const auto& scale = XMMatrixScalingFromVector(XMLoadFloat3(&entries.get<EntryNames::Scale>(i)));
 				XMStoreFloat4x4(&transforms[i], scale*rotation*translation);
-
+				//XMMatrixTransformation()
 				if (entries.get<EntryNames::Parent>(i) == -1)
 				{
 					auto child = entries.get<EntryNames::Child>(i);
@@ -430,7 +433,7 @@ namespace ECS
 
 		auto entities = entries.get<EntryNames::Entity>();
 		for(auto tu : transformUsers)
-			tu->UpdateEntityTransforms(transforms, entities, static_cast<uint32_t>(entries.size()));
+			tu->UpdateEntityTransforms((Matrix*)transforms, entities, static_cast<uint32_t>(entries.size()));
 	}
 	void TransformManager::GarbageCollection()noexcept
 	{
@@ -447,6 +450,10 @@ namespace ECS
 				continue;
 			}
 			alive_in_row = 0;
+			if (entries.get<EntryNames::Parent>(i) != -1)
+			{
+				UnbindParent(entries.get<EntryNames::Entity>(i), TransformFlags::NONE);
+			}
 			entries.destroy(i);
 		}
 	}

@@ -60,7 +60,7 @@ namespace ECS
 		virtual void Create(Entity entity,
 			const Vector& position = Vector(), 
 			const Vector& rotaiton = Vector(), 
-			const Vector& scale = Vector())noexcept = 0;
+			const Vector& scale = { 1.0f, 1.0f, 1.0f })noexcept = 0;
 		
 		virtual void BindChild(Entity parent, Entity child, TransformFlags flags)noexcept = 0;
 		virtual void UnbindParent(Entity entity, TransformFlags flags)noexcept = 0;

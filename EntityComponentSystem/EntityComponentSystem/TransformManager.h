@@ -16,7 +16,7 @@ namespace ECS
 		virtual void Create(Entity entity,
 			const Vector& position = Vector(), 
 			const Vector& rotaiton = Vector(), 
-			const Vector& scale = Vector())noexcept override;
+			const Vector& scale = { 1.0f, 1.0f, 1.0f })noexcept override;
 		
 		virtual void BindChild(Entity parent, Entity child, TransformFlags flags)noexcept override;
 		virtual void UnbindParent(Entity entity, TransformFlags flags)noexcept override;

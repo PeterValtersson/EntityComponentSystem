@@ -99,13 +99,7 @@ namespace Tests
 			Delete_C(tm);
 			Delete_C(em);
 		}
-		/*bool MatE(const Matrix& a, const Matrix& b)
-		{
-			for(int x = 0; x < 4; x++)
-				for(int y = 0; y < 4; y++)
-					if()
-			return true;
-		}*/
+	
 		TEST_METHOD(ParentChild)
 		{
 			auto em = EntityManager_CreateEntityManager_C();
@@ -164,6 +158,61 @@ namespace Tests
 			TransformManager_UnbindAllChildren_C(tm, ents[0], 0);
 			Assert::AreEqual(0u, TransformManager_GetNumberOfChildren_C(tm, ents[0]), L"Entity did not have 0 children", LINE_INFO());
 
+
+			Delete_C(tm);
+			Delete_C(em);
+		}
+		bool MatE(const Matrix& a, const Matrix& b)
+		{
+			for (int y = 0; y < 4; y++)
+				for (int x = 0; x < 4; x++)
+					if (std::abs(a.m[y][x] - b.m[y][x]) > 0.001f)
+						return false;
+		return true;
+		}
+		TEST_METHOD(InheritedTransforms)
+		{
+
+			auto em = EntityManager_CreateEntityManager_C();
+			TransformManagerInitializationInfo tmii;
+			tmii.entityManager = em;
+			auto tm = TransformManager_CreateTransformManager_C(tmii);
+			std::vector<Entity> ents;
+			ents.resize(1000);
+			EntityManager_CreateMultiple_C(em, (uint32_t*)ents.data(), (uint32_t)ents.size());
+			Assert::AreEqual(EntityManager_GetNumberOfAliveEntities_C(em), 1000u, L"Could not create 10000 entities", LINE_INFO());
+
+			for (size_t i = 0; i < ents.size(); i++)
+				TransformManager_Create_C(tm, ents[i], {}, {}, {1.0f,1.0f,1.0f});
+
+			Manager_Base_Frame(tm);
+
+			Entity parentEnt = EntityManager_Create_C(em);
+			TransformManager_Create_C(tm, parentEnt, {}, {}, {1.0f, 1.0f, 1.0f});
+
+			for (size_t i = 0; i < ents.size(); i++)
+				TransformManager_BindChild_C(tm, parentEnt, ents[i], 0);
+
+			Assert::AreEqual(1000u, TransformManager_GetNumberOfChildren_C(tm, parentEnt), L"Entity did not have 1000 children", LINE_INFO());
+			Manager_Base_Frame(tm);
+
+			auto parentTransform = TransformManager_GetTransform_C(tm, parentEnt);
+			for (size_t i = 0; i < ents.size(); i++)
+				Assert::IsTrue(MatE(parentTransform, TransformManager_GetTransform_C(tm, ents[i])), L"Transforms not equal", LINE_INFO());
+
+			Entity parentEnt2 = EntityManager_Create_C(em);
+			TransformManager_Create_C(tm, parentEnt2, { 1.0f }, {1.0f}, {2.0f, 2.0f, 2.0f});
+			TransformManager_BindChild_C(tm, parentEnt2, parentEnt, 0);
+			//TransformManager_SetPosition_C(tm, parentEnt, { 1.0f });
+
+			Manager_Base_Frame(tm);
+
+			parentTransform = TransformManager_GetTransform_C(tm, parentEnt2);
+			auto parentTransform2 = TransformManager_GetTransform_C(tm, parentEnt);
+			Assert::IsTrue(MatE(parentTransform, parentTransform2), L"Transforms not equal", LINE_INFO());
+
+			for (size_t i = 0; i < ents.size(); i++)
+				Assert::IsTrue(MatE(parentTransform, TransformManager_GetTransform_C(tm, ents[i])), L"Transforms not equal", LINE_INFO());
 
 			Delete_C(tm);
 			Delete_C(em);
