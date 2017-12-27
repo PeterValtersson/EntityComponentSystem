@@ -385,7 +385,9 @@ namespace ECS
 	}
 	void TransformManager::UpdateDirtyEntities()noexcept
 	{
-		auto transforms = (Matrix*)entries.getConst<EntryNames::Transform>();
+		auto transforms = entries.getConst<EntryNames::Transform>();
+		std::vector<uint32_t> entitiesToApplyParentTransformTo;
+	
 		for (size_t i = 0; i < entries.size(); i++)
 		{
 			if (entries.get<EntryNames::Dirty>(i))
@@ -394,9 +396,38 @@ namespace ECS
 				//const auto& qrot = XMMatrixRotationQuaternion()
 				const auto& rotation = XMMatrixRotationQuaternion(XMLoadFloat4(&entries.get<EntryNames::Rotation>(i)));
 				const auto& scale = XMMatrixScalingFromVector(XMLoadFloat3(&entries.get<EntryNames::Scale>(i)));
-				XMStoreFloat4x4((XMFLOAT4X4*)&transforms[i], scale*rotation*translation);
+				XMStoreFloat4x4(&transforms[i], scale*rotation*translation);
+
+				if (entries.get<EntryNames::Parent>(i) == -1)
+				{
+					auto child = entries.get<EntryNames::Child>(i);
+					while (child != -1)
+					{
+						entitiesToApplyParentTransformTo.push_back(child);
+						child = entries.get<EntryNames::Sibling>(child);
+					}
+				}
 			}
 		}
+	
+		do
+		{
+			auto entitiesToApplyTransTo = std::move(entitiesToApplyParentTransformTo);
+			for (auto i : entitiesToApplyTransTo)
+			{
+				const auto& parentTransform = XMLoadFloat4x4(&transforms[entries.get<EntryNames::Parent>(i)]);
+				const auto& childTransform = XMLoadFloat4x4(&transforms[i]);
+
+				XMStoreFloat4x4((XMFLOAT4X4*)&transforms[i], childTransform*parentTransform);
+				auto child = entries.get<EntryNames::Child>(i);
+				while (child != -1)
+				{
+					entitiesToApplyParentTransformTo.push_back(child);
+					child = entries.get<EntryNames::Sibling>(child);
+				}
+			}
+		} while (entitiesToApplyParentTransformTo.size());
+
 		auto entities = entries.get<EntryNames::Entity>();
 		for(auto tu : transformUsers)
 			tu->UpdateEntityTransforms(transforms, entities, static_cast<uint32_t>(entries.size()));
