@@ -63,7 +63,7 @@ namespace ECS
 		Sofa<
 			Entity, Entity::Hasher,
 			XMFLOAT3,
-			XMFLOAT3,
+			XMFLOAT4,
 			XMFLOAT3,
 			XMFLOAT4X4,
 			bool,

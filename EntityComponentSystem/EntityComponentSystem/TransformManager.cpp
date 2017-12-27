@@ -40,7 +40,7 @@ namespace ECS
 
 		auto index = entries.add(entity);
 		entries.get<EntryNames::Position>(index) = ToXMFLOAT3(position);
-		entries.get<EntryNames::Rotation>(index) = ToXMFLOAT3(rotaiton);
+		XMStoreFloat4(&entries.get<EntryNames::Rotation>(index), XMQuaternionIdentity());
 		entries.get<EntryNames::Scale>(index) = ToXMFLOAT3(scale);
 		XMStoreFloat4x4(&entries.get<EntryNames::Transform>(index), XMMatrixIdentity());
 		entries.get<EntryNames::Dirty>(index) = true;
@@ -207,7 +207,9 @@ namespace ECS
 			return;
 		else
 		{
-			entries.get<EntryNames::Rotation>(find->second) = ToXMFLOAT3(rotation);
+
+			auto quat = XMQuaternionRotationRollPitchYawFromVector(XMLoadFloat3((XMFLOAT3*)&rotation));
+			XMStoreFloat4(&entries.get<EntryNames::Rotation>(find->second), quat);
 			entries.get<EntryNames::Dirty>(find->second) = true;
 		}
 	}
@@ -217,7 +219,12 @@ namespace ECS
 		if (auto find = entries.find(entity); !find.has_value())
 			return Vector();
 		else
-			return ToVector(entries.getConst<EntryNames::Rotation>(find->second));
+		{
+			//XMQuaternionToAxisAngle
+			//	return ToVector(entries.getConst<EntryNames::Rotation>(find->second));
+			return Vector();
+		}
+		
 	}
 	void TransformManager::SetScale(Entity entity, const Vector & scale)noexcept
 	{
@@ -252,7 +259,7 @@ namespace ECS
 			XMMatrixDecompose(&scale, &rot, &pos, trans);
 			XMStoreFloat3(&entries.get<EntryNames::Scale>(find->second), scale);
 			XMStoreFloat3(&entries.get<EntryNames::Position>(find->second), pos);
-			XMStoreFloat3(&entries.get<EntryNames::Rotation>(find->second), rot);
+			XMStoreFloat4(&entries.get<EntryNames::Rotation>(find->second), rot);
 			entries.get<EntryNames::Dirty>(find->second) = true;
 		}
 		
@@ -378,7 +385,8 @@ namespace ECS
 			if (entries.get<EntryNames::Dirty>(i))
 			{
 				const auto& translation = XMMatrixTranslationFromVector(XMLoadFloat3(&entries.get<EntryNames::Position>(i)));
-				const auto& rotation = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&entries.get<EntryNames::Rotation>(i)));
+				//const auto& qrot = XMMatrixRotationQuaternion()
+				const auto& rotation = XMMatrixRotationQuaternion(XMLoadFloat4(&entries.get<EntryNames::Rotation>(i)));
 				const auto& scale = XMMatrixScalingFromVector(XMLoadFloat3(&entries.get<EntryNames::Scale>(i)));
 				XMStoreFloat4x4((XMFLOAT4X4*)&transforms[i], scale*rotation*translation);
 			}
