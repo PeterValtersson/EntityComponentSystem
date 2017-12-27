@@ -60,11 +60,11 @@ namespace ECS
 				return;
 			else
 			{
-				entries.get<EntryNames::Parent>(findChild->second) = findParent->second;
+				entries.get<EntryNames::Parent>(findChild->second) = static_cast<uint32_t>(findParent->second);
 				auto parentChild = entries.get<EntryNames::Child>(findParent->second);
 				if (parentChild == -1)
 				{
-					entries.get<EntryNames::Child>(findParent->second) = findChild->second;
+					entries.get<EntryNames::Child>(findParent->second) = static_cast<uint32_t>(findChild->second);
 				}
 				else
 				{
@@ -74,7 +74,7 @@ namespace ECS
 						parentChild = sibling;
 						sibling = entries.get<EntryNames::Sibling>(sibling);
 					}
-					entries.get<EntryNames::Sibling>(parentChild) = findChild->second;
+					entries.get<EntryNames::Sibling>(parentChild) = static_cast<uint32_t>(findChild->second);
 				}
 			}
 		}
@@ -149,7 +149,7 @@ namespace ECS
 		}
 	}
 
-	void TransformManager::UnbindParent(Entity entity, TransformFlags flags)
+	void TransformManager::UnbindParent(Entity entity, TransformFlags flags)noexcept
 	{
 		StartProfile;
 		if (auto find = entries.find(entity); !find.has_value())
