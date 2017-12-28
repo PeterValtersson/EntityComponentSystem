@@ -1,6 +1,7 @@
 #ifndef _ECS_SCENE_MANAGER_H_
 #define _ECS_SCENE_MANAGER_H_
 #include <Managers\SceneManager_Interface.h>
+#include <unordered_map>
 namespace ECS
 {
 	class SceneManager : public SceneManager_Interface
@@ -27,6 +28,16 @@ namespace ECS
 		virtual void CreateFromFile(std::ifstream& file);
 	protected:
 		virtual void GarbageCollection()noexcept override;
+
+	private:
+		struct SceneEntries
+		{
+			std::vector<Entity> entity;
+			std::vector<std::vector<Entity>> entitiesInScene;
+			std::vector<bool> update;
+
+		}entries;
+		std::unordered_map<Entity, uint32_t, Entity::Hasher> entityToEntry;
 	};
 }
 #endif
