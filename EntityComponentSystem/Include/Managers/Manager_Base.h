@@ -4,11 +4,14 @@
 #include <Memory_Base.h>
 #include <DLLExport.h>
 #include <EntityManager_Interface.h>
+#include <ResourceHandler\Resource.h>
 namespace ECS
 {
 	class Manager_Base : public Memory_Base
 	{
 	public:
+		virtual Entity CreateFromResource() = 0;
+
 		virtual void Destroy(Entity entity)noexcept = 0;
 		virtual void DestroyEntities(const Entity entities[], uint32_t numEntities)noexcept = 0;
 	
