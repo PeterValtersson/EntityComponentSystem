@@ -14,6 +14,9 @@
     <Filter Include="Managers\TransformManager">
       <UniqueIdentifier>{5fab2126-365a-4d70-9785-98af2736d6e3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Managers\SceneManager">
+      <UniqueIdentifier>{2c4a9ac5-78c6-4711-8ec3-eb546208941e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Entity.h">
@@ -36,6 +39,12 @@
     <ClInclude Include="..\Include\Managers\TransformManager_Interface.h">
       <Filter>Managers\TransformManager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\Managers\SceneManager_Interface.h">
+      <Filter>Managers\SceneManager</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>Managers\SceneManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EntityManager.cpp">
@@ -54,5 +63,9 @@
     <ClCompile Include="..\Include\Managers\Manager_Base.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
+    <ClCompile Include="SceneManager_Interface.cpp">
+      <Filter>Managers\SceneManager</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp" />
   </ItemGroup>
 </Project>
