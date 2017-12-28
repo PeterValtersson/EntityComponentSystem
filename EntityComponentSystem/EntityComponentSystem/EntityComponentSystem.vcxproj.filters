@@ -60,12 +60,14 @@
     <ClCompile Include="TransformManager.cpp">
       <Filter>Managers\TransformManager</Filter>
     </ClCompile>
-    <ClCompile Include="..\Include\Managers\Manager_Base.cpp">
-      <Filter>Managers</Filter>
-    </ClCompile>
     <ClCompile Include="SceneManager_Interface.cpp">
       <Filter>Managers\SceneManager</Filter>
     </ClCompile>
-    <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="..\Include\Managers\Manager_Base.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>Managers\SceneManager</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

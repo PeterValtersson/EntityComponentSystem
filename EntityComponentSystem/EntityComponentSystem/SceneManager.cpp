@@ -10,6 +10,8 @@ ECS::SceneManager::~SceneManager()
 {
 }
 
+
+
 void ECS::SceneManager::Create(Entity entity)noexcept
 {
 	StartProfile;
@@ -39,7 +41,10 @@ uint32_t ECS::SceneManager::GetNumberOfEntitiesInScene(Entity scene)const noexce
 void ECS::SceneManager::GetEntitiesInScene(Entity scene, Entity entities[])const noexcept
 {
 }
-
+ECS::Entity ECS::SceneManager::CreateFromResource(ResourceHandler::Resource resource)noexcept
+{
+	return Entity();
+}
 void ECS::SceneManager::Destroy(Entity entity)noexcept
 {
 }

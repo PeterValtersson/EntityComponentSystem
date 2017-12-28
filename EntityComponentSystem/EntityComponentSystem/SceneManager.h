@@ -16,6 +16,9 @@ namespace ECS
 		virtual uint32_t GetNumberOfEntitiesInScene(Entity scene)const noexcept override;
 		virtual void GetEntitiesInScene(Entity scene, Entity entities[])const noexcept override;
 
+
+		virtual Entity CreateFromResource(ResourceHandler::Resource resource)noexcept override;
+
 		virtual void Destroy(Entity entity)noexcept override;
 		virtual void DestroyEntities(const Entity entities[], uint32_t numEntities)noexcept override;
 

@@ -40,6 +40,7 @@ namespace ECS
 		virtual void RegisterTransformUser(Manager_TransformUser* tUser)noexcept override;
 		virtual void UnregisterTransformUser(Manager_TransformUser* tUser)noexcept override;
 
+		virtual Entity CreateFromResource(ResourceHandler::Resource resource)noexcept override;
 		virtual void Destroy(Entity entity)noexcept override;
 		virtual void DestroyEntities(const Entity entities[], uint32_t numEntities)noexcept override;
 		virtual uint32_t GetNumberOfRegisteredEntities()const noexcept override;

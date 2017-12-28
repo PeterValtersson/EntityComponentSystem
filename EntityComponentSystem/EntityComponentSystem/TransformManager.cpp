@@ -3,6 +3,7 @@
 #include <Profiler.h>
 #undef min
 #undef max
+
 namespace ECS
 {
 	XMFLOAT3 ToXMFLOAT3(const Vector& v)
@@ -350,6 +351,11 @@ namespace ECS
 		StartProfile;
 		GarbageCollection();
 		UpdateDirtyEntities();
+	}
+
+	Entity TransformManager::CreateFromResource(ResourceHandler::Resource resource)noexcept
+	{
+		return Entity();
 	}
 
 	void TransformManager::WriteToFile(std::ofstream & file) const
