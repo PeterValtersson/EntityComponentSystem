@@ -5,6 +5,11 @@
 #include "Manager_Base.h"
 namespace ECS
 {
+	struct SceneManagerInitializationInfo
+	{
+		EntityManager_Interface* entityManager;
+		void* pNext;
+	};
 	class SceneManager_Interface : public Manager_Base
 	{
 	public:
@@ -22,7 +27,7 @@ namespace ECS
 	};
 }
 
-DECLDIR ECS::SceneManager_Interface* SceneManager_CreateSceneManager_C();
+DECLDIR ECS::SceneManager_Interface* SceneManager_CreateSceneManager_C(SceneManagerInitializationInfo ii);
 DECLDIR void SceneManager_Create_C(ECS::SceneManager_Interface* sm, uint32_t entity);
 DECLDIR void SceneManager_AddEntityToScene_C(ECS::SceneManager_Interface* sm, uint32_t scene, uint32_t entity);
 DECLDIR void SceneManager_AddEntitiesToScene_C(ECS::SceneManager_Interface* sm, uint32_t scene, uint32_t* entities, uint32_t numEntities);

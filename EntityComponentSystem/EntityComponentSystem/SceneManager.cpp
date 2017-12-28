@@ -1,7 +1,26 @@
 #include "SceneManager.h"
+#include <Profiler.h>
+
+ECS::SceneManager::SceneManager(SceneManagerInitializationInfo ii) : initInfo(ii)
+{
+	_ASSERT_EXPR(initInfo.entityManager, "SceneManager must have entitymanager");
+}
+
+ECS::SceneManager::~SceneManager()
+{
+}
 
 void ECS::SceneManager::Create(Entity entity)noexcept
 {
+	StartProfile;
+	if (auto find = entityToEntry.find(entity); find != entityToEntry.end())
+		return;
+
+	if (!initInfo.entityManager->IsAlive(entity))
+		return;
+
+
+
 }
 
 void ECS::SceneManager::AddEntityToScene(Entity scene, Entity entity)noexcept
@@ -50,6 +69,8 @@ uint64_t ECS::SceneManager::GetMemoryUsage() const noexcept
 void ECS::SceneManager::ShrinkToFit() noexcept
 {
 }
+
+
 
 void ECS::SceneManager::WriteToFile(std::ofstream & file) const
 {

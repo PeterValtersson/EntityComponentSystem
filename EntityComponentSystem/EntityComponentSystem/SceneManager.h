@@ -7,6 +7,8 @@ namespace ECS
 	class SceneManager : public SceneManager_Interface
 	{
 	public:
+		SceneManager(SceneManagerInitializationInfo ii);
+		virtual ~SceneManager();
 		virtual	void Create(Entity entity)noexcept override;
 		virtual void AddEntityToScene(Entity scene, Entity entity)noexcept override;
 		virtual void AddEntitiesToScene(Entity scene, const Entity entities[], uint32_t numEntities)noexcept override;
@@ -30,12 +32,17 @@ namespace ECS
 		virtual void GarbageCollection()noexcept override;
 
 	private:
+		SceneManagerInitializationInfo initInfo;
+		struct EntityInfo
+		{
+			Entity entity;
+			//Resource entityDetails
+		};
 		struct SceneEntries
 		{
 			std::vector<Entity> entity;
 			std::vector<std::vector<Entity>> entitiesInScene;
-			std::vector<bool> update;
-
+			//std::vector<bool> update;
 		}entries;
 		std::unordered_map<Entity, uint32_t, Entity::Hasher> entityToEntry;
 	};
