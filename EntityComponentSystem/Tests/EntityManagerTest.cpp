@@ -10,7 +10,7 @@ namespace Tests
 	{
 	public:
 		
-		TEST_METHOD(CreateAndDestroy)
+		TEST_METHOD(EntityManager_CreateAndDestroy)
 		{
 			auto em = EntityManager_CreateEntityManager_C();
 			std::vector<Entity> ents;
@@ -31,7 +31,7 @@ namespace Tests
 		
 			Delete_C(em);
 		}
-		TEST_METHOD(CreateAndDestroyAll)
+		TEST_METHOD(EntityManager_CreateAndDestroyAll)
 		{
 			auto em = EntityManager_CreateEntityManager_C();
 			std::vector<Entity> ents;
@@ -45,7 +45,7 @@ namespace Tests
 
 		}
 
-		TEST_METHOD(FileExport)
+		TEST_METHOD(EntityManager_FileExport)
 		{
 			auto em = EntityManager_CreateEntityManager_C();
 			std::vector<Entity> ents;

@@ -18,7 +18,9 @@ namespace ECS
 
 
 		virtual Entity CreateFromResource(ResourceHandler::Resource resource)noexcept override;
+		virtual std::function<bool(std::fstream&file)> GetDataWriter(Entity entity)const noexcept override;
 
+		virtual bool IsRegistered(Entity entity)const noexcept override;
 		virtual void Destroy(Entity entity)noexcept override;
 		virtual void DestroyEntities(const Entity entities[], uint32_t numEntities)noexcept override;
 

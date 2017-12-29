@@ -10,6 +10,11 @@ ECS::SceneManager::~SceneManager()
 {
 }
 
+std::function<bool(std::fstream&file)> ECS::SceneManager::GetDataWriter(Entity entity)const noexcept
+{
+	return [](std::fstream& file) {return false; };
+}
+
 
 
 void ECS::SceneManager::Create(Entity entity)noexcept
@@ -76,6 +81,11 @@ void ECS::SceneManager::ShrinkToFit() noexcept
 }
 
 
+
+bool ECS::SceneManager::IsRegistered(Entity entity) const noexcept
+{
+	return false;
+}
 
 void ECS::SceneManager::WriteToFile(std::ofstream & file) const
 {

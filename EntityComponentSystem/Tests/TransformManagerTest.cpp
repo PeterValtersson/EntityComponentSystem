@@ -11,7 +11,7 @@ namespace Tests
 	{
 	public:
 
-		TEST_METHOD(CreateAndDestroy)
+		TEST_METHOD(TransformManager_CreateAndDestroy)
 		{
 			auto em = EntityManager_CreateEntityManager_C();
 			TransformManagerInitializationInfo tmii;
@@ -39,7 +39,7 @@ namespace Tests
 			Delete_C(em);
 		}
 
-		TEST_METHOD(CreateAndDestroyNow)
+		TEST_METHOD(TransformManager_CreateAndDestroyNow)
 		{
 			auto em = EntityManager_CreateEntityManager_C();
 			TransformManagerInitializationInfo tmii;
@@ -61,7 +61,7 @@ namespace Tests
 			Delete_C(em);
 		}
 
-		TEST_METHOD(PosRotScale)
+		TEST_METHOD(TransformManager_PosRotScale)
 		{
 			auto em = EntityManager_CreateEntityManager_C();
 			TransformManagerInitializationInfo tmii;
@@ -100,7 +100,7 @@ namespace Tests
 			Delete_C(em);
 		}
 	
-		TEST_METHOD(ParentChild)
+		TEST_METHOD(TransformManager_ParentChild)
 		{
 			auto em = EntityManager_CreateEntityManager_C();
 			TransformManagerInitializationInfo tmii;
@@ -170,7 +170,7 @@ namespace Tests
 						return false;
 		return true;
 		}
-		TEST_METHOD(InheritedTransforms)
+		TEST_METHOD(TransformManager_InheritedTransforms)
 		{
 
 			auto em = EntityManager_CreateEntityManager_C();
@@ -216,6 +216,11 @@ namespace Tests
 
 			Delete_C(tm);
 			Delete_C(em);
+		}
+
+		TEST_METHOD(TransformManager_WriteComponentAndCreateFromResource)
+		{
+
 		}
 	};
 }

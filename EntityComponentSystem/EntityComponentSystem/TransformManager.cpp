@@ -358,6 +358,29 @@ namespace ECS
 		return Entity();
 	}
 
+	std::function<bool(std::fstream&file)> TransformManager::GetDataWriter(Entity entity)const noexcept
+	{
+		auto find = entries.find(entity);
+		_ASSERT_EXPR(find.has_value(), "Can't get data writer if entity is not registered");
+		return [this,entity](std::fstream& file) {
+			if (auto find = entries.find(entity); !find.has_value())
+				return false;
+			else
+			{
+				file.write((char*)&entries.getConst<EntryNames::Position>(find->second), sizeof(XMFLOAT3));
+				file.write((char*)&entries.getConst<EntryNames::Rotation>(find->second), sizeof(XMFLOAT4));
+				file.write((char*)&entries.getConst<EntryNames::Scale>(find->second), sizeof(XMFLOAT3));
+				return true;
+			}
+		};
+
+	}
+
+	bool TransformManager::IsRegistered(Entity entity) const noexcept
+	{
+		return entries.find(entity).has_value();
+	}
+
 	void TransformManager::WriteToFile(std::ofstream & file) const
 	{
 		file.write((char*)&version, sizeof(version));
