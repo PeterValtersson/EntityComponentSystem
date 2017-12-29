@@ -17,8 +17,9 @@ namespace ECS
 		virtual void GetEntitiesInScene(Entity scene, Entity entities[])const noexcept override;
 
 
-		virtual Entity CreateFromResource(ResourceHandler::Resource resource)noexcept override;
-		virtual std::function<bool(std::fstream&file)> GetDataWriter(Entity entity)const noexcept override;
+		virtual void CreateFromResource(Entity entity, ResourceHandler::Resource resource)noexcept override;
+		virtual void CreateFromStream(Entity entity, std::istream* stream)noexcept override;
+		virtual std::function<bool(std::ostream* file)> GetDataWriter(Entity entity)const noexcept override;
 
 		virtual bool IsRegistered(Entity entity)const noexcept override;
 		virtual void Destroy(Entity entity)noexcept override;

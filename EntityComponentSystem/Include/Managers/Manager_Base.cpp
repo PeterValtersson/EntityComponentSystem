@@ -23,15 +23,15 @@ DECLDIR_ECS void Manager_Base_GetRegisteredEntities(ECS::Manager_Base * mb, uint
 {
 	mb->GetRegisteredEntities((ECS::Entity*)entities, numEntities);
 }
-
+#include <sstream>
 DECLDIR_ECS void Manager_Base_Frame(ECS::Manager_Base * mb)
 {
 	mb->Frame();
 }
 
-DECLDIR_ECS uint32_t Manager_Base_CreateFromResource_C(ECS::Manager_Base * mb, const char * guid, const char * type)
+DECLDIR_ECS void Manager_Base_CreateFromResource_C(ECS::Manager_Base * mb, uint32_t entity, const char * guid, const char * type)
 {
-	return mb->CreateFromResource(ResourceHandler::Resource(std::string(guid), std::string(type)));
+	 mb->CreateFromResource(entity, ResourceHandler::Resource(std::string(guid), std::string(type)));
 }
 
 DECLDIR_ECS void Manager_Base_WriteComponent_C(ECS::Manager_Base * mb, ResourceHandler::Loader_Interface * li, uint32_t entity, const char * guid, const char * type)

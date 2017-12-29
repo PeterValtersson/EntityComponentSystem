@@ -10,9 +10,17 @@ ECS::SceneManager::~SceneManager()
 {
 }
 
-std::function<bool(std::fstream&file)> ECS::SceneManager::GetDataWriter(Entity entity)const noexcept
+void ECS::SceneManager::CreateFromResource(Entity entity, ResourceHandler::Resource resource)noexcept
 {
-	return [](std::fstream& file) {return false; };
+}
+
+void ECS::SceneManager::CreateFromStream(Entity entity, std::istream * stream)noexcept
+{
+}
+
+std::function<bool(std::ostream* file)> ECS::SceneManager::GetDataWriter(Entity entity)const noexcept
+{
+	return [](std::ostream* file) {return false; };
 }
 
 
@@ -46,10 +54,7 @@ uint32_t ECS::SceneManager::GetNumberOfEntitiesInScene(Entity scene)const noexce
 void ECS::SceneManager::GetEntitiesInScene(Entity scene, Entity entities[])const noexcept
 {
 }
-ECS::Entity ECS::SceneManager::CreateFromResource(ResourceHandler::Resource resource)noexcept
-{
-	return Entity();
-}
+
 void ECS::SceneManager::Destroy(Entity entity)noexcept
 {
 }

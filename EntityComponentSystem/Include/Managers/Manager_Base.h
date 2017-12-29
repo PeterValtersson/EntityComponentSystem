@@ -14,8 +14,9 @@ namespace ECS
 	{
 	public:
 		virtual bool IsRegistered(Entity entity)const noexcept = 0;
-		virtual Entity CreateFromResource(ResourceHandler::Resource resource) = 0;
-		virtual std::function<bool(std::fstream&file)> GetDataWriter(Entity entity)const noexcept = 0;
+		virtual void CreateFromResource(Entity entity, ResourceHandler::Resource resource)noexcept = 0;
+		virtual void CreateFromStream(Entity entity, std::istream* stream)noexcept = 0;
+		virtual std::function<bool(std::ostream* file)> GetDataWriter(Entity entity)const noexcept = 0;
 		virtual void Destroy(Entity entity)noexcept = 0;
 		virtual void DestroyEntities(const Entity entities[], uint32_t numEntities)noexcept = 0;
 	
@@ -35,7 +36,7 @@ DECLDIR_ECS void Manager_Base_DestroyEntities_C(ECS::Manager_Base* mb, const uin
 DECLDIR_ECS uint32_t Manager_Base_GetNumberOfRegisteredEntities(ECS::Manager_Base* mb);
 DECLDIR_ECS void Manager_Base_GetRegisteredEntities(ECS::Manager_Base* mb, uint32_t* entities, uint32_t numEntities);
 DECLDIR_ECS void Manager_Base_Frame(ECS::Manager_Base* mb);
-DECLDIR_ECS uint32_t Manager_Base_CreateFromResource_C(ECS::Manager_Base* mb, const char* guid, const char* type);
+DECLDIR_ECS void Manager_Base_CreateFromResource_C(ECS::Manager_Base* mb, uint32_t entity, const char* guid, const char* type);
 DECLDIR_ECS void Manager_Base_WriteComponent_C(ECS::Manager_Base* mb, ResourceHandler::Loader_Interface* li, uint32_t entity, const char* guid, const char* type);
 
 #endif
