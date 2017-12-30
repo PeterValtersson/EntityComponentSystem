@@ -100,25 +100,29 @@
     <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
     <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
     <TargetExt>.dll</TargetExt>
-    <IncludePath>$(SolutionDir)../../CompileTimeGUID/include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)../../Sofa/Sofa/;$(SolutionDir)../../Profiler/Profiler/Profiler/;$(SolutionDir)Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../../CompileTimeGUID/include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)../../Sofa/Sofa/;$(SolutionDir)../../Profiler/Profiler/Profiler/;$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/Include/;$(IncludePath)</IncludePath>
+    <TargetName>ECS</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
     <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
     <TargetExt>.dll</TargetExt>
-    <IncludePath>$(SolutionDir)../../CompileTimeGUID/include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)../../Sofa/Sofa/;$(SolutionDir)../../Profiler/Profiler/Profiler/;$(SolutionDir)Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../../CompileTimeGUID/include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)../../Sofa/Sofa/;$(SolutionDir)../../Profiler/Profiler/Profiler/;$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/Include/;$(IncludePath)</IncludePath>
+    <TargetName>ECS</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
     <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
     <TargetExt>.dll</TargetExt>
-    <IncludePath>$(SolutionDir)../../CompileTimeGUID/include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)../../Sofa/Sofa/;$(SolutionDir)../../Profiler/Profiler/Profiler/;$(SolutionDir)Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../../CompileTimeGUID/include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)../../Sofa/Sofa/;$(SolutionDir)../../Profiler/Profiler/Profiler/;$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/Include/;$(IncludePath)</IncludePath>
+    <TargetName>ECS</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
     <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
     <TargetExt>.dll</TargetExt>
-    <IncludePath>$(SolutionDir)../../CompileTimeGUID/include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)../../Sofa/Sofa/;$(SolutionDir)../../Profiler/Profiler/Profiler/;$(SolutionDir)Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../../CompileTimeGUID/include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)../../Sofa/Sofa/;$(SolutionDir)../../Profiler/Profiler/Profiler/;$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/Include/;$(IncludePath)</IncludePath>
+    <TargetName>ECS</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
