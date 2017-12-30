@@ -29,3 +29,8 @@ DECLDIR_ECS void SceneManager_GetEntitiesInScene_C(ECS::SceneManager_Interface *
 {
 	sm->GetEntitiesInScene(scene, (ECS::Entity*)entities);
 }
+
+DECLDIR_ECS void SceneManager_RegisterManager_C(ECS::SceneManager_Interface * sm, ECS::Manager_Base * mb)
+{
+	sm->RegisterManager(mb);
+}

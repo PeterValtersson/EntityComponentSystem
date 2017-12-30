@@ -12,10 +12,10 @@ namespace ECS
 		virtual	void Create(Entity entity)noexcept override;
 		virtual void AddEntityToScene(Entity scene, Entity entity)noexcept override;
 		virtual void AddEntitiesToScene(Entity scene, const Entity entities[], uint32_t numEntities)noexcept override;
-		//virtual void AddNamedEntityToScene(Entity scene, Entity entity, Utilz::GUID guid)override;
+		virtual void AddNamedEntityToScene(Entity scene, Entity entity, const std::string& name)noexcept override;
 		virtual uint32_t GetNumberOfEntitiesInScene(Entity scene)const noexcept override;
 		virtual void GetEntitiesInScene(Entity scene, Entity entities[])const noexcept override;
-
+		virtual void RegisterManager(Manager_Base* manager)noexcept override;
 
 		virtual void CreateFromResource(Entity entity, ResourceHandler::Resource resource)noexcept override;
 		virtual void CreateFromStream(Entity entity, std::istream* stream)noexcept override;
@@ -38,16 +38,20 @@ namespace ECS
 		virtual void GarbageCollection()noexcept override;
 
 	private:
+		uint32_t version = 0;
+		std::vector<Manager_Base*> managers;
+
 		SceneManagerInitializationInfo initInfo;
 		struct EntityInfo
 		{
 			Entity entity;
-			//Resource entityDetails
+			std::string name;
 		};
 		struct SceneEntries
 		{
 			std::vector<Entity> entity;
-			std::vector<std::vector<Entity>> entitiesInScene;
+			std::vector<std::vector<EntityInfo>> entitiesInScene;
+			std::vector<std::unordered_map<Entity, uint32_t, Entity::Hasher>> entityToEntityInScene;
 			//std::vector<bool> update;
 		}entries;
 		std::unordered_map<Entity, uint32_t, Entity::Hasher> entityToEntry;
