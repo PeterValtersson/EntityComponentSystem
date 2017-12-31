@@ -80,8 +80,60 @@ void ECS::SceneManager::CreateFromResource(Entity entity, ResourceHandler::Resou
 {
 }
 
+
+void ReadComponents(ECS::Entity entity, std::istream* stream, uint32_t componentCount, const std::vector<ECS::Manager_Base*>& managers)
+{
+	for (uint32_t i = 0; i < componentCount; i++)
+	{
+		Utilz::GUID type;
+		stream->read((char*)&type, sizeof(type));
+		for (auto& m : managers)
+			if (m->GetManagerType() == type)
+				m->CreateFromStream(entity, stream);
+	}
+};
 void ECS::SceneManager::CreateFromStream(Entity entity, std::istream * stream)noexcept
 {
+	if (auto find = entityToEntry.find(entity); find == entityToEntry.end())
+		return;
+	else
+	{
+		
+		decltype(version) ver = 0;
+		stream->read((char*)&ver, sizeof(ver));
+		std::string name;
+		Utilz::readString(stream, name);
+
+		uint32_t index = static_cast<uint32_t>(entries.entity.size());
+		entries.entity.push_back(entity);
+		entries.entitiesInScene.push_back({});
+		entries.entityToEntityInScene.push_back({});
+		entries.entityNamesInScene.push_back({});
+		entries.name.push_back(name);
+
+		entityToEntry[entity] = index;
+
+		uint32_t componentCount = 0;
+		stream->read((char*)&componentCount, sizeof(componentCount));
+		ReadComponents(entity, stream, componentCount, managers);
+
+		uint32_t numEnts = 0;
+		stream->read((char*)&numEnts, sizeof(numEnts));
+		auto& ents = entries.entitiesInScene[find->second];
+		auto& names = entries.entityNamesInScene[find->second];
+		auto& map = entries.entityToEntityInScene[find->second];
+		ents.resize(numEnts);
+		names.reserve(numEnts);
+		initInfo.entityManager->CreateMultiple(ents.data(), uint32_t(ents.size()));
+		for (uint32_t i = 0; i < numEnts; i++)
+		{
+			map[ents[i]] = i;
+			Utilz::readString(stream, names[i]);
+			stream->read((char*)&componentCount, sizeof(componentCount));
+			ReadComponents(ents[i], stream, componentCount, managers);
+		}
+	}
+
 }
 
 uint64_t ECS::SceneManager::GetDataWriter(Entity entity, std::function<bool(std::ostream* file)>& writer)const noexcept
@@ -93,7 +145,7 @@ uint64_t ECS::SceneManager::GetDataWriter(Entity entity, std::function<bool(std:
 
 
 
-		uint64_t size = sizeof(version) + sizeof(uint32_t)*2 + static_cast<uint64_t>(entries.name[findf->second].size());
+		uint64_t size = sizeof(version) + sizeof(uint32_t);
 		auto& ents = entries.entitiesInScene[findf->second];
 		auto& names = entries.entityNamesInScene[findf->second];
 		struct Component
@@ -107,6 +159,29 @@ uint64_t ECS::SceneManager::GetDataWriter(Entity entity, std::function<bool(std:
 			uint32_t componentCount;
 			std::vector<Component> eInfo;
 		};
+		WriteInfo myComponents{ entries.name[findf->second] };
+		size += sizeof(uint32_t) + static_cast<uint64_t>(myComponents.name.size());
+		size += sizeof(uint32_t);
+		for (auto m : managers)
+		{
+			if (m == this)
+				continue;
+			if (m->IsRegistered(entity))
+			{
+				Component comp{ m->GetManagerType() };
+
+				auto writerSize = m->GetDataWriter(entity, comp.writer);
+				if (writerSize == 0)
+					continue;
+				size += sizeof(comp.type);
+				size += writerSize;
+				myComponents.eInfo.push_back(std::move(comp));
+			}
+
+		}
+		myComponents.componentCount = static_cast<uint32_t>(myComponents.eInfo.size());
+
+
 		std::vector<WriteInfo> writeInfo;
 		writeInfo.reserve(ents.size());
 		for(size_t i = 0; i < ents.size(); i++)
@@ -135,16 +210,25 @@ uint64_t ECS::SceneManager::GetDataWriter(Entity entity, std::function<bool(std:
 			writeInfo.push_back(std::move(info));
 		}
 
-		writer = [entity, this,writeInfo](std::ostream* file) {
+		writer = [entity, this,writeInfo, myComponents, size](std::ostream* file) {
 
 			if (auto find = entityToEntry.find(entity); find == entityToEntry.end())
 				return false;
 			else
 			{
+				uint64_t start = file->tellp();
 				auto& ents = entries.entitiesInScene[find->second];
 
 				file->write((char*)&version, sizeof(version));
-				Utilz::writeString(file, entries.name[find->second]);
+				Utilz::writeString(file, myComponents.name);
+				file->write((char*)&myComponents.componentCount, sizeof(myComponents.componentCount));
+				for (auto& comp : myComponents.eInfo)
+				{
+					file->write((char*)&comp.type, sizeof(comp.type));
+					if (!comp.writer(file))
+						return false;
+				}
+
 				uint32_t numEnt = static_cast<uint32_t>(ents.size());
 				file->write((char*)&numEnt, sizeof(numEnt));
 				for (auto& info : writeInfo)
@@ -159,14 +243,16 @@ uint64_t ECS::SceneManager::GetDataWriter(Entity entity, std::function<bool(std:
 					}
 				}
 
-
+				uint64_t asize = uint64_t(file->tellp()) - start;
+				if (asize != size)
+					return false;
 
 				return true;
 			}};
 
 
 
-		return 0;
+		return size;
 	}
 }
 

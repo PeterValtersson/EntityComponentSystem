@@ -179,6 +179,9 @@
     <ClCompile Include="EntityManagerTest.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\ResourceHandler\ResourceHandler\ResourceHandler\ResourceHandler.vcxproj">
+      <Project>{d4cccf45-cbb6-406f-8b19-53666ae769b2}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\EntityComponentSystem\EntityComponentSystem.vcxproj">
       <Project>{70e14de8-7ff0-4249-9b02-ed33116c837d}</Project>
     </ProjectReference>

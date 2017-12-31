@@ -2,6 +2,9 @@
 #include "CppUnitTest.h"
 #include <EntityManager_Interface.h>
 #include <Managers\TransformManager_Interface.h>
+#include <ResourceHandler\ResourceHandler_Interface.h>
+#include <filesystem>
+namespace fs = std::experimental::filesystem;
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace ECS;
 #include <vector>
@@ -224,9 +227,83 @@ namespace Tests
 			Delete_C(em);
 		}
 
-		TEST_METHOD(TransformManager_WriteComponentAndCreateFromResource)
+		TEST_METHOD(TransformManager_WriteReadComponent)
 		{
+			auto em = EntityManager_CreateEntityManager_C();
 
+			TransformManagerInitializationInfo tmii;
+			tmii.entityManager = em;
+			auto tm = TransformManager_CreateTransformManager_C(tmii);
+			Assert::AreEqual(Manager_Base_GetManagerType(tm), Utilz::GUID("TransformManager").id);
+			
+			auto ent = em->Create();
+			tm->Create(ent, { 1.0f }, {});
+			tm->Frame();
+
+			Assert::AreEqual(1.0f, tm->GetPosition(ent).x);
+			Assert::AreEqual(0.0f, tm->GetPosition(ent).y);
+			Assert::AreEqual(0.0f, tm->GetPosition(ent).z);
+
+			std::function<bool(std::ostream* file)> writer;
+			auto size = tm->GetDataWriter(ent, writer);
+			Assert::AreNotEqual(0Ui64, size);
+			std::stringstream ss;
+			bool result = writer(&ss);
+			Assert::IsTrue(result);
+			tm->Destroy(ent);
+			ss.seekg(0);
+			tm->CreateFromStream(ent, &ss);
+
+			Assert::AreEqual(1.0f, tm->GetPosition(ent).x);
+			Assert::AreEqual(0.0f, tm->GetPosition(ent).y);
+			Assert::AreEqual(0.0f, tm->GetPosition(ent).z);
+
+			Delete_C(tm);
+			Delete_C(em);
+		}
+		TEST_METHOD(TransformManager_WriteReadComponentResource)
+		{
+			std::error_code err;
+			fs::remove("wrcr.dat", err);
+			auto bl = CreateLoader(ResourceHandler::LoaderType::Binary);
+			bl->Init("wrcr.dat", ResourceHandler::Mode::EDIT);
+			Utilz::ThreadPool pool(4);
+			auto rh = CreateResourceHandler(bl, &pool);
+
+
+			auto em = EntityManager_CreateEntityManager_C();
+
+
+
+			TransformManagerInitializationInfo tmii;
+			tmii.entityManager = em;
+			auto tm = TransformManager_CreateTransformManager_C(tmii);
+			Assert::AreEqual(Manager_Base_GetManagerType(tm), Utilz::GUID("TransformManager").id);
+
+			auto ent = em->Create();
+			tm->Create(ent, { 1.0f }, {});
+			tm->Frame();
+
+			Assert::AreEqual(1.0f, tm->GetPosition(ent).x);
+			Assert::AreEqual(0.0f, tm->GetPosition(ent).y);
+			Assert::AreEqual(0.0f, tm->GetPosition(ent).z);
+
+			Assert::AreEqual(long(0), Manager_Base_WriteComponent_C(tm, bl, ent, "Dog", "Transform"));
+			tm->Destroy(ent);
+			Manager_Base_CreateFromResource_C(tm, ent, "Dog", "Transform");
+
+
+			Assert::AreEqual(1.0f, tm->GetPosition(ent).x);
+			Assert::AreEqual(0.0f, tm->GetPosition(ent).y);
+			Assert::AreEqual(0.0f, tm->GetPosition(ent).z);
+
+			Delete_C(tm);
+			Delete_C(em);
+
+			delete rh;
+			bl->Shutdown();
+			delete bl;
+			fs::remove("wrcr.dat", err);
 		}
 	};
 }

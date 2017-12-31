@@ -1,5 +1,4 @@
 #include "Manager_Base.h"
-#include <ResourceHandler\ResourceHandler_Interface.h>
 DECLDIR_ECS bool Manager_Base_IsRegistered_C(ECS::Manager_Base * mb, uint32_t entity)
 {
 	return mb->IsRegistered(entity);

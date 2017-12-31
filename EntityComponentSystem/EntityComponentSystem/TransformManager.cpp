@@ -386,10 +386,60 @@ namespace ECS
 
 	void TransformManager::CreateFromResource(Entity entity, ResourceHandler::Resource resource)noexcept
 	{
+		struct Component
+		{
+			decltype(version) ver;
+			XMFLOAT3 pos;
+			XMFLOAT4 rot;
+			XMFLOAT3 scale;
+		};
+	
+		StartProfile;
+		if (auto find = entries.find(entity); find.has_value())
+			return;
+
+		if (!initInfo.entityManager->IsAlive(entity))
+			return;
+
+		
+		if (ResourceData<Component> data; resource.GetData(data.GetVoid()) & ResourceHandler::LoadStatus::LOADED)
+		{
+			auto index = entries.add(entity);
+
+			entries.get<EntryNames::Position>(index) = data.Get().pos;
+			entries.get<EntryNames::Rotation>(index) = data.Get().rot;
+			entries.get<EntryNames::Scale>(index) = data.Get().scale;
+			XMStoreFloat4x4(&entries.get<EntryNames::Transform>(index), XMMatrixIdentity());
+			entries.get<EntryNames::Dirty>(index) = true;
+			entries.get<EntryNames::Parent>(index) = -1;
+			entries.get<EntryNames::Child>(index) = -1;
+			entries.get<EntryNames::Sibling>(index) = -1;
+			entries.get<EntryNames::Flags>(index) = TransformFlags::NONE;
+		}
 	}
 
 	void TransformManager::CreateFromStream(Entity entity, std::istream * stream)noexcept
 	{
+		StartProfile;
+		if (auto find = entries.find(entity); find.has_value())
+			return;
+
+		if (!initInfo.entityManager->IsAlive(entity))
+			return;
+
+		auto index = entries.add(entity);
+
+		decltype(version) fileV = 0;
+		stream->read((char*)&fileV, sizeof(fileV));
+		stream->read((char*)&entries.getConst<EntryNames::Position>(index), sizeof(XMFLOAT3));
+		stream->read((char*)&entries.getConst<EntryNames::Rotation>(index), sizeof(XMFLOAT4));
+		stream->read((char*)&entries.getConst<EntryNames::Scale>(index), sizeof(XMFLOAT3));
+		XMStoreFloat4x4(&entries.get<EntryNames::Transform>(index), XMMatrixIdentity());
+		entries.get<EntryNames::Dirty>(index) = true;
+		entries.get<EntryNames::Parent>(index) = -1;
+		entries.get<EntryNames::Child>(index) = -1;
+		entries.get<EntryNames::Sibling>(index) = -1;
+		entries.get<EntryNames::Flags>(index) = TransformFlags::NONE;
 	}
 
 	Utilz::GUID TransformManager::GetManagerType() const noexcept

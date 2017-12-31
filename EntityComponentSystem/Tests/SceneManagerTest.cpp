@@ -2,6 +2,7 @@
 #include "CppUnitTest.h"
 #include <EntityManager_Interface.h>
 #include <Managers\SceneManager_Interface.h>
+#include <Managers\TransformManager_Interface.h>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace ECS;
@@ -77,6 +78,61 @@ namespace Tests
 			Manager_Base_Destroy_C(sm, scene);
 			Assert::AreEqual(0u, Manager_Base_GetNumberOfRegisteredEntities(sm));
 			Assert::AreEqual(0u, SceneManager_GetNumberOfEntitiesInScene_C(sm, scene));
+
+			Delete_C(sm);
+			Delete_C(em);
+		}
+
+		TEST_METHOD(SceneManager_WriteReadComponent)
+		{
+			auto em = EntityManager_CreateEntityManager_C();
+
+			TransformManagerInitializationInfo tmii;
+			tmii.entityManager = em;
+			auto tm = TransformManager_CreateTransformManager_C(tmii);
+			Assert::AreEqual(Manager_Base_GetManagerType(tm), Utilz::GUID("TransformManager").id);
+
+			SceneManagerInitializationInfo smii;
+			smii.entityManager = em;
+			auto sm = SceneManager_CreateSceneManager_C(smii);
+			Assert::AreEqual(Utilz::GUID("SceneManager").id, Manager_Base_GetManagerType(sm));
+			SceneManager_RegisterManager_C(sm, tm);
+
+			Entity scene = em->Create();
+			SceneManager_Create_C(sm, scene, "World");
+	
+			std::function<bool(std::ostream* file)> writer;
+			Assert::AreNotEqual(0Ui64, sm->GetDataWriter(scene, writer));
+			std::stringstream ss;
+			Assert::IsTrue(writer(&ss));
+
+			auto ent = em->Create();
+			sm->AddEntityToScene(scene, ent, "Ent");
+
+			Assert::AreNotEqual(0Ui64, sm->GetDataWriter(scene, writer));
+			ss.seekp(0);
+			Assert::IsTrue(writer(&ss));
+
+			tm->Create(scene, { 1.0f });
+
+			Assert::AreNotEqual(0Ui64, sm->GetDataWriter(scene, writer));
+			ss.seekp(0);
+			Assert::IsTrue(writer(&ss));
+			
+			tm->Create(ent, { 0.0f, 1.0f });
+
+			Assert::AreNotEqual(0Ui64, sm->GetDataWriter(scene, writer));
+			ss.seekp(0);
+			Assert::IsTrue(writer(&ss));
+
+			Assert::AreEqual(1u, sm->GetNumberOfRegisteredEntities());
+			Assert::AreEqual(2u, tm->GetNumberOfRegisteredEntities());
+
+			auto newScene = em->Create();
+			ss.seekg(0);
+			sm->CreateFromStream(newScene, &ss);
+			Assert::AreEqual(2u, sm->GetNumberOfRegisteredEntities());
+			Assert::AreEqual(4u, tm->GetNumberOfRegisteredEntities());
 
 			Delete_C(sm);
 			Delete_C(em);
