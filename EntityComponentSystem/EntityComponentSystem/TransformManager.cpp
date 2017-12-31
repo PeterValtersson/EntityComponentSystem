@@ -353,22 +353,29 @@ namespace ECS
 		UpdateDirtyEntities();
 	}
 
-	std::function<bool(std::ostream* file)> TransformManager::GetDataWriter(Entity entity)const noexcept
+	uint64_t TransformManager::GetDataWriter(Entity entity, std::function<bool(std::ostream* file)>& writer)const noexcept
 	{
-		
-		auto find = entries.find(entity);
-		_ASSERT_EXPR(find.has_value(), "Can't get data writer if entity is not registered");
-		return [this,entity](std::ostream* file) {
+
+		if (auto findF = entries.find(entity); !findF.has_value())
+			return 0;
+
+
+		writer = [this, entity](std::ostream* file) {
 			if (auto find = entries.find(entity); !find.has_value())
 				return false;
 			else
 			{
+				file->write((char*)&version, sizeof(version));
 				file->write((char*)&entries.getConst<EntryNames::Position>(find->second), sizeof(XMFLOAT3));
 				file->write((char*)&entries.getConst<EntryNames::Rotation>(find->second), sizeof(XMFLOAT4));
 				file->write((char*)&entries.getConst<EntryNames::Scale>(find->second), sizeof(XMFLOAT3));
 				return true;
 			}
 		};
+
+		return sizeof(XMFLOAT3) * 2 + sizeof(XMFLOAT4) + sizeof(version);
+
+
 
 	}
 
@@ -383,6 +390,11 @@ namespace ECS
 
 	void TransformManager::CreateFromStream(Entity entity, std::istream * stream)noexcept
 	{
+	}
+
+	Utilz::GUID TransformManager::GetManagerType() const noexcept
+	{
+		return "TransformManager";
 	}
 
 	void TransformManager::WriteToFile(std::ofstream & file) const

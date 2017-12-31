@@ -34,7 +34,16 @@ DECLDIR_ECS void Manager_Base_CreateFromResource_C(ECS::Manager_Base * mb, uint3
 	 mb->CreateFromResource(entity, ResourceHandler::Resource(std::string(guid), std::string(type)));
 }
 
-DECLDIR_ECS void Manager_Base_WriteComponent_C(ECS::Manager_Base * mb, ResourceHandler::Loader_Interface * li, uint32_t entity, const char * guid, const char * type)
+DECLDIR_ECS long Manager_Base_WriteComponent_C(ECS::Manager_Base * mb, ResourceHandler::Loader_Interface * li, uint32_t entity, const char * guid, const char * type)
 {	
-	li->CreateFromCallback(guid, type, mb->GetDataWriter(entity));
+	std::function<bool(std::ostream* file)> writer;
+	auto size = mb->GetDataWriter(entity, writer);
+	if (size == 0)
+		return -1;
+	return li->CreateFromCallback(guid, type, writer);
+}
+
+DECLDIR_ECS uint32_t Manager_Base_GetManagerType(ECS::Manager_Base * mb)
+{
+	return mb->GetManagerType();
 }

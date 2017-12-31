@@ -14,9 +14,11 @@ namespace Tests
 		TEST_METHOD(TransformManager_CreateAndDestroy)
 		{
 			auto em = EntityManager_CreateEntityManager_C();
+			
 			TransformManagerInitializationInfo tmii;
 			tmii.entityManager = em;
 			auto tm = TransformManager_CreateTransformManager_C(tmii);
+			Assert::AreEqual(Manager_Base_GetManagerType(tm), Utilz::GUID("TransformManager").id);
 			std::vector<Entity> ents;
 			ents.resize(10000);
 			EntityManager_CreateMultiple_C(em, (uint32_t*)ents.data(), (uint32_t)ents.size());
@@ -45,6 +47,7 @@ namespace Tests
 			TransformManagerInitializationInfo tmii;
 			tmii.entityManager = em;
 			auto tm = TransformManager_CreateTransformManager_C(tmii);
+			Assert::AreEqual(Manager_Base_GetManagerType(tm), Utilz::GUID("TransformManager").id);
 			std::vector<Entity> ents;
 			ents.resize(10000);
 			EntityManager_CreateMultiple_C(em, (uint32_t*)ents.data(), (uint32_t)ents.size());
@@ -67,6 +70,7 @@ namespace Tests
 			TransformManagerInitializationInfo tmii;
 			tmii.entityManager = em;
 			auto tm = TransformManager_CreateTransformManager_C(tmii);
+			Assert::AreEqual(Manager_Base_GetManagerType(tm), Utilz::GUID("TransformManager").id);
 			std::vector<Entity> ents;
 			ents.resize(10000);
 			EntityManager_CreateMultiple_C(em, (uint32_t*)ents.data(), (uint32_t)ents.size());
@@ -106,6 +110,7 @@ namespace Tests
 			TransformManagerInitializationInfo tmii;
 			tmii.entityManager = em;
 			auto tm = TransformManager_CreateTransformManager_C(tmii);
+			Assert::AreEqual(Manager_Base_GetManagerType(tm), Utilz::GUID("TransformManager").id);
 			std::vector<Entity> ents;
 			ents.resize(10000);
 			EntityManager_CreateMultiple_C(em, (uint32_t*)ents.data(), (uint32_t)ents.size());
@@ -177,6 +182,7 @@ namespace Tests
 			TransformManagerInitializationInfo tmii;
 			tmii.entityManager = em;
 			auto tm = TransformManager_CreateTransformManager_C(tmii);
+			Assert::AreEqual(Manager_Base_GetManagerType(tm), Utilz::GUID("TransformManager").id);
 			std::vector<Entity> ents;
 			ents.resize(1000);
 			EntityManager_CreateMultiple_C(em, (uint32_t*)ents.data(), (uint32_t)ents.size());

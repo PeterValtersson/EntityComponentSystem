@@ -42,7 +42,7 @@ namespace ECS
 
 		virtual void CreateFromResource(Entity entity, ResourceHandler::Resource resource)noexcept override;
 		virtual void CreateFromStream(Entity entity, std::istream* stream)noexcept override;
-		virtual std::function<bool(std::ostream* file)> GetDataWriter(Entity entity)const noexcept override;
+		virtual uint64_t GetDataWriter(Entity entity, std::function<bool(std::ostream* file)>& writer)const noexcept override;
 
 		virtual bool IsRegistered(Entity entity)const noexcept override;
 		virtual void Destroy(Entity entity)noexcept override;
@@ -50,7 +50,7 @@ namespace ECS
 		virtual uint32_t GetNumberOfRegisteredEntities()const noexcept override;
 		virtual void GetRegisteredEntities(Entity entities[], uint32_t numEntities)const noexcept override;
 		virtual void Frame()noexcept override;
-
+		virtual Utilz::GUID GetManagerType()const noexcept override;
 
 		virtual uint64_t GetMemoryUsage()const noexcept override;
 		virtual void ShrinkToFit()noexcept override;
