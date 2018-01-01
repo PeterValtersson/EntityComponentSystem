@@ -33,6 +33,11 @@ DECLDIR_ECS void Manager_Base_CreateFromResource_C(ECS::Manager_Base * mb, uint3
 	 mb->CreateFromResource(entity, ResourceHandler::Resource(std::string(guid), std::string(type)));
 }
 
+DECLDIR_ECS void Manager_Base_CreateFromResourceG_C(ECS::Manager_Base * mb, uint32_t entity, uint32_t guid, uint32_t type)
+{
+	mb->CreateFromResource(entity, ResourceHandler::Resource(guid, type));
+}
+
 DECLDIR_ECS long Manager_Base_WriteComponent_C(ECS::Manager_Base * mb, ResourceHandler::Loader_Interface * li, uint32_t entity, const char * guid, const char * type)
 {	
 	std::function<bool(std::ostream* file)> writer;
