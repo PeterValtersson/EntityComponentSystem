@@ -11,6 +11,35 @@ ECS::SceneManager::SceneManager(SceneManagerInitializationInfo ii) : initInfo(ii
 ECS::SceneManager::~SceneManager()
 {
 }
+struct OneShotReadBuf : public std::streambuf
+{
+	OneShotReadBuf(char* s, std::size_t n)
+	{
+		setg(s, s, s + n);
+	}
+};
+void ECS::SceneManager::GetChildResourcesOfSceneResource(ResourceHandler::Resource resource, std::vector<Utilz::GUID>& resources) const noexcept
+{
+
+
+	if (ResourceData<char*> data; resource.GetData(data.GetVoid()) & ResourceHandler::LoadStatus::LOADED)
+	{
+		OneShotReadBuf osrb(data.Get(), data.GetVoid().size);
+		std::istream istr(&osrb);
+		auto stream = &istr;
+
+		decltype(version) ver = 0;
+		stream->read((char*)&ver, sizeof(ver));
+		std::string name;
+		Utilz::readString(stream, name);
+
+		uint32_t numCS = 0;
+		stream->read((char*)&numCS, sizeof(numCS));
+		resources.resize(numCS);
+		stream->read((char*)resources.data(), numCS * sizeof(Utilz::GUID));
+	}
+
+}
 
 void ECS::SceneManager::RemoveEntityFromScene(Entity scene, Entity entity)noexcept
 {
@@ -81,13 +110,6 @@ void ECS::SceneManager::RegisterManager(Manager_Base * manager)noexcept
 
 void ECS::SceneManager::CreateFromResource(Entity entity, ResourceHandler::Resource resource)noexcept
 {
-	struct OneShotReadBuf : public std::streambuf
-	{
-		OneShotReadBuf(char* s, std::size_t n)
-		{
-			setg(s, s, s + n);
-		}
-	};
 	StartProfile;
 	if (auto find = entityToEntry.find(entity); find != entityToEntry.end())
 		return;
@@ -144,6 +166,12 @@ void ECS::SceneManager::CreateFromStream(Entity entity, std::istream * stream)no
 
 	entityToEntry[entity] = index;
 
+	uint32_t numCS = 0;
+	stream->read((char*)&numCS, sizeof(numCS));
+	std::vector<Utilz::GUID> resources(numCS);
+	stream->read((char*)resources.data(), numCS * sizeof(Utilz::GUID));
+	//stream->seekg(size_t(stream->tellg()) + numCS * sizeof(Utilz::GUID));
+
 	uint32_t componentCount = 0;
 	stream->read((char*)&componentCount, sizeof(componentCount));
 	ReadComponents(nullptr, name, entity, stream, componentCount, managers);
@@ -194,6 +222,13 @@ uint64_t ECS::SceneManager::GetDataWriter(Entity entity, std::function<bool(std:
 		};
 		WriteInfo myComponents{ entries.name[findf->second] };
 		size += sizeof(uint32_t) + static_cast<uint64_t>(myComponents.name.size());
+		std::vector<Utilz::GUID> childScenes;
+		uint32_t numChildScenes = 0;
+		for (auto& e : ents)
+			if (auto findC = entityToEntry.find(e); findC != entityToEntry.end())
+				childScenes.push_back(entries.name[findC->second]);
+		size += sizeof(uint32_t) + sizeof(Utilz::GUID)*childScenes.size();
+
 		size += sizeof(uint32_t);
 		for (auto m : managers)
 		{
@@ -267,7 +302,7 @@ uint64_t ECS::SceneManager::GetDataWriter(Entity entity, std::function<bool(std:
 			
 		}
 
-		writer = [entity, this,writeInfo, myComponents, size](std::ostream* file) {
+		writer = [entity, this,writeInfo, myComponents, size, childScenes](std::ostream* file) {
 
 			if (auto find = entityToEntry.find(entity); find == entityToEntry.end())
 				return false;
@@ -278,6 +313,11 @@ uint64_t ECS::SceneManager::GetDataWriter(Entity entity, std::function<bool(std:
 
 				file->write((char*)&version, sizeof(version));
 				Utilz::writeString(file, myComponents.name);
+				
+				uint32_t numCS = uint32_t(childScenes.size());
+				file->write((char*)&numCS, sizeof(numCS));
+				file->write((char*)childScenes.data(), sizeof(Utilz::GUID)*numCS);
+
 				file->write((char*)&myComponents.componentCount, sizeof(myComponents.componentCount));
 				for (auto& comp : myComponents.eInfo)
 				{

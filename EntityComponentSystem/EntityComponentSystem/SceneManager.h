@@ -19,6 +19,7 @@ namespace ECS
 		virtual void RegisterManager(Manager_Base* manager)noexcept override;
 		virtual const char* GetNameOfScene(Entity scene)const noexcept override;
 		virtual const char* GetNameOfEntityInScene(Entity scene, Entity entity)const noexcept override;
+		virtual void GetChildResourcesOfSceneResource(ResourceHandler::Resource resource, std::vector<Utilz::GUID>& resources)const noexcept override;
 
 
 		virtual void CreateFromResource(Entity entity, ResourceHandler::Resource resource)noexcept override;

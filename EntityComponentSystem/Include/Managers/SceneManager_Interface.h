@@ -26,7 +26,7 @@ namespace ECS
 		virtual void GetEntitiesInScene(Entity scene, Entity entities[])const noexcept = 0;
 		virtual const char* GetNameOfScene(Entity scene)const noexcept = 0;
 		virtual const char* GetNameOfEntityInScene(Entity scene, Entity entity)const noexcept = 0;
-
+		virtual void GetChildResourcesOfSceneResource(ResourceHandler::Resource resource, std::vector<Utilz::GUID>& resources)const noexcept = 0;
 		virtual void RegisterManager(Manager_Base* manager)noexcept = 0;
 	protected:
 		SceneManager_Interface() {}
@@ -44,4 +44,6 @@ DECLDIR_ECS void SceneManager_GetEntitiesInScene_C(ECS::SceneManager_Interface* 
 DECLDIR_ECS void SceneManager_RegisterManager_C(ECS::SceneManager_Interface* sm, ECS::Manager_Base* mb);
 DECLDIR_ECS const char* SceneManager_GetNameOfScene_C(ECS::SceneManager_Interface* sm, uint32_t scene);
 DECLDIR_ECS const char* SceneManager_GetNameOfEntityInScene_C(ECS::SceneManager_Interface* sm, uint32_t scene, uint32_t entity);
+DECLDIR_ECS void SceneManager_GetChildResourcesOfSceneResource_C(ECS::SceneManager_Interface* sm, uint32_t guid, uint32_t** resources, uint32_t* numResources);
+DECLDIR_ECS void DeleteUInt32Array_C(uint32_t* arr);
 #endif
