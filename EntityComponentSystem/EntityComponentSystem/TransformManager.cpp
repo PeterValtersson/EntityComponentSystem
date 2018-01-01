@@ -18,7 +18,7 @@ namespace ECS
 	TransformManager::TransformManager(ECS::TransformManagerInitializationInfo initInfo)
 		: initInfo(initInfo)
 	{
-		_ASSERT_EXPR(initInfo.entityManager, "Transform manager must have an entity manager");
+		_ASSERT_EXPR(initInfo.entityManager, L"Transform manager must have an entity manager");
 		initInfo.entityManager->RegisterManagerForDestroyNow(this);
 	}
 	TransformManager::~TransformManager()
@@ -87,7 +87,7 @@ namespace ECS
 	{
 		StartProfile;
 		auto find = entries.find(parent);
-		_ASSERT_EXPR(find.has_value(), "Can't get children from non exitent parent");
+		_ASSERT_EXPR(find.has_value(), L"Can't get children from non exitent parent");
 
 		auto childIndex = entries.getConst<EntryNames::Child>(find->second);
 		size_t i = 0;

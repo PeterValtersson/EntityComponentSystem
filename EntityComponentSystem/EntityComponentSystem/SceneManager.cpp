@@ -3,8 +3,8 @@
 #include <Utilz\StringReadWrite.h>
 ECS::SceneManager::SceneManager(SceneManagerInitializationInfo ii) : initInfo(ii)
 {
-	_ASSERT_EXPR(initInfo.entityManager, "SceneManager must have entitymanager");
-	_ASSERT_EXPR(initInfo.transformManager, "SceneManager must have transform manager");
+	_ASSERT_EXPR(initInfo.entityManager, L"SceneManager must have entitymanager");
+	_ASSERT_EXPR(initInfo.transformManager, L"SceneManager must have transform manager");
 
 }
 
