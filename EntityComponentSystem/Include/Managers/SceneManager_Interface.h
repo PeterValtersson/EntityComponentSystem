@@ -38,10 +38,10 @@ DECLDIR_ECS void SceneManager_Create_C(ECS::SceneManager_Interface* sm, uint32_t
 DECLDIR_ECS void SceneManager_AddEntityToScene_C(ECS::SceneManager_Interface* sm, uint32_t scene, uint32_t entity);
 DECLDIR_ECS void SceneManager_AddEntitiesToScene_C(ECS::SceneManager_Interface* sm, uint32_t scene, uint32_t* entities, uint32_t numEntities);
 DECLDIR_ECS void SceneManager_AddNamedEntityToScene_C(ECS::SceneManager_Interface* sm, uint32_t scene, uint32_t entity, const char* name);
-DECLDIR_ECS void SceneManager_RemoveEntityFromScene(ECS::SceneManager_Interface* sm, uint32_t scene, uint32_t entity);
+DECLDIR_ECS void SceneManager_RemoveEntityFromScene_C(ECS::SceneManager_Interface* sm, uint32_t scene, uint32_t entity);
 DECLDIR_ECS uint32_t SceneManager_GetNumberOfEntitiesInScene_C(ECS::SceneManager_Interface* sm, uint32_t entity);
 DECLDIR_ECS void SceneManager_GetEntitiesInScene_C(ECS::SceneManager_Interface* sm, uint32_t scene, uint32_t* entities);
 DECLDIR_ECS void SceneManager_RegisterManager_C(ECS::SceneManager_Interface* sm, ECS::Manager_Base* mb);
-DECLDIR_ECS const char* SceneManager_GetNameOfScene(ECS::SceneManager_Interface* sm, uint32_t scene);
-DECLDIR_ECS const char* SceneManager_GetNameOfEntityInScene(ECS::SceneManager_Interface* sm, uint32_t scene, uint32_t entity);
+DECLDIR_ECS const char* SceneManager_GetNameOfScene_C(ECS::SceneManager_Interface* sm, uint32_t scene);
+DECLDIR_ECS const char* SceneManager_GetNameOfEntityInScene_C(ECS::SceneManager_Interface* sm, uint32_t scene, uint32_t entity);
 #endif

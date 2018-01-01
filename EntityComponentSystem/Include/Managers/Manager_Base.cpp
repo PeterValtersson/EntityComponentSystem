@@ -13,17 +13,17 @@ DECLDIR_ECS void Manager_Base_DestroyEntities_C(ECS::Manager_Base * mb, const ui
 	mb->DestroyEntities((const ECS::Entity*)entities, numEntities);
 }
 
-DECLDIR_ECS uint32_t Manager_Base_GetNumberOfRegisteredEntities(ECS::Manager_Base * mb)
+DECLDIR_ECS uint32_t Manager_Base_GetNumberOfRegisteredEntities_C(ECS::Manager_Base * mb)
 {
 	return mb->GetNumberOfRegisteredEntities();
 }
 
-DECLDIR_ECS void Manager_Base_GetRegisteredEntities(ECS::Manager_Base * mb, uint32_t * entities, uint32_t numEntities)
+DECLDIR_ECS void Manager_Base_GetRegisteredEntities_C(ECS::Manager_Base * mb, uint32_t * entities, uint32_t numEntities)
 {
 	mb->GetRegisteredEntities((ECS::Entity*)entities, numEntities);
 }
 #include <sstream>
-DECLDIR_ECS void Manager_Base_Frame(ECS::Manager_Base * mb)
+DECLDIR_ECS void Manager_Base_Frame_C(ECS::Manager_Base * mb)
 {
 	mb->Frame();
 }
@@ -47,7 +47,7 @@ DECLDIR_ECS long Manager_Base_WriteComponent_C(ECS::Manager_Base * mb, ResourceH
 	return li->CreateFromCallback(guid, type, writer);
 }
 
-DECLDIR_ECS uint32_t Manager_Base_GetManagerType(ECS::Manager_Base * mb)
+DECLDIR_ECS uint32_t Manager_Base_GetManagerType_C(ECS::Manager_Base * mb)
 {
 	return mb->GetManagerType();
 }
