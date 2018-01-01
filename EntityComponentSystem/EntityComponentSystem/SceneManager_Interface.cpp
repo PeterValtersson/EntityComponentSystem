@@ -55,18 +55,12 @@ DECLDIR_ECS const char * SceneManager_GetNameOfEntityInScene_C(ECS::SceneManager
 	return sm->GetNameOfEntityInScene(scene, entity);
 }
 
-DECLDIR_ECS void SceneManager_GetChildResourcesOfSceneResource_C(ECS::SceneManager_Interface * sm, uint32_t guid, uint32_t ** resources, uint32_t * numResources)
+DECLDIR_ECS uint32_t SceneManager_GetNumberOfChildResourcesOfSceneResource_C(ECS::SceneManager_Interface * sm, uint32_t guid)
 {
-	std::vector<Utilz::GUID> res;
-	sm->GetChildResourcesOfSceneResource(ResourceHandler::Resource(Utilz::GUID(guid), sm->GetManagerType()), res);
-	
-	*resources = new uint32_t[res.size()];
-	memcpy(*resources, res.data(), sizeof(uint32_t)*res.size());
-	*numResources = uint32_t(res.size());
+	return sm->GetNumberOfChildResourcesOfSceneResource(ResourceHandler::Resource(guid, sm->GetManagerType()));
 }
 
-DECLDIR_ECS void DeleteUInt32Array_C(uint32_t* arr)
+DECLDIR_ECS void SceneManager_GetChildResourcesOfSceneResource_C(ECS::SceneManager_Interface * sm, uint32_t guid, uint32_t * resources, uint32_t numResources)
 {
-	delete[] arr;
+	sm->GetChildResourcesOfSceneResource(ResourceHandler::Resource(guid, sm->GetManagerType()), (Utilz::GUID*)resources, numResources);
 }
-

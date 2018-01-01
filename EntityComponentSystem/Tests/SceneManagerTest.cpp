@@ -235,18 +235,18 @@ namespace Tests
 			Assert::AreEqual(long(0), Manager_Base_WriteComponent_C(sm, bl, childScene, "Child", "Scene"));
 			Assert::AreEqual(long(0), Manager_Base_WriteComponent_C(sm, bl, childScene2, "Child2", "Scene"));
 			
-			uint32_t* res;
 			uint32_t numRes = 0;
-			SceneManager_GetChildResourcesOfSceneResource_C(sm, Utilz::GUID("World"), &res, &numRes);
+			numRes = SceneManager_GetNumberOfChildResourcesOfSceneResource_C(sm, Utilz::GUID("World"));
 			Assert::AreEqual(1u, numRes);
+			uint32_t res[2];
+			SceneManager_GetChildResourcesOfSceneResource_C(sm, Utilz::GUID("World"), res, numRes);
 			Assert::AreEqual(Utilz::GUID("Child").id, res[0]);
-			DeleteUInt32Array_C(res);
-			
-			numRes = 0;
-			SceneManager_GetChildResourcesOfSceneResource_C(sm, Utilz::GUID("Child"), &res, &numRes);
+
+			numRes = SceneManager_GetNumberOfChildResourcesOfSceneResource_C(sm, Utilz::GUID("World"));
 			Assert::AreEqual(1u, numRes);
+			SceneManager_GetChildResourcesOfSceneResource_C(sm, Utilz::GUID("Child"), res, numRes);
 			Assert::AreEqual(Utilz::GUID("Child2").id, res[0]);
-			DeleteUInt32Array_C(res);
+	
 
 			em->DestroyAll(true);
 			Assert::AreEqual(0u, tm->GetNumberOfRegisteredEntities());

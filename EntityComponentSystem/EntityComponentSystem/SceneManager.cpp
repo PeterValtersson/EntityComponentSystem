@@ -18,9 +18,8 @@ struct OneShotReadBuf : public std::streambuf
 		setg(s, s, s + n);
 	}
 };
-void ECS::SceneManager::GetChildResourcesOfSceneResource(ResourceHandler::Resource resource, std::vector<Utilz::GUID>& resources) const noexcept
+uint32_t ECS::SceneManager::GetNumberOfChildResourcesOfSceneResource(ResourceHandler::Resource resource) const noexcept
 {
-
 
 	if (ResourceData<char*> data; resource.GetData(data.GetVoid()) & ResourceHandler::LoadStatus::LOADED)
 	{
@@ -35,8 +34,29 @@ void ECS::SceneManager::GetChildResourcesOfSceneResource(ResourceHandler::Resour
 
 		uint32_t numCS = 0;
 		stream->read((char*)&numCS, sizeof(numCS));
-		resources.resize(numCS);
-		stream->read((char*)resources.data(), numCS * sizeof(Utilz::GUID));
+		return numCS;
+	}
+	return 0;
+}
+
+void ECS::SceneManager::GetChildResourcesOfSceneResource(ResourceHandler::Resource resource, Utilz::GUID resources[], uint32_t num) const noexcept
+{
+
+	if (ResourceData<char*> data; resource.GetData(data.GetVoid()) & ResourceHandler::LoadStatus::LOADED)
+	{
+		OneShotReadBuf osrb(data.Get(), data.GetVoid().size);
+		std::istream istr(&osrb);
+		auto stream = &istr;
+
+		decltype(version) ver = 0;
+		stream->read((char*)&ver, sizeof(ver));
+		std::string name;
+		Utilz::readString(stream, name);
+
+		uint32_t numCS = 0;
+		stream->read((char*)&numCS, sizeof(numCS));
+		numCS = std::min(numCS, num);
+		stream->read((char*)resources, numCS * sizeof(Utilz::GUID));
 	}
 
 }
