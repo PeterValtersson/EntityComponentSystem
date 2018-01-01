@@ -22,30 +22,30 @@ namespace Tests
 			TransformManagerInitializationInfo tmii;
 			tmii.entityManager = em;
 			auto tm = TransformManager_CreateTransformManager_C(tmii);
-			Assert::AreEqual(Manager_Base_GetManagerType(tm), Utilz::GUID("TransformManager").id);
+			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilz::GUID("TransformManager").id);
 
 			SceneManagerInitializationInfo smii;
 			smii.entityManager = em;
 			smii.transformManager = tm;
 			auto sm = SceneManager_CreateSceneManager_C(smii);
-			Assert::AreEqual(Utilz::GUID("SceneManager").id, Manager_Base_GetManagerType(sm));
+			Assert::AreEqual(Utilz::GUID("SceneManager").id, Manager_Base_GetManagerType_C(sm));
 
 			Entity scene = em->Create();
 			SceneManager_Create_C(sm, scene, "World");
 			Assert::IsTrue(Manager_Base_IsRegistered_C(sm, scene));
-			Assert::AreEqual("World", SceneManager_GetNameOfScene(sm, scene));
+			Assert::AreEqual("World", SceneManager_GetNameOfScene_C(sm, scene));
 
 			auto ent = em->Create();
 			SceneManager_AddNamedEntityToScene_C(sm, scene, ent, "Char");
 			Assert::AreEqual(1u, SceneManager_GetNumberOfEntitiesInScene_C(sm, scene));
-			Assert::AreEqual("Char", SceneManager_GetNameOfEntityInScene(sm, scene, ent));
+			Assert::AreEqual("Char", SceneManager_GetNameOfEntityInScene_C(sm, scene, ent));
 
-			SceneManager_RemoveEntityFromScene(sm, scene, ent);
+			SceneManager_RemoveEntityFromScene_C(sm, scene, ent);
 			Assert::AreEqual(0u, SceneManager_GetNumberOfEntitiesInScene_C(sm, scene));
-			Assert::IsTrue(SceneManager_GetNameOfEntityInScene(sm, scene, ent) == nullptr);
+			Assert::IsTrue(SceneManager_GetNameOfEntityInScene_C(sm, scene, ent) == nullptr);
 
 			Manager_Base_Destroy_C(sm, scene);
-			Assert::AreEqual(0u, Manager_Base_GetNumberOfRegisteredEntities(sm));
+			Assert::AreEqual(0u, Manager_Base_GetNumberOfRegisteredEntities_C(sm));
 
 			Delete_C(sm);
 			Delete_C(em);
@@ -58,18 +58,18 @@ namespace Tests
 			TransformManagerInitializationInfo tmii;
 			tmii.entityManager = em;
 			auto tm = TransformManager_CreateTransformManager_C(tmii);
-			Assert::AreEqual(Manager_Base_GetManagerType(tm), Utilz::GUID("TransformManager").id);
+			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilz::GUID("TransformManager").id);
 
 			SceneManagerInitializationInfo smii;
 			smii.entityManager = em;
 			smii.transformManager = tm;
 			auto sm = SceneManager_CreateSceneManager_C(smii);
-			Assert::AreEqual(Utilz::GUID("SceneManager").id, Manager_Base_GetManagerType(sm));
+			Assert::AreEqual(Utilz::GUID("SceneManager").id, Manager_Base_GetManagerType_C(sm));
 
 			Entity scene = em->Create();
 			SceneManager_Create_C(sm, scene, "World");
 			Assert::IsTrue(Manager_Base_IsRegistered_C(sm, scene));
-			Assert::AreEqual("World", SceneManager_GetNameOfScene(sm, scene));
+			Assert::AreEqual("World", SceneManager_GetNameOfScene_C(sm, scene));
 
 			std::vector<Entity> ents(1000);
 			em->CreateMultiple(ents.data(), uint32_t(ents.size()));
@@ -77,7 +77,7 @@ namespace Tests
 			{
 				SceneManager_AddNamedEntityToScene_C(sm, scene, ents[i], ("Ent" + std::to_string(i)).c_str());
 				Assert::AreEqual(uint32_t(i+1), SceneManager_GetNumberOfEntitiesInScene_C(sm, scene));
-				Assert::AreEqual(("Ent" + std::to_string(i)).c_str(), SceneManager_GetNameOfEntityInScene(sm, scene, ents[i]));
+				Assert::AreEqual(("Ent" + std::to_string(i)).c_str(), SceneManager_GetNameOfEntityInScene_C(sm, scene, ents[i]));
 			}
 			
 			Assert::AreEqual(1000u, SceneManager_GetNumberOfEntitiesInScene_C(sm, scene));
@@ -86,11 +86,11 @@ namespace Tests
 			for (size_t i = 0; i < ents.size(); i++)
 			{
 				Assert::AreEqual(uint32_t(ents[i]), uint32_t(getEnts[i]));
-				Assert::AreEqual(("Ent" + std::to_string(i)).c_str(), SceneManager_GetNameOfEntityInScene(sm, scene, getEnts[i]));
+				Assert::AreEqual(("Ent" + std::to_string(i)).c_str(), SceneManager_GetNameOfEntityInScene_C(sm, scene, getEnts[i]));
 			}
 
 			Manager_Base_Destroy_C(sm, scene);
-			Assert::AreEqual(0u, Manager_Base_GetNumberOfRegisteredEntities(sm));
+			Assert::AreEqual(0u, Manager_Base_GetNumberOfRegisteredEntities_C(sm));
 			Assert::AreEqual(0u, SceneManager_GetNumberOfEntitiesInScene_C(sm, scene));
 
 			Delete_C(sm);
@@ -104,13 +104,13 @@ namespace Tests
 			TransformManagerInitializationInfo tmii;
 			tmii.entityManager = em;
 			auto tm = TransformManager_CreateTransformManager_C(tmii);
-			Assert::AreEqual(Manager_Base_GetManagerType(tm), Utilz::GUID("TransformManager").id);
+			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilz::GUID("TransformManager").id);
 
 			SceneManagerInitializationInfo smii;
 			smii.entityManager = em;
 			smii.transformManager = tm;
 			auto sm = SceneManager_CreateSceneManager_C(smii);
-			Assert::AreEqual(Utilz::GUID("SceneManager").id, Manager_Base_GetManagerType(sm));
+			Assert::AreEqual(Utilz::GUID("SceneManager").id, Manager_Base_GetManagerType_C(sm));
 			SceneManager_RegisterManager_C(sm, tm);
 
 			Entity scene = em->Create();
@@ -201,14 +201,14 @@ namespace Tests
 			TransformManagerInitializationInfo tmii;
 			tmii.entityManager = em;
 			auto tm = TransformManager_CreateTransformManager_C(tmii);
-			Assert::AreEqual(Manager_Base_GetManagerType(tm), Utilz::GUID("TransformManager").id);
+			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilz::GUID("TransformManager").id);
 
 
 			SceneManagerInitializationInfo smii;
 			smii.entityManager = em;
 			smii.transformManager = tm;
 			auto sm = SceneManager_CreateSceneManager_C(smii);
-			Assert::AreEqual(Utilz::GUID("SceneManager").id, Manager_Base_GetManagerType(sm));
+			Assert::AreEqual(Utilz::GUID("SceneManager").id, Manager_Base_GetManagerType_C(sm));
 			SceneManager_RegisterManager_C(sm, tm);
 
 
