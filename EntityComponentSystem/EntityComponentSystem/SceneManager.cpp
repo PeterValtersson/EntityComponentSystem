@@ -106,15 +106,19 @@ void ECS::SceneManager::CreateFromResource(Entity entity, ResourceHandler::Resou
 }
 
 
-void ReadComponents(ECS::Entity entity, std::istream* stream, uint32_t componentCount, const std::vector<ECS::Manager_Base*>& managers)
+void ReadComponents(ECS::SceneManager* sm, const std::string& name, ECS::Entity entity, std::istream* stream, uint32_t componentCount, const std::vector<ECS::Manager_Base*>& managers)
 {
 	for (uint32_t i = 0; i < componentCount; i++)
 	{
 		Utilz::GUID type;
 		stream->read((char*)&type, sizeof(type));
-		for (auto& m : managers)
-			if (m->GetManagerType() == type)
-				m->CreateFromStream(entity, stream);
+		if (sm && type == sm->GetManagerType())
+			sm->CreateFromResource(entity, ResourceHandler::Resource(name, sm->GetManagerType()));
+		else
+			for (auto& m : managers)
+				if (m->GetManagerType() == type)
+					m->CreateFromStream(entity, stream);
+
 	}
 };
 void ECS::SceneManager::CreateFromStream(Entity entity, std::istream * stream)noexcept
@@ -142,26 +146,23 @@ void ECS::SceneManager::CreateFromStream(Entity entity, std::istream * stream)no
 
 	uint32_t componentCount = 0;
 	stream->read((char*)&componentCount, sizeof(componentCount));
-	ReadComponents(entity, stream, componentCount, managers);
+	ReadComponents(nullptr, name, entity, stream, componentCount, managers);
 
 	uint32_t numEnts = 0;
 	stream->read((char*)&numEnts, sizeof(numEnts));
-	auto& ents = entries.entitiesInScene[index];
-	auto& names = entries.entityNamesInScene[index];
-	auto& map = entries.entityToEntityInScene[index];
-	ents.resize(numEnts);
-	names.resize(numEnts);
-	initInfo.entityManager->CreateMultiple(ents.data(), uint32_t(ents.size()));
+	entries.entitiesInScene[index].resize(numEnts);
+	entries.entityNamesInScene[index].resize(numEnts);
+	initInfo.entityManager->CreateMultiple(entries.entitiesInScene[index].data(), uint32_t(entries.entitiesInScene[index].size()));
 	for (uint32_t i = 0; i < numEnts; i++)
 	{
-		map[ents[i]] = i;
-		Utilz::readString(stream, names[i]);
+		entries.entityToEntityInScene[index][entries.entitiesInScene[index][i]] = i;
+		Utilz::readString(stream, entries.entityNamesInScene[index][i]);
 		stream->read((char*)&componentCount, sizeof(componentCount));
-		ReadComponents(ents[i], stream, componentCount, managers);
+		ReadComponents(this, entries.entityNamesInScene[index][i], entries.entitiesInScene[index][i], stream, componentCount, managers);
 		uint8_t bindToParent = 0;
 		stream->read((char*)&bindToParent, sizeof(bindToParent));
 		if (bindToParent)
-			initInfo.transformManager->BindChild(entity, ents[i], TransformFlags::INHERIT_ALL);
+			initInfo.transformManager->BindChild(entity, entries.entitiesInScene[index][i], TransformFlags::INHERIT_ALL);
 	}
 
 
@@ -219,25 +220,44 @@ uint64_t ECS::SceneManager::GetDataWriter(Entity entity, std::function<bool(std:
 		for(size_t i = 0; i < ents.size(); i++)
 		{
 			auto& e = ents[i];
-		
 			WriteInfo info{ names[i], 0 };
 			size += sizeof(uint32_t) + static_cast<uint64_t>(info.name.size());
 			size += sizeof(uint32_t);
-			for (auto m : managers)
+			if (IsRegistered(e))
 			{
-				if (m->IsRegistered(e))
+				Component comp{ GetManagerType() };
+				comp.writer = [](std::ostream* out)
 				{
-					Component comp{ m->GetManagerType() };
+					return true;
+				};
 				
-					auto writerSize = m->GetDataWriter(e, comp.writer);
-					if (writerSize == 0)
-						continue;
-					size += sizeof(comp.type);
-					size += writerSize;
-					info.eInfo.push_back(std::move(comp));
-				}
 
+				size += sizeof(comp.type);
+				info.eInfo.push_back(std::move(comp));
 			}
+			else
+			{
+				for (auto m : managers)
+				{
+
+					if (m->IsRegistered(e))
+					{
+						Component comp{ m->GetManagerType() };
+						uint64_t writerSize = 0;
+
+						writerSize = m->GetDataWriter(e, comp.writer);
+						if (writerSize == 0)
+							continue;
+
+						size += sizeof(comp.type);
+
+						size += writerSize;
+						info.eInfo.push_back(std::move(comp));
+					}
+
+				}
+			}
+			
 			info.componentCount = static_cast<uint32_t>(info.eInfo.size());
 
 			size += sizeof(info.bindToParent);
@@ -326,6 +346,8 @@ void ECS::SceneManager::AddEntityToScene(Entity scene, Entity entity, const std:
 		return;
 	else
 	{
+		if (auto findChild = entityToEntry.find(entity); findChild != entityToEntry.end())
+			entries.name[findChild->second] = name;
 		auto& sceneMap = entries.entityToEntityInScene[find->second];
 		if (auto findInScene = sceneMap.find(entity); findInScene != sceneMap.end())
 		{
@@ -364,7 +386,10 @@ void ECS::SceneManager::AddEntityToScene(Entity scene, Entity entity)noexcept
 		auto& names = entries.entityNamesInScene[find->second];
 		uint32_t index = static_cast<uint32_t>(ents.size());
 		ents.push_back(entity);
-		names.push_back({});
+		if (auto findChild = entityToEntry.find(entity); findChild != entityToEntry.end())
+			names.push_back(entries.name[findChild->second]);
+		else
+			names.push_back({});
 		sceneMap[entity] = index;
 
 		initInfo.transformManager->Create(entity);
@@ -437,6 +462,8 @@ void ECS::SceneManager::Destroy(Entity entity)noexcept
 		uint32_t last = static_cast<uint32_t>(entries.entity.size() - 1);
 		Entity lastE = entries.entity[last];
 
+		initInfo.entityManager->DestroyMultiple(entries.entitiesInScene[find->second].data(), uint32_t(entries.entitiesInScene[find->second].size()));
+
 		entries.entity[find->second] = entries.entity[last];
 		entries.entitiesInScene[find->second] = entries.entitiesInScene[last];
 		entries.entityToEntityInScene[find->second] = entries.entityToEntityInScene[last];
@@ -465,14 +492,19 @@ void ECS::SceneManager::DestroyEntities(const Entity entities[], uint32_t numEnt
 		{
 			uint32_t last = static_cast<uint32_t>(entries.entity.size() - 1);
 
+			initInfo.entityManager->DestroyMultiple(entries.entitiesInScene[find->second].data(), uint32_t(entries.entitiesInScene[find->second].size()));
+
 
 			entries.entity[find->second] = entries.entity[last];
 			entries.entitiesInScene[find->second] = entries.entitiesInScene[last];
+			entries.entityToEntityInScene[find->second] = entries.entityToEntityInScene[last];
+			entries.entityNamesInScene[find->second] = entries.entityNamesInScene[last];
 			entries.name[find->second] = entries.name[last];
 
 			entries.entity.pop_back();
 			entries.name.pop_back();
 			entries.entitiesInScene.pop_back();
+			entries.entityNamesInScene.pop_back();
 			entries.entityToEntityInScene.pop_back();
 
 			entityToEntry[entries.entity[find->second]] = find->second;
@@ -505,6 +537,16 @@ uint64_t ECS::SceneManager::GetMemoryUsage() const noexcept
 
 void ECS::SceneManager::ShrinkToFit() noexcept
 {
+	for (auto& eis : entries.entitiesInScene)
+		eis.shrink_to_fit();
+	for (auto& eis : entries.entityNamesInScene)
+		eis.shrink_to_fit();
+
+	entries.entitiesInScene.shrink_to_fit();
+	entries.entity.shrink_to_fit();
+	entries.entityNamesInScene.shrink_to_fit();
+	entries.entityToEntityInScene.shrink_to_fit();
+	entries.name.shrink_to_fit();
 }
 
 
@@ -516,7 +558,21 @@ bool ECS::SceneManager::IsRegistered(Entity entity) const noexcept
 
 Utilz::GUID ECS::SceneManager::GetManagerType() const noexcept
 {
-	return "SceneManager";
+	return "Scene";
+}
+
+void ECS::SceneManager::DestroyAll()noexcept
+{
+	for (auto& eis : entries.entitiesInScene)
+		initInfo.entityManager->DestroyMultiple(eis.data(), uint32_t(eis.size()));
+
+	entries.entitiesInScene.clear();
+	entries.entity.clear();
+	entries.entityNamesInScene.clear();
+	entries.entityToEntityInScene.clear();
+	entries.name.clear();
+
+	entityToEntry.clear();
 }
 
 void ECS::SceneManager::WriteToFile(std::ofstream & file) const

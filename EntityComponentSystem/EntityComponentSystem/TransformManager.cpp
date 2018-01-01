@@ -443,7 +443,12 @@ namespace ECS
 
 	Utilz::GUID TransformManager::GetManagerType() const noexcept
 	{
-		return "TransformManager";
+		return "Transform";
+	}
+
+	void TransformManager::DestroyAll()noexcept
+	{
+		entries.clear();
 	}
 
 	void TransformManager::WriteToFile(std::ofstream & file) const

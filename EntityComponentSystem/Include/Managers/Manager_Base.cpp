@@ -13,6 +13,11 @@ DECLDIR_ECS void Manager_Base_DestroyEntities_C(ECS::Manager_Base * mb, const ui
 	mb->DestroyEntities((const ECS::Entity*)entities, numEntities);
 }
 
+DECLDIR_ECS void Manager_Base_DestroyAll_C(ECS::Manager_Base * mb)
+{
+	mb->DestroyAll();
+}
+
 DECLDIR_ECS uint32_t Manager_Base_GetNumberOfRegisteredEntities_C(ECS::Manager_Base * mb)
 {
 	return mb->GetNumberOfRegisteredEntities();

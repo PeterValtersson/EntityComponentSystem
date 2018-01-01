@@ -28,7 +28,7 @@ namespace ECS
 		virtual bool IsRegistered(Entity entity)const noexcept override;
 		virtual void Destroy(Entity entity)noexcept override;
 		virtual void DestroyEntities(const Entity entities[], uint32_t numEntities)noexcept override;
-
+		virtual void DestroyAll()noexcept override;
 		virtual uint32_t GetNumberOfRegisteredEntities()const noexcept override;
 		virtual void GetRegisteredEntities(Entity entities[], uint32_t numEntities)const noexcept override;
 

@@ -21,7 +21,8 @@ namespace ECS
 		virtual uint64_t GetDataWriter(Entity entity, std::function<bool(std::ostream* file)>& writer)const noexcept = 0;
 		virtual void Destroy(Entity entity)noexcept = 0;
 		virtual void DestroyEntities(const Entity entities[], uint32_t numEntities)noexcept = 0;
-	
+		virtual void DestroyAll()noexcept = 0;
+
 		virtual uint32_t GetNumberOfRegisteredEntities()const noexcept = 0;
 		virtual void GetRegisteredEntities(Entity entities[], uint32_t numEntities)const noexcept = 0;
 	
@@ -37,6 +38,7 @@ namespace ECS
 DECLDIR_ECS bool Manager_Base_IsRegistered_C(ECS::Manager_Base* mb, uint32_t entity);
 DECLDIR_ECS void Manager_Base_Destroy_C(ECS::Manager_Base* mb, uint32_t entity);
 DECLDIR_ECS void Manager_Base_DestroyEntities_C(ECS::Manager_Base* mb, const uint32_t entities[], uint32_t numEntities);
+DECLDIR_ECS void Manager_Base_DestroyAll_C(ECS::Manager_Base* mb);
 DECLDIR_ECS uint32_t Manager_Base_GetNumberOfRegisteredEntities_C(ECS::Manager_Base* mb);
 DECLDIR_ECS void Manager_Base_GetRegisteredEntities_C(ECS::Manager_Base* mb, uint32_t* entities, uint32_t numEntities);
 DECLDIR_ECS void Manager_Base_Frame_C(ECS::Manager_Base* mb);

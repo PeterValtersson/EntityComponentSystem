@@ -116,7 +116,7 @@ namespace ECS
 			{
 				entities[i] = Entity(generation[i], i);
 				for (auto m : managers)
-					m->DestroyEntities(entities, static_cast<uint32_t>(generation.size()));
+					m->DestroyAll();
 			}
 		}
 		generation.clear();

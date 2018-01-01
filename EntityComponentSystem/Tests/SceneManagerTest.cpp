@@ -22,13 +22,13 @@ namespace Tests
 			TransformManagerInitializationInfo tmii;
 			tmii.entityManager = em;
 			auto tm = TransformManager_CreateTransformManager_C(tmii);
-			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilz::GUID("TransformManager").id);
+			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilz::GUID("Transform").id);
 
 			SceneManagerInitializationInfo smii;
 			smii.entityManager = em;
 			smii.transformManager = tm;
 			auto sm = SceneManager_CreateSceneManager_C(smii);
-			Assert::AreEqual(Utilz::GUID("SceneManager").id, Manager_Base_GetManagerType_C(sm));
+			Assert::AreEqual(Utilz::GUID("Scene").id, Manager_Base_GetManagerType_C(sm));
 
 			Entity scene = em->Create();
 			SceneManager_Create_C(sm, scene, "World");
@@ -58,13 +58,13 @@ namespace Tests
 			TransformManagerInitializationInfo tmii;
 			tmii.entityManager = em;
 			auto tm = TransformManager_CreateTransformManager_C(tmii);
-			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilz::GUID("TransformManager").id);
+			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilz::GUID("Transform").id);
 
 			SceneManagerInitializationInfo smii;
 			smii.entityManager = em;
 			smii.transformManager = tm;
 			auto sm = SceneManager_CreateSceneManager_C(smii);
-			Assert::AreEqual(Utilz::GUID("SceneManager").id, Manager_Base_GetManagerType_C(sm));
+			Assert::AreEqual(Utilz::GUID("Scene").id, Manager_Base_GetManagerType_C(sm));
 
 			Entity scene = em->Create();
 			SceneManager_Create_C(sm, scene, "World");
@@ -104,13 +104,13 @@ namespace Tests
 			TransformManagerInitializationInfo tmii;
 			tmii.entityManager = em;
 			auto tm = TransformManager_CreateTransformManager_C(tmii);
-			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilz::GUID("TransformManager").id);
+			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilz::GUID("Transform").id);
 
 			SceneManagerInitializationInfo smii;
 			smii.entityManager = em;
 			smii.transformManager = tm;
 			auto sm = SceneManager_CreateSceneManager_C(smii);
-			Assert::AreEqual(Utilz::GUID("SceneManager").id, Manager_Base_GetManagerType_C(sm));
+			Assert::AreEqual(Utilz::GUID("Scene").id, Manager_Base_GetManagerType_C(sm));
 			SceneManager_RegisterManager_C(sm, tm);
 
 			Entity scene = em->Create();
@@ -201,16 +201,17 @@ namespace Tests
 			TransformManagerInitializationInfo tmii;
 			tmii.entityManager = em;
 			auto tm = TransformManager_CreateTransformManager_C(tmii);
-			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilz::GUID("TransformManager").id);
+			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilz::GUID("Transform").id);
 
 
 			SceneManagerInitializationInfo smii;
 			smii.entityManager = em;
 			smii.transformManager = tm;
 			auto sm = SceneManager_CreateSceneManager_C(smii);
-			Assert::AreEqual(Utilz::GUID("SceneManager").id, Manager_Base_GetManagerType_C(sm));
+			Assert::AreEqual(Utilz::GUID("Scene").id, Manager_Base_GetManagerType_C(sm));
 			SceneManager_RegisterManager_C(sm, tm);
-
+			em->RegisterManagerForDestroyNow(tm);
+			em->RegisterManagerForDestroyNow(sm);
 
 			auto scene = em->Create();
 			sm->Create(scene, "World");
@@ -218,20 +219,40 @@ namespace Tests
 			auto e1 = em->Create();
 			sm->AddEntityToScene(scene, e1, "E1");
 			auto e2 = em->Create();
-			sm->AddEntityToScene(scene, e2, "E2");
 			tm->SetPosition(e1, { 0.0f, 1.0f });
 			tm->SetPosition(e2, { 0.0f, 0.0f,1.0f });
+			
+			auto childScene = em->Create();
+			sm->Create(childScene, "Child");
+			sm->AddEntityToScene(scene, childScene);
+			sm->AddEntityToScene(childScene, e2, "E2");
+
+			auto childScene2 = em->Create();
+			sm->Create(childScene2, "Child");
+			sm->AddEntityToScene(childScene, childScene2, "Child2");
+
 			Assert::AreEqual(long(0), Manager_Base_WriteComponent_C(sm, bl, scene, "World", "Scene"));
+			Assert::AreEqual(long(0), Manager_Base_WriteComponent_C(sm, bl, childScene, "Child", "Scene"));
+			Assert::AreEqual(long(0), Manager_Base_WriteComponent_C(sm, bl, childScene2, "Child2", "Scene"));
+			em->DestroyAll(true);
+			Assert::AreEqual(0u, tm->GetNumberOfRegisteredEntities());
+			Assert::AreEqual(0u, sm->GetNumberOfRegisteredEntities());
 
 			auto sceneNew = em->Create();
 			Manager_Base_CreateFromResource_C(sm, sceneNew, "World", "Scene");
-			Assert::AreEqual(2u, sm->GetNumberOfRegisteredEntities());
+			Assert::AreEqual(3u, sm->GetNumberOfRegisteredEntities());
 			Assert::AreEqual(2u, sm->GetNumberOfEntitiesInScene(sceneNew));
 			Assert::AreEqual("World", sm->GetNameOfScene(sceneNew));
 			Entity ents[2];
 			sm->GetEntitiesInScene(sceneNew, ents);
 			Assert::AreEqual("E1", sm->GetNameOfEntityInScene(sceneNew, ents[0]));
-			Assert::AreEqual("E2", sm->GetNameOfEntityInScene(sceneNew, ents[1]));
+			Assert::AreEqual("Child", sm->GetNameOfEntityInScene(sceneNew, ents[1]));
+			Entity ents2[2];
+			Assert::IsTrue(sm->IsRegistered(ents[1]));
+			Assert::AreEqual(2u, sm->GetNumberOfEntitiesInScene(ents[1]));
+			sm->GetEntitiesInScene(ents[1], ents2);
+			Assert::AreEqual("E2", sm->GetNameOfEntityInScene(ents[1], ents2[0]));
+			Assert::AreEqual("Child2", sm->GetNameOfEntityInScene(ents[1], ents2[1]));
 
 			Delete_C(sm);
 			Delete_C(tm);
