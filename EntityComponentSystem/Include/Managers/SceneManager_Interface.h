@@ -3,12 +3,14 @@
 #include <Entity.h>
 #include <DLLExport.h>
 #include "Manager_Base.h"
+#include "TransformManager_Interface.h"
 namespace ECS
 {
 	struct SceneManagerInitializationInfo
 	{
-		EntityManager_Interface* entityManager;
-		void* pNext;
+		EntityManager_Interface* entityManager = nullptr;
+		TransformManager_Interface* transformManager = nullptr;
+		void* pNext = nullptr;
 	};
 	class SceneManager_Interface : public Manager_Base
 	{

@@ -55,7 +55,7 @@ namespace ECS
 		virtual void BindChild(Entity parent, Entity child, TransformFlags flags)noexcept = 0;
 		virtual void UnbindParent(Entity entity, TransformFlags flags)noexcept = 0;
 		virtual void UnbindAllChildren(Entity entity, TransformFlags flags)noexcept = 0;
-		virtual bool GetParent(Entity entity, Entity& parent)const noexcept = 0;
+		virtual Entity GetParent(Entity entity)const noexcept = 0;
 		virtual uint32_t GetNumberOfChildren(Entity entity)const noexcept = 0;
 		virtual void GetChildren(Entity parent, Entity children[])const noexcept = 0;
 
@@ -86,7 +86,7 @@ DECLDIR_ECS void TransformManager_Create_C(ECS::TransformManager_Interface* tm, 
 DECLDIR_ECS void TransformManager_BindChild_C(ECS::TransformManager_Interface*tm, uint32_t parent, uint32_t child, uint8_t flags);
 DECLDIR_ECS void TransformManager_UnbindParent_C(ECS::TransformManager_Interface*tm, uint32_t child, uint8_t flags);
 DECLDIR_ECS void TransformManager_UnbindAllChildren_C(ECS::TransformManager_Interface*tm, uint32_t entity, uint8_t flags);
-DECLDIR_ECS bool TransformManager_GetParent_C(ECS::TransformManager_Interface*tm, uint32_t entity, uint32_t* parent);
+DECLDIR_ECS uint32_t TransformManager_GetParent_C(ECS::TransformManager_Interface*tm, uint32_t entity);
 DECLDIR_ECS uint32_t TransformManager_GetNumberOfChildren_C(ECS::TransformManager_Interface*tm, uint32_t entity);
 DECLDIR_ECS void TransformManager_GetChildren_C(ECS::TransformManager_Interface*tm, uint32_t entity, uint32_t* children);
 DECLDIR_ECS void TransformManager_SetPosition_C(ECS::TransformManager_Interface*tm, uint32_t entity, ECS::Vector position);

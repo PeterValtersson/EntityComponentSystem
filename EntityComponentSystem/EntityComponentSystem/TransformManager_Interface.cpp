@@ -26,9 +26,9 @@ DECLDIR_ECS void TransformManager_UnbindAllChildren_C(ECS::TransformManager_Inte
 	tm->UnbindAllChildren(entity, ECS::TransformFlags(flags));
 }
 
-DECLDIR_ECS bool TransformManager_GetParent_C(ECS::TransformManager_Interface * tm, uint32_t entity, uint32_t * parent)
+DECLDIR_ECS uint32_t TransformManager_GetParent_C(ECS::TransformManager_Interface * tm, uint32_t entity)
 {
-	return tm->GetParent(entity, *(ECS::Entity*)parent);
+	return tm->GetParent(entity);
 }
 
 DECLDIR_ECS uint32_t TransformManager_GetNumberOfChildren_C(ECS::TransformManager_Interface * tm, uint32_t entity)

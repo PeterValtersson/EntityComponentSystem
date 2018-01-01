@@ -118,18 +118,17 @@ namespace ECS
 		}
 	}
 
-	bool TransformManager::GetParent(Entity entity, Entity & parent) const noexcept
+	Entity TransformManager::GetParent(Entity entity) const noexcept
 	{
 		StartProfile;
 		if (auto find = entries.find(entity); !find.has_value())
-			return false;
+			return -1;
 		else
 		{
 			auto parentIndex = entries.getConst<EntryNames::Parent>(find->second);
 			if (parentIndex == -1)
 				return false;
-			parent = entries.getConst<EntryNames::Entity>(parentIndex);
-			return true;
+			return entries.getConst<EntryNames::Entity>(parentIndex);
 		}
 	}
 
