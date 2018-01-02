@@ -231,43 +231,51 @@ namespace Tests
 			sm->Create(childScene2, "Child");
 			sm->AddEntityToScene(childScene, childScene2, "Child2");
 
-			Assert::AreEqual(long(0), Manager_Base_WriteComponent_C(sm, bl, scene, "World", "Scene"));
-			Assert::AreEqual(long(0), Manager_Base_WriteComponent_C(sm, bl, childScene, "Child", "Scene"));
-			Assert::AreEqual(long(0), Manager_Base_WriteComponent_C(sm, bl, childScene2, "Child2", "Scene"));
+			{
+				Assert::AreEqual(long(0), Manager_Base_WriteComponent_C(sm, bl, scene, "World", "Scene"));
+				sm->SetNameOfScene(scene, "NewWorld");
+				Assert::AreEqual(long(0), Manager_Base_WriteComponent_C(sm, bl, scene, "World", "Scene"));
+				Assert::AreEqual(long(0), Manager_Base_WriteComponent_C(sm, bl, childScene, "Child", "Scene"));
+				Assert::AreEqual(long(0), Manager_Base_WriteComponent_C(sm, bl, childScene2, "Child2", "Scene"));
+
+				uint32_t numRes = 0;
+				numRes = SceneManager_GetNumberOfChildResourcesOfSceneResource_C(sm, Utilz::GUID("World"));
+				Assert::AreEqual(1u, numRes);
+				uint32_t res[2];
+				SceneManager_GetChildResourcesOfSceneResource_C(sm, Utilz::GUID("World"), res, numRes);
+				Assert::AreEqual(Utilz::GUID("Child").id, res[0]);
+
+				numRes = SceneManager_GetNumberOfChildResourcesOfSceneResource_C(sm, Utilz::GUID("World"));
+				Assert::AreEqual(1u, numRes);
+				SceneManager_GetChildResourcesOfSceneResource_C(sm, Utilz::GUID("Child"), res, numRes);
+				Assert::AreEqual(Utilz::GUID("Child2").id, res[0]);
+
+
+				em->DestroyAll(true);
+				Assert::AreEqual(0u, tm->GetNumberOfRegisteredEntities());
+				Assert::AreEqual(0u, sm->GetNumberOfRegisteredEntities());
+
+				auto sceneNew = em->Create();
+				Manager_Base_CreateFromResourceG_C(sm, sceneNew, Utilz::GUID("World").id, Utilz::GUID("Scene").id);
+				Assert::AreEqual(3u, sm->GetNumberOfRegisteredEntities());
+				Assert::AreEqual(2u, sm->GetNumberOfEntitiesInScene(sceneNew));
+				Assert::AreEqual(5u, tm->GetNumberOfRegisteredEntities());
+				Assert::IsTrue(tm->IsRegistered(sceneNew));
+				Assert::AreEqual("NewWorld", sm->GetNameOfScene(sceneNew));
+				Entity ents[2];
+				sm->GetEntitiesInScene(sceneNew, ents);
+				Assert::AreEqual("E1", sm->GetNameOfEntityInScene(sceneNew, ents[0]));
+				Assert::AreEqual("Child", sm->GetNameOfEntityInScene(sceneNew, ents[1]));
+				Entity ents2[2];
+				Assert::IsTrue(sm->IsRegistered(ents[1]));
+				Assert::AreEqual(2u, sm->GetNumberOfEntitiesInScene(ents[1]));
+				sm->GetEntitiesInScene(ents[1], ents2);
+				Assert::AreEqual("E2", sm->GetNameOfEntityInScene(ents[1], ents2[0]));
+				Assert::AreEqual("Child2", sm->GetNameOfEntityInScene(ents[1], ents2[1]));
+			}
+
+
 			
-			uint32_t numRes = 0;
-			numRes = SceneManager_GetNumberOfChildResourcesOfSceneResource_C(sm, Utilz::GUID("World"));
-			Assert::AreEqual(1u, numRes);
-			uint32_t res[2];
-			SceneManager_GetChildResourcesOfSceneResource_C(sm, Utilz::GUID("World"), res, numRes);
-			Assert::AreEqual(Utilz::GUID("Child").id, res[0]);
-
-			numRes = SceneManager_GetNumberOfChildResourcesOfSceneResource_C(sm, Utilz::GUID("World"));
-			Assert::AreEqual(1u, numRes);
-			SceneManager_GetChildResourcesOfSceneResource_C(sm, Utilz::GUID("Child"), res, numRes);
-			Assert::AreEqual(Utilz::GUID("Child2").id, res[0]);
-	
-
-			em->DestroyAll(true);
-			Assert::AreEqual(0u, tm->GetNumberOfRegisteredEntities());
-			Assert::AreEqual(0u, sm->GetNumberOfRegisteredEntities());
-
-			auto sceneNew = em->Create();
-			Manager_Base_CreateFromResource_C(sm, sceneNew, "World", "Scene");
-			Assert::AreEqual(3u, sm->GetNumberOfRegisteredEntities());
-			Assert::AreEqual(2u, sm->GetNumberOfEntitiesInScene(sceneNew));
-			Assert::AreEqual("World", sm->GetNameOfScene(sceneNew));
-			Entity ents[2];
-			sm->GetEntitiesInScene(sceneNew, ents);
-			Assert::AreEqual("E1", sm->GetNameOfEntityInScene(sceneNew, ents[0]));
-			Assert::AreEqual("Child", sm->GetNameOfEntityInScene(sceneNew, ents[1]));
-			Entity ents2[2];
-			Assert::IsTrue(sm->IsRegistered(ents[1]));
-			Assert::AreEqual(2u, sm->GetNumberOfEntitiesInScene(ents[1]));
-			sm->GetEntitiesInScene(ents[1], ents2);
-			Assert::AreEqual("E2", sm->GetNameOfEntityInScene(ents[1], ents2[0]));
-			Assert::AreEqual("Child2", sm->GetNameOfEntityInScene(ents[1], ents2[1]));
-
 			Delete_C(sm);
 			Delete_C(tm);
 			Delete_C(em);

@@ -49,7 +49,10 @@ DECLDIR_ECS long Manager_Base_WriteComponent_C(ECS::Manager_Base * mb, ResourceH
 	auto size = mb->GetDataWriter(entity, writer);
 	if (size == 0)
 		return -1;
-	return li->CreateFromCallback(guid, type, writer);
+	auto res = li->CreateFromCallback(guid, type, writer);
+	if (res == 1)
+		return li->WriteFromCallback(std::string(guid), std::string(type), size, writer);
+	return res;
 }
 
 DECLDIR_ECS uint32_t Manager_Base_GetManagerType_C(ECS::Manager_Base * mb)

@@ -11,6 +11,7 @@ ECS::SceneManager::SceneManager(SceneManagerInitializationInfo ii) : initInfo(ii
 ECS::SceneManager::~SceneManager()
 {
 }
+
 struct OneShotReadBuf : public std::streambuf
 {
 	OneShotReadBuf(char* s, std::size_t n)
@@ -20,6 +21,7 @@ struct OneShotReadBuf : public std::streambuf
 };
 uint32_t ECS::SceneManager::GetNumberOfChildResourcesOfSceneResource(ResourceHandler::Resource resource) const noexcept
 {
+	StartProfile;
 
 	if (ResourceData<char*> data; resource.GetData(data.GetVoid()) & ResourceHandler::LoadStatus::LOADED)
 	{
@@ -41,7 +43,7 @@ uint32_t ECS::SceneManager::GetNumberOfChildResourcesOfSceneResource(ResourceHan
 
 void ECS::SceneManager::GetChildResourcesOfSceneResource(ResourceHandler::Resource resource, Utilz::GUID resources[], uint32_t num) const noexcept
 {
-
+	StartProfile;
 	if (ResourceData<char*> data; resource.GetData(data.GetVoid()) & ResourceHandler::LoadStatus::LOADED)
 	{
 		OneShotReadBuf osrb(data.Get(), data.GetVoid().size);
@@ -63,6 +65,7 @@ void ECS::SceneManager::GetChildResourcesOfSceneResource(ResourceHandler::Resour
 
 void ECS::SceneManager::RemoveEntityFromScene(Entity scene, Entity entity)noexcept
 {
+	StartProfile;
 	if (auto find = entityToEntry.find(scene); find == entityToEntry.end())
 		return;
 	else
@@ -91,7 +94,7 @@ void ECS::SceneManager::RemoveEntityFromScene(Entity scene, Entity entity)noexce
 
 const char * ECS::SceneManager::GetNameOfEntityInScene(Entity scene, Entity entity) const noexcept
 {
-
+	StartProfile;
 	if (auto find = entityToEntry.find(scene); find == entityToEntry.end())
 		return nullptr;
 	else
@@ -108,6 +111,7 @@ const char * ECS::SceneManager::GetNameOfEntityInScene(Entity scene, Entity enti
 
 const char * ECS::SceneManager::GetNameOfScene(Entity scene) const noexcept
 {
+	StartProfile;
 	if (auto find = entityToEntry.find(scene); find == entityToEntry.end())
 		return nullptr;
 	else
@@ -116,7 +120,16 @@ const char * ECS::SceneManager::GetNameOfScene(Entity scene) const noexcept
 	}
 }
 
-
+void ECS::SceneManager::SetNameOfScene(Entity scene, const std::string & name)noexcept
+{
+	StartProfile;
+	if (auto find = entityToEntry.find(scene); find == entityToEntry.end())
+		return;
+	else
+	{
+		 entries.name[find->second] = name;
+	}
+}
 
 void ECS::SceneManager::RegisterManager(Manager_Base * manager)noexcept
 {
@@ -150,6 +163,7 @@ void ECS::SceneManager::CreateFromResource(Entity entity, ResourceHandler::Resou
 
 void ReadComponents(ECS::SceneManager* sm, const std::string& name, ECS::Entity entity, std::istream* stream, uint32_t componentCount, const std::vector<ECS::Manager_Base*>& managers)
 {
+	StartProfile;
 	for (uint32_t i = 0; i < componentCount; i++)
 	{
 		Utilz::GUID type;
@@ -165,6 +179,7 @@ void ReadComponents(ECS::SceneManager* sm, const std::string& name, ECS::Entity 
 };
 void ECS::SceneManager::CreateFromStream(Entity entity, std::istream * stream)noexcept
 {
+	StartProfile;
 	if (auto find = entityToEntry.find(entity); find != entityToEntry.end())
 		return;
 
@@ -218,6 +233,7 @@ void ECS::SceneManager::CreateFromStream(Entity entity, std::istream * stream)no
 
 uint64_t ECS::SceneManager::GetDataWriter(Entity entity, std::function<bool(std::ostream* file)>& writer)const noexcept
 {
+	StartProfile;
 	if (auto findf = entityToEntry.find(entity); findf == entityToEntry.end())
 		return 0;
 	else
@@ -597,6 +613,7 @@ uint64_t ECS::SceneManager::GetMemoryUsage() const noexcept
 
 void ECS::SceneManager::ShrinkToFit() noexcept
 {
+	StartProfile;
 	for (auto& eis : entries.entitiesInScene)
 		eis.shrink_to_fit();
 	for (auto& eis : entries.entityNamesInScene)
@@ -623,6 +640,7 @@ Utilz::GUID ECS::SceneManager::GetManagerType() const noexcept
 
 void ECS::SceneManager::DestroyAll()noexcept
 {
+	StartProfile;
 	for (auto& eis : entries.entitiesInScene)
 		initInfo.entityManager->DestroyMultiple(eis.data(), uint32_t(eis.size()));
 

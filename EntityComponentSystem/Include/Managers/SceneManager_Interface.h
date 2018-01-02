@@ -24,6 +24,7 @@ namespace ECS
 		virtual void RemoveEntityFromScene(Entity scene, Entity entity)noexcept = 0;
 		virtual uint32_t GetNumberOfEntitiesInScene(Entity scene)const noexcept = 0;
 		virtual void GetEntitiesInScene(Entity scene, Entity entities[])const noexcept = 0;
+		virtual void SetNameOfScene(Entity scene, const std::string& name)noexcept = 0;
 		virtual const char* GetNameOfScene(Entity scene)const noexcept = 0;
 		virtual const char* GetNameOfEntityInScene(Entity scene, Entity entity)const noexcept = 0;
 		virtual uint32_t GetNumberOfChildResourcesOfSceneResource(ResourceHandler::Resource resource)const noexcept = 0;
@@ -43,6 +44,7 @@ DECLDIR_ECS void SceneManager_RemoveEntityFromScene_C(ECS::SceneManager_Interfac
 DECLDIR_ECS uint32_t SceneManager_GetNumberOfEntitiesInScene_C(ECS::SceneManager_Interface* sm, uint32_t entity);
 DECLDIR_ECS void SceneManager_GetEntitiesInScene_C(ECS::SceneManager_Interface* sm, uint32_t scene, uint32_t* entities);
 DECLDIR_ECS void SceneManager_RegisterManager_C(ECS::SceneManager_Interface* sm, ECS::Manager_Base* mb);
+DECLDIR_ECS void SceneManager_SetNameOfScene_C(ECS::SceneManager_Interface* sm, uint32_t scene, const char* name);
 DECLDIR_ECS const char* SceneManager_GetNameOfScene_C(ECS::SceneManager_Interface* sm, uint32_t scene);
 DECLDIR_ECS const char* SceneManager_GetNameOfEntityInScene_C(ECS::SceneManager_Interface* sm, uint32_t scene, uint32_t entity);
 DECLDIR_ECS uint32_t SceneManager_GetNumberOfChildResourcesOfSceneResource_C(ECS::SceneManager_Interface* sm, uint32_t guid);

@@ -45,6 +45,11 @@ DECLDIR_ECS void SceneManager_RegisterManager_C(ECS::SceneManager_Interface * sm
 	sm->RegisterManager(mb);
 }
 
+DECLDIR_ECS void SceneManager_SetNameOfScene_C(ECS::SceneManager_Interface * sm, uint32_t scene, const char * name)
+{
+	sm->SetNameOfScene(scene, name);
+}
+
 DECLDIR_ECS const char * SceneManager_GetNameOfScene_C(ECS::SceneManager_Interface * sm, uint32_t scene)
 {
 	return sm->GetNameOfScene(scene);
