@@ -92,6 +92,24 @@ void ECS::SceneManager::RemoveEntityFromScene(Entity scene, Entity entity)noexce
 	}
 }
 
+void ECS::SceneManager::SetNameOfEntityInScene(Entity scene, Entity entity, const std::string & name)noexcept
+{
+	StartProfile;
+	if (auto find = entityToEntry.find(scene); find == entityToEntry.end())
+		return;
+	else
+	{
+		auto& map = entries.entityToEntityInScene[find->second];
+		if (auto findE = map.find(entity); findE == map.end())
+			return;
+		else
+		{
+			entries.entityNamesInScene[find->second][findE->second] = name;
+			return;
+		}
+	}
+}
+
 const char * ECS::SceneManager::GetNameOfEntityInScene(Entity scene, Entity entity) const noexcept
 {
 	StartProfile;

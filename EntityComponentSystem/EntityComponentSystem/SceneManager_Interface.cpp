@@ -50,6 +50,11 @@ DECLDIR_ECS void SceneManager_SetNameOfScene_C(ECS::SceneManager_Interface * sm,
 	sm->SetNameOfScene(scene, name);
 }
 
+DECLDIR_ECS void SceneManager_SetNameOfEntityScene_C(ECS::SceneManager_Interface * sm, uint32_t scene, uint32_t entity, const char * name)
+{
+	sm->SetNameOfEntityInScene(scene, entity, name);
+}
+
 DECLDIR_ECS const char * SceneManager_GetNameOfScene_C(ECS::SceneManager_Interface * sm, uint32_t scene)
 {
 	return sm->GetNameOfScene(scene);
