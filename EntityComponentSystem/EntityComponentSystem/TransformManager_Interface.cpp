@@ -71,6 +71,21 @@ DECLDIR_ECS void TransformManager_UnregisterTransformUser(ECS::TransformManager_
 	tm->UnregisterTransformUser(tu);
 }
 
+DECLDIR_ECS void TransformManager_GetPosition_NoReturn_C(ECS::TransformManager_Interface * tm, uint32_t entity, ECS::Vector * position)
+{
+	*position = tm->GetPosition(entity);
+}
+
+DECLDIR_ECS void TransformManager_GetRotation_NoReturn_C(ECS::TransformManager_Interface * tm, uint32_t entity, ECS::Vector * rotation)
+{
+	*rotation = tm->GetRotation(entity);
+}
+
+DECLDIR_ECS void TransformManager_GetScale_NoReturn_C(ECS::TransformManager_Interface * tm, uint32_t entity, ECS::Vector * scale)
+{
+	*scale = tm->GetScale(entity);
+}
+
 DECLDIR_ECS ECS::Vector TransformManager_GetRotation_C(ECS::TransformManager_Interface * tm, uint32_t entity)
 {
 	return tm->GetRotation(entity);
