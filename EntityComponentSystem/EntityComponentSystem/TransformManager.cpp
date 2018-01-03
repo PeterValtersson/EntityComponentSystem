@@ -1,6 +1,7 @@
 #include "TransformManager.h"
 #include <algorithm>
 #include <Profiler.h>
+
 #undef min
 #undef max
 
@@ -448,11 +449,13 @@ namespace ECS
 
 	void TransformManager::DestroyAll()noexcept
 	{
+		StartProfile;
 		entries.clear();
 	}
 
 	void TransformManager::WriteToFile(std::ofstream & file) const
 	{
+		StartProfile;
 		file.write((char*)&version, sizeof(version));
 		uint32_t used = static_cast<uint32_t>(entries.size());
 		file.write((char*)&used, sizeof(used));
@@ -466,6 +469,7 @@ namespace ECS
 	}
 	void TransformManager::CreateFromFile(std::ifstream & file)
 	{
+		StartProfile;
 		uint32_t ver = 0;
 		file.read((char*)&ver, sizeof(ver));
 		uint32_t used = 0;
@@ -487,6 +491,7 @@ namespace ECS
 	}
 	void TransformManager::UpdateDirtyEntities()noexcept
 	{
+		StartProfile;
 		auto transforms = entries.getConst<EntryNames::Transform>();
 		std::vector<uint32_t> entitiesToApplyParentTransformTo;
 	

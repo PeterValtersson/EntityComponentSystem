@@ -51,7 +51,9 @@ DECLDIR_ECS long Manager_Base_WriteComponent_C(ECS::Manager_Base * mb, ResourceH
 		return -1;
 	auto res = li->CreateFromCallback(guid, type, writer);
 	if (res == 1)
-		return li->WriteFromCallback(std::string(guid), std::string(type), size, writer);
+		res =  li->WriteFromCallback(std::string(guid), std::string(type), size, writer);
+	if (res == 0)
+		ResourceHandler::Resource(std::string(guid), std::string(type), true);
 	return res;
 }
 
