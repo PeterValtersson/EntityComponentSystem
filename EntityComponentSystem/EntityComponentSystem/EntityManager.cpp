@@ -111,13 +111,9 @@ namespace ECS
 		StartProfile;
 		if (immediate)
 		{
-			auto entities = new Entity[generation.size()];
-			for (uint32_t i = 0; i < generation.size(); i++)
-			{
-				entities[i] = Entity(generation[i], i);
-				for (auto m : managers)
-					m->DestroyAll();
-			}
+			for (auto m : managers)
+				m->DestroyAll();
+
 		}
 		generation.clear();
 		freeIndices = std::stack<decltype(Entity::id)>();
