@@ -1,6 +1,7 @@
 #include "EntityManager.h"
 #include <Profiler.h>
 #include <Managers\Manager_Base.h>
+
 namespace ECS
 {
 	EntityManager::EntityManager()

@@ -42,7 +42,7 @@ DECLDIR_ECS void EntityManager_DestroyNow_C(ECS::EntityManager_Interface* em, ui
 
 DECLDIR_ECS void EntityManager_DestroyAll_C(ECS::EntityManager_Interface * em, bool immediate)
 {
-	em->DestroyAll();
+	em->DestroyAll(immediate);
 }
 
 DECLDIR_ECS uint32_t EntityManager_GetNumberOfAliveEntities_C(ECS::EntityManager_Interface * em)

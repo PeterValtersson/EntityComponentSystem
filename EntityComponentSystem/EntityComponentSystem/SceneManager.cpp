@@ -669,6 +669,8 @@ void ECS::SceneManager::DestroyAll()noexcept
 	entries.name.clear();
 
 	entityToEntry.clear();
+
+
 }
 
 void ECS::SceneManager::WriteToFile(std::ofstream & file) const
