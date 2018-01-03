@@ -43,7 +43,7 @@ DECLDIR_ECS void Manager_Base_CreateFromResourceG_C(ECS::Manager_Base * mb, uint
 	mb->CreateFromResource(entity, ResourceHandler::Resource(guid, type));
 }
 
-DECLDIR_ECS long Manager_Base_WriteComponent_C(ECS::Manager_Base * mb, ResourceHandler::Loader_Interface * li, uint32_t entity, const char * guid, const char * type)
+DECLDIR_ECS long Manager_Base_WriteComponent_C(ECS::Manager_Base * mb, ResourceHandler::FileSystem_Interface * li, uint32_t entity, const char * guid, const char * type)
 {	
 	std::function<bool(std::ostream* file)> writer;
 	auto size = mb->GetDataWriter(entity, writer);
