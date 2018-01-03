@@ -265,7 +265,7 @@ namespace Tests
 		{
 			std::error_code err;
 			fs::remove("wrcr.dat", err);
-			auto bl = CreateLoader(ResourceHandler::LoaderType::Binary);
+			auto bl = CreateFileSystem(ResourceHandler::FileSystemType::Binary);
 			bl->Init("wrcr.dat", ResourceHandler::Mode::EDIT);
 			Utilz::ThreadPool pool(4);
 			auto rh = CreateResourceHandler(bl, &pool);
