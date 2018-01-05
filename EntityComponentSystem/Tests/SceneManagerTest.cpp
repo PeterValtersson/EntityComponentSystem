@@ -5,6 +5,7 @@
 #include <ResourceHandler\ResourceHandler_Interface.h>
 #include <Managers\TransformManager_Interface.h>
 #include <filesystem>
+#include <Utilz\ThreadPool.h>
 namespace fs = std::experimental::filesystem;
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace ECS;
@@ -232,11 +233,11 @@ namespace Tests
 			sm->AddEntityToScene(childScene, childScene2, "Child2");
 
 			{
-				Assert::AreEqual(long(0), Manager_Base_WriteComponent_C(sm, bl, scene, "World", "Scene"));
+				Assert::AreEqual(0, Manager_Base_WriteComponent_C(sm, bl, scene, "World", "Scene").errornr);
 				sm->SetNameOfScene(scene, "NewWorld");
-				Assert::AreEqual(long(0), Manager_Base_WriteComponent_C(sm, bl, scene, "World", "Scene"));
-				Assert::AreEqual(long(0), Manager_Base_WriteComponent_C(sm, bl, childScene, "Child", "Scene"));
-				Assert::AreEqual(long(0), Manager_Base_WriteComponent_C(sm, bl, childScene2, "Child2", "Scene"));
+				Assert::AreEqual(0, Manager_Base_WriteComponent_C(sm, bl, scene, "World", "Scene").errornr);
+				Assert::AreEqual(0, Manager_Base_WriteComponent_C(sm, bl, childScene, "Child", "Scene").errornr);
+				Assert::AreEqual(0, Manager_Base_WriteComponent_C(sm, bl, childScene2, "Child2", "Scene").errornr);
 
 				uint32_t numRes = 0;
 				numRes = SceneManager_GetNumberOfChildResourcesOfSceneResource_C(sm, Utilz::GUID("World"));

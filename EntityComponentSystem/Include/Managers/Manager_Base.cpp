@@ -43,16 +43,16 @@ DECLDIR_ECS void Manager_Base_CreateFromResourceG_C(ECS::Manager_Base * mb, uint
 	mb->CreateFromResource(entity, ResourceHandler::Resource(guid, type));
 }
 
-DECLDIR_ECS long Manager_Base_WriteComponent_C(ECS::Manager_Base * mb, ResourceHandler::FileSystem_Interface * li, uint32_t entity, const char * guid, const char * type)
+DECLDIR_ECS ResourceHandler::File_Error Manager_Base_WriteComponent_C(ECS::Manager_Base * mb, ResourceHandler::FileSystem_Interface * li, uint32_t entity, const char * guid, const char * type)
 {	
 	std::function<bool(std::ostream* file)> writer;
 	auto size = mb->GetDataWriter(entity, writer);
 	if (size == 0)
-		return -1;
+		RETURN_ERROR_C("Could not fetch data writer");
 	auto res = li->CreateFromCallback(guid, type, writer);
-	if (res == 1)
+	if (res.errornr == 1)
 		res =  li->WriteFromCallback(std::string(guid), std::string(type), size, writer);
-	if (res == 0)
+	if (res.errornr == 0)
 		ResourceHandler::Resource(std::string(guid), std::string(type), true);
 	return res;
 }

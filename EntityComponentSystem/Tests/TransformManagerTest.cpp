@@ -4,6 +4,7 @@
 #include <Managers\TransformManager_Interface.h>
 #include <ResourceHandler\ResourceHandler_Interface.h>
 #include <filesystem>
+#include <Utilz\ThreadPool.h>
 namespace fs = std::experimental::filesystem;
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace ECS;
@@ -288,7 +289,7 @@ namespace Tests
 			Assert::AreEqual(0.0f, tm->GetPosition(ent).y);
 			Assert::AreEqual(0.0f, tm->GetPosition(ent).z);
 
-			Assert::AreEqual(long(0), Manager_Base_WriteComponent_C(tm, bl, ent, "Dog", "Transform"));
+			Assert::AreEqual(0, Manager_Base_WriteComponent_C(tm, bl, ent, "Dog", "Transform").errornr);
 			tm->Destroy(ent);
 			Manager_Base_CreateFromResource_C(tm, ent, "Dog", "Transform");
 
