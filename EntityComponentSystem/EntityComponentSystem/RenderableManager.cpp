@@ -10,6 +10,7 @@ namespace ECS
 		_ASSERT_EXPR(ii.entityManager, L"RenderableManager must have a entity manager");
 		_ASSERT_EXPR(ii.transformManager, L"RenderableManager must have a transform manager");
 		_ASSERT_EXPR(ii.renderer, L"RenderableManager must have a renderer");
+		initInfo.transformManager->RegisterTransformUser(this);
 	}
 
 
@@ -29,7 +30,7 @@ namespace ECS
 	}
 	bool RenderableManager::IsRegistered(Entity entity) const noexcept
 	{
-		return false;
+		return entries.find(entity).has_value();
 	}
 	void RenderableManager::CreateFromResource(Entity entity, ResourceHandler::Resource resource)noexcept
 	{
@@ -62,7 +63,7 @@ namespace ECS
 	}
 	Utilz::GUID RenderableManager::GetManagerType() const noexcept
 	{
-		return Utilz::GUID();
+		return "Renderable";
 	}
 
 	void RenderableManager::CreateFromFile(std::ifstream & file)noexcept

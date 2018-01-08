@@ -18,6 +18,16 @@ DECLDIR_ECS void Manager_Base_DestroyAll_C(ECS::Manager_Base * mb)
 	mb->DestroyAll();
 }
 
+DECLDIR_ECS void Manager_Base_ToggleVisible_C(ECS::Manager_Base * mb, uint32_t entity)
+{
+	mb->ToggleVisible(entity);
+}
+
+DECLDIR_ECS void Manager_Base_ToggleVisibleMultiple_C(ECS::Manager_Base * mb, const uint32_t entities[], uint32_t numEntities)
+{
+	mb->ToggleVisible((ECS::Entity*)entities, numEntities);
+}
+
 DECLDIR_ECS uint32_t Manager_Base_GetNumberOfRegisteredEntities_C(ECS::Manager_Base * mb)
 {
 	return mb->GetNumberOfRegisteredEntities();
