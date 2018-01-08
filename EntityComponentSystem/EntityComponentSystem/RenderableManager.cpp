@@ -11,43 +11,43 @@ namespace ECS
 	RenderableManager::~RenderableManager()
 	{
 	}
-	void RenderableManager::Create()
+	void RenderableManager::Create()noexcept
 	{
 	}
-	bool RenderableManager::IsRegistered(Entity entity) const
+	bool RenderableManager::IsRegistered(Entity entity) const noexcept
 	{
 		return false;
 	}
-	void RenderableManager::CreateFromResource(Entity entity, ResourceHandler::Resource resource)
+	void RenderableManager::CreateFromResource(Entity entity, ResourceHandler::Resource resource)noexcept
 	{
 	}
 	void RenderableManager::CreateFromStream(Entity entity, std::istream * stream)
 	{
 	}
-	uint64_t RenderableManager::GetDataWriter(Entity entity, std::function<bool(std::ostream*file)>& writer) const
+	uint64_t RenderableManager::GetDataWriter(Entity entity, std::function<bool(std::ostream*file)>& writer) const noexcept
 	{
 		return uint64_t();
 	}
-	void RenderableManager::Destroy(Entity entity)
+	void RenderableManager::Destroy(Entity entity)noexcept
 	{
 	}
-	void RenderableManager::DestroyEntities(const Entity entities[], uint32_t numEntities)
+	void RenderableManager::DestroyEntities(const Entity entities[], uint32_t numEntities)noexcept
 	{
 	}
-	void RenderableManager::DestroyAll()
+	void RenderableManager::DestroyAll()noexcept
 	{
 	}
-	uint32_t RenderableManager::GetNumberOfRegisteredEntities() const
+	uint32_t RenderableManager::GetNumberOfRegisteredEntities() const noexcept
 	{
 		return uint32_t();
 	}
-	void RenderableManager::GetRegisteredEntities(Entity entities[], uint32_t numEntities) const
+	void RenderableManager::GetRegisteredEntities(Entity entities[], uint32_t numEntities) const noexcept
 	{
 	}
-	void RenderableManager::Frame()
+	void RenderableManager::Frame()noexcept
 	{
 	}
-	Utilz::GUID RenderableManager::GetManagerType() const
+	Utilz::GUID RenderableManager::GetManagerType() const noexcept
 	{
 		return Utilz::GUID();
 	}
@@ -66,7 +66,7 @@ namespace ECS
 		return uint64_t();
 	}
 
-	void RenderableManager::GarbageCollection()
+	void RenderableManager::GarbageCollection()noexcept
 	{
 	}
 }
