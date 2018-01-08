@@ -1,18 +1,31 @@
 #include "RenderableManager.h"
-
+#include <Profiler.h>
+using namespace ResourceHandler;
 namespace ECS
 {
 
 	RenderableManager::RenderableManager(const RenderableManager_InitializationInfo& ii)
+		:initInfo(ii)
 	{
+		_ASSERT_EXPR(ii.entityManager, L"RenderableManager must have a entity manager");
+		_ASSERT_EXPR(ii.transformManager, L"RenderableManager must have a transform manager");
+		_ASSERT_EXPR(ii.renderer, L"RenderableManager must have a renderer");
 	}
 
 
 	RenderableManager::~RenderableManager()
 	{
 	}
+
 	void RenderableManager::Create(Entity entity)noexcept
 	{
+		StartProfile;
+		if (auto find = entries.find(entity); find.has_value())
+			return;
+		
+		size_t index = entries.add(entity);
+		entries.get<EntryNames::Visible>(index) = false;
+		entries.get<EntryNames::Mesh>(index) = Resource("DefaultMesh", "StaticMesh");
 	}
 	bool RenderableManager::IsRegistered(Entity entity) const noexcept
 	{
@@ -65,7 +78,9 @@ namespace ECS
 	{
 		return uint64_t();
 	}
-
+	void RenderableManager::UpdateEntityTransforms(const Matrix transforms[], const Entity entities[], uint32_t numEntities)noexcept
+	{
+	}
 	void RenderableManager::GarbageCollection()noexcept
 	{
 	}

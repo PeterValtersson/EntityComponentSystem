@@ -3,14 +3,16 @@
 #include <DLLExport.h>
 #include "Manager_Base.h"
 #include <Graphics\Renderer_Interface.h> 
+#include <Managers\TransformManager_Interface.h>
 namespace ECS
 {
 	struct RenderableManager_InitializationInfo
 	{
-		Graphics::Renderer_Interface* renderer;
-		EntityManager_Interface* entityManager;
+		Graphics::Renderer_Interface* renderer = nullptr;
+		EntityManager_Interface* entityManager = nullptr;
+		TransformManager_Interface* transformManager = nullptr;
 	};
-	class RenderableManager_Interface : public Manager_Base
+	class RenderableManager_Interface : public Manager_Base, public Manager_TransformUser
 	{
 	public:
 		virtual ~RenderableManager_Interface() {};

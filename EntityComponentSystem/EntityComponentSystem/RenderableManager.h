@@ -1,6 +1,7 @@
 #ifndef _ECS_RENDERABLE_MANAGER_H_
 #define _ECS_RENDERABLE_MANAGER_H_
 #include <Managers\RenderableManager_Interface.h>
+#include <Utilz\Sofa.h>
 namespace ECS
 {
 	class RenderableManager : public RenderableManager_Interface
@@ -31,8 +32,27 @@ namespace ECS
 		virtual void WriteToFile(std::ofstream& file)const noexcept override;
 		virtual void CreateFromFile(std::ifstream& file)noexcept override;
 
+		virtual void UpdateEntityTransforms(const Matrix transforms[], const Entity entities[], uint32_t numEntities)noexcept override;
 	protected:
 		virtual void GarbageCollection()noexcept override;
+
+		RenderableManager_InitializationInfo initInfo;
+
+		Utilz::Sofa<
+			Entity, Entity::Hasher, // Entity
+			bool, //visible
+			ResourceHandler::Resource // Mesh
+		>entries;
+
+		struct EntryNames
+		{
+			enum EntryNamesEnum
+			{
+				Entity,
+				Visible,
+				Mesh
+			};
+		}
 	};
 }
 #endif
