@@ -9,7 +9,7 @@ namespace ECS
 		RenderableManager(const RenderableManager_InitializationInfo& ii);
 		~RenderableManager();
 
-		virtual void Create()noexcept override;
+		virtual void Create(Entity entity)noexcept override;
 
 		virtual bool IsRegistered(Entity entity)const noexcept override;
 		virtual void CreateFromResource(Entity entity, ResourceHandler::Resource resource)noexcept override;

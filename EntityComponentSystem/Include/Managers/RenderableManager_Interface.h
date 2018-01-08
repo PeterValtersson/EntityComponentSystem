@@ -15,7 +15,7 @@ namespace ECS
 	public:
 		virtual ~RenderableManager_Interface() {};
 
-		virtual void Create()noexcept = 0;
+		virtual void Create(Entity entity)noexcept = 0;
 	protected:
 		RenderableManager_Interface() {  };
 	};

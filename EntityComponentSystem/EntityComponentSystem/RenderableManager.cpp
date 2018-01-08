@@ -11,7 +11,7 @@ namespace ECS
 	RenderableManager::~RenderableManager()
 	{
 	}
-	void RenderableManager::Create()noexcept
+	void RenderableManager::Create(Entity entity)noexcept
 	{
 	}
 	bool RenderableManager::IsRegistered(Entity entity) const noexcept
