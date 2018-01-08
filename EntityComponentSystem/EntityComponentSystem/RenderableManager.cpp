@@ -21,7 +21,7 @@ namespace ECS
 	void RenderableManager::CreateFromResource(Entity entity, ResourceHandler::Resource resource)noexcept
 	{
 	}
-	void RenderableManager::CreateFromStream(Entity entity, std::istream * stream)
+	void RenderableManager::CreateFromStream(Entity entity, std::istream * stream)noexcept
 	{
 	}
 	uint64_t RenderableManager::GetDataWriter(Entity entity, std::function<bool(std::ostream*file)>& writer) const noexcept

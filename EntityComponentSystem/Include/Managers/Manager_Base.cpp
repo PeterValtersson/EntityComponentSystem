@@ -48,7 +48,7 @@ DECLDIR_ECS ResourceHandler::File_Error Manager_Base_WriteComponent_C(ECS::Manag
 	std::function<bool(std::ostream* file)> writer;
 	auto size = mb->GetDataWriter(entity, writer);
 	if (size == 0)
-		RETURN_ERROR_C("Could not fetch data writer");
+		RETURN_FILE_ERROR_C("Could not fetch data writer");
 	auto res = li->CreateFromCallback(guid, type, writer);
 	if (res.errornr == 1)
 		res =  li->WriteFromCallback(std::string(guid), std::string(type), size, writer);
