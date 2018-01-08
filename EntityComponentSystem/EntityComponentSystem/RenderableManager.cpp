@@ -18,6 +18,7 @@ namespace ECS
 	{
 	}
 
+
 	void RenderableManager::Create(Entity entity)noexcept
 	{
 		StartProfile;
@@ -50,7 +51,58 @@ namespace ECS
 	}
 	void RenderableManager::DestroyAll()noexcept
 	{
+	}	
+	void RenderableManager::ToggleActive(Entity entity, bool active)noexcept
+	{
+		StartProfile;
+		if (auto find = entries.find(entity); find.has_value())
+		{
+			if (entries.get<EntryNames::Visible>(find->second) == active)
+				return;
+
+			entries.get<EntryNames::Visible>(find->second) = active;
+
+			if (active)
+			{
+				entries.get<EntryNames::Mesh>(find->second).CheckIn();
+				//if(entries.get<EntryNames::Mesh>(find->second).PeekStatus() & LoadStatus::LOADED)
+				//initInfo.renderer->AddRenderJob();
+			}
+			else
+			{
+				entries.get<EntryNames::Mesh>(find->second).CheckOut();
+				//initInfo.renderer->RemoveRenderJob();
+			}
+		}
 	}
+
+	void RenderableManager::ToggleActive(const Entity entities[], uint32_t numEntites, bool active)noexcept
+	{
+		StartProfile;
+		for (uint32_t i = 0; i < numEntites; ++i)
+		{
+			if (auto find = entries.find(entities[i]); find.has_value())
+			{
+				if (entries.get<EntryNames::Visible>(find->second) == active)
+					continue;
+
+				entries.get<EntryNames::Visible>(find->second) = active;
+
+				if (active)
+				{
+					entries.get<EntryNames::Mesh>(find->second).CheckIn();
+					//if(entries.get<EntryNames::Mesh>(find->second).PeekStatus() & LoadStatus::LOADED)
+					//initInfo.renderer->AddRenderJob();
+				}
+				else
+				{
+					entries.get<EntryNames::Mesh>(find->second).CheckOut();
+					//initInfo.renderer->RemoveRenderJob();
+				}
+			}
+		}
+	}
+
 	uint32_t RenderableManager::GetNumberOfRegisteredEntities() const noexcept
 	{
 		return uint32_t();

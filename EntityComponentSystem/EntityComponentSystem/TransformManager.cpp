@@ -453,6 +453,14 @@ namespace ECS
 		entries.clear();
 	}
 
+	void TransformManager::ToggleActive(Entity entity, bool active)
+	{
+	}
+
+	void TransformManager::ToggleActive(const Entity entities[], uint32_t numEntites, bool active)
+	{
+	}
+
 	void TransformManager::WriteToFile(std::ofstream & file) const
 	{
 		StartProfile;
