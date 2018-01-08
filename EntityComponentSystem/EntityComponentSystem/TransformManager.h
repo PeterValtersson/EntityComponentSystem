@@ -11,7 +11,7 @@ namespace ECS
 	class TransformManager : public TransformManager_Interface
 	{
 	public:
-		TransformManager(ECS::TransformManagerInitializationInfo initInfo);
+		TransformManager(ECS::TransformManager_InitializationInfo initInfo);
 		~TransformManager();
 		virtual void Create(Entity entity,
 			const Vector& position = Vector(), 
@@ -63,7 +63,7 @@ namespace ECS
 		void UpdateDirtyEntities()noexcept;
 
 
-		TransformManagerInitializationInfo initInfo;
+		TransformManager_InitializationInfo initInfo;
 		uint32_t version = 0;
 		std::default_random_engine generator;
 		std::vector<Manager_TransformUser*> transformUsers;

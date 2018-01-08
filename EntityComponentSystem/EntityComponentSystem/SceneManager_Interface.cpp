@@ -1,6 +1,6 @@
 #include <Managers\SceneManager_Interface.h>
 #include "SceneManager.h"
-DECLDIR_ECS ECS::SceneManager_Interface * SceneManager_CreateSceneManager_C(ECS::SceneManagerInitializationInfo ii)
+DECLDIR_ECS ECS::SceneManager_Interface * SceneManager_CreateSceneManager_C(ECS::SceneManager_InitializationInfo ii)
 {
 	return new ECS::SceneManager(ii);
 }

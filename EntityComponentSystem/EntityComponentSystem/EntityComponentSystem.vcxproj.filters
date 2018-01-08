@@ -17,6 +17,9 @@
     <Filter Include="Managers\SceneManager">
       <UniqueIdentifier>{2c4a9ac5-78c6-4711-8ec3-eb546208941e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Managers\RenderableManager">
+      <UniqueIdentifier>{330cdea4-bb2b-43f7-ba97-e7f2a3ecef1c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Entity.h">
@@ -45,6 +48,12 @@
     <ClInclude Include="SceneManager.h">
       <Filter>Managers\SceneManager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\Managers\RenderableManager_Interface.h">
+      <Filter>Managers\RenderableManager</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderableManager.h">
+      <Filter>Managers\RenderableManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EntityManager.cpp">
@@ -68,6 +77,12 @@
     </ClCompile>
     <ClCompile Include="SceneManager.cpp">
       <Filter>Managers\SceneManager</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderableManager_Interface.cpp">
+      <Filter>Managers\RenderableManager</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderableManager.cpp">
+      <Filter>Managers\RenderableManager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -15,7 +15,7 @@ namespace ECS
 		KEEP_CURRENT_POSITION = 1 << 3,
 		INHERIT_ALL = INHERIT_TRANSLATION | INHERIT_SCALE | INHERIT_ROTATION,
 	};
-	struct TransformManagerInitializationInfo
+	struct TransformManager_InitializationInfo
 	{
 		EntityManager_Interface* entityManager = nullptr;
 		void* pNext = nullptr;
@@ -81,7 +81,7 @@ namespace ECS
 
 ENUM_FLAGS(ECS::TransformFlags);
 
-DECLDIR_ECS ECS::TransformManager_Interface* TransformManager_CreateTransformManager_C(ECS::TransformManagerInitializationInfo initinfo);
+DECLDIR_ECS ECS::TransformManager_Interface* TransformManager_CreateTransformManager_C(ECS::TransformManager_InitializationInfo initinfo);
 DECLDIR_ECS void TransformManager_Create_C(ECS::TransformManager_Interface* tm, uint32_t entity, ECS::Vector position, ECS::Vector rotation, ECS::Vector scale);
 DECLDIR_ECS void TransformManager_BindChild_C(ECS::TransformManager_Interface*tm, uint32_t parent, uint32_t child, uint8_t flags);
 DECLDIR_ECS void TransformManager_UnbindParent_C(ECS::TransformManager_Interface*tm, uint32_t child, uint8_t flags);

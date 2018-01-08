@@ -6,7 +6,7 @@
 #include "TransformManager_Interface.h"
 namespace ECS
 {
-	struct SceneManagerInitializationInfo
+	struct SceneManager_InitializationInfo
 	{
 		EntityManager_Interface* entityManager = nullptr;
 		TransformManager_Interface* transformManager = nullptr;
@@ -36,7 +36,7 @@ namespace ECS
 	};
 }
 
-DECLDIR_ECS ECS::SceneManager_Interface* SceneManager_CreateSceneManager_C(ECS::SceneManagerInitializationInfo ii);
+DECLDIR_ECS ECS::SceneManager_Interface* SceneManager_CreateSceneManager_C(ECS::SceneManager_InitializationInfo ii);
 DECLDIR_ECS void SceneManager_Create_C(ECS::SceneManager_Interface* sm, uint32_t entity, const char* name);
 DECLDIR_ECS void SceneManager_AddEntityToScene_C(ECS::SceneManager_Interface* sm, uint32_t scene, uint32_t entity);
 DECLDIR_ECS void SceneManager_AddEntitiesToScene_C(ECS::SceneManager_Interface* sm, uint32_t scene, uint32_t* entities, uint32_t numEntities);

@@ -16,7 +16,7 @@ namespace ECS
 		return { f.x, f.y, f.z };
 	}
 	
-	TransformManager::TransformManager(ECS::TransformManagerInitializationInfo initInfo)
+	TransformManager::TransformManager(ECS::TransformManager_InitializationInfo initInfo)
 		: initInfo(initInfo)
 	{
 		_ASSERT_EXPR(initInfo.entityManager, L"Transform manager must have an entity manager");

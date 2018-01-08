@@ -7,7 +7,7 @@ namespace ECS
 	class SceneManager : public SceneManager_Interface
 	{
 	public:
-		SceneManager(SceneManagerInitializationInfo ii);
+		SceneManager(SceneManager_InitializationInfo ii);
 		virtual ~SceneManager();
 		virtual	void Create(Entity entity,const std::string& name)noexcept override;
 		virtual void AddEntityToScene(Entity scene, Entity entity)noexcept override;
@@ -50,7 +50,7 @@ namespace ECS
 		uint32_t version = 0;
 		std::vector<Manager_Base*> managers;
 
-		SceneManagerInitializationInfo initInfo;
+		SceneManager_InitializationInfo initInfo;
 
 		struct SceneEntries
 		{

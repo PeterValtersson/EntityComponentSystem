@@ -23,10 +23,12 @@
     <ClInclude Include="..\Include\Entity.h" />
     <ClInclude Include="..\Include\EntityManager_Interface.h" />
     <ClInclude Include="..\Include\Managers\Manager_Base.h" />
+    <ClInclude Include="..\Include\Managers\RenderableManager_Interface.h" />
     <ClInclude Include="..\Include\Managers\SceneManager_Interface.h" />
     <ClInclude Include="..\Include\Managers\TransformManager_Interface.h" />
     <ClInclude Include="..\Include\Memory_Base.h" />
     <ClInclude Include="EntityManager.h" />
+    <ClInclude Include="RenderableManager.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="TransformManager.h" />
   </ItemGroup>
@@ -35,12 +37,17 @@
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="EntityManager_Interface.cpp" />
     <ClCompile Include="Memory_Base.cpp" />
+    <ClCompile Include="RenderableManager.cpp" />
+    <ClCompile Include="RenderableManager_Interface.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SceneManager_Interface.cpp" />
     <ClCompile Include="TransformManager.cpp" />
     <ClCompile Include="TransformManager_Interface.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Renderer\Renderer\Renderer\Renderer.vcxproj">
+      <Project>{ff7b443e-8ce6-45f7-892c-b4f2a67fef18}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\ResourceHandler\ResourceHandler\ResourceHandler\ResourceHandler.vcxproj">
       <Project>{d4cccf45-cbb6-406f-8b19-53666ae769b2}</Project>
     </ProjectReference>
@@ -100,28 +107,28 @@
     <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
     <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
     <TargetExt>.dll</TargetExt>
-    <IncludePath>$(SolutionDir)../../CompileTimeGUID/include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)../../Sofa/Sofa/;$(SolutionDir)../../Profiler/Profiler/Profiler/;$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../../CompileTimeGUID/include/;$(SolutionDir)../../Renderer/Renderer\Include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)../../Sofa/Sofa/;$(SolutionDir)../../Profiler/Profiler/Profiler/;$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/Include/;$(IncludePath)</IncludePath>
     <TargetName>ECS</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
     <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
     <TargetExt>.dll</TargetExt>
-    <IncludePath>$(SolutionDir)../../CompileTimeGUID/include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)../../Sofa/Sofa/;$(SolutionDir)../../Profiler/Profiler/Profiler/;$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../../CompileTimeGUID/include/;$(SolutionDir)../../Renderer/Renderer\Include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)../../Sofa/Sofa/;$(SolutionDir)../../Profiler/Profiler/Profiler/;$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/Include/;$(IncludePath)</IncludePath>
     <TargetName>ECS</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
     <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
     <TargetExt>.dll</TargetExt>
-    <IncludePath>$(SolutionDir)../../CompileTimeGUID/include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)../../Sofa/Sofa/;$(SolutionDir)../../Profiler/Profiler/Profiler/;$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../../CompileTimeGUID/include/;$(SolutionDir)../../Renderer/Renderer\Include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)../../Sofa/Sofa/;$(SolutionDir)../../Profiler/Profiler/Profiler/;$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/Include/;$(IncludePath)</IncludePath>
     <TargetName>ECS</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
     <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
     <TargetExt>.dll</TargetExt>
-    <IncludePath>$(SolutionDir)../../CompileTimeGUID/include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)../../Sofa/Sofa/;$(SolutionDir)../../Profiler/Profiler/Profiler/;$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../../CompileTimeGUID/include/;$(SolutionDir)../../Renderer/Renderer\Include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)../../Sofa/Sofa/;$(SolutionDir)../../Profiler/Profiler/Profiler/;$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/Include/;$(IncludePath)</IncludePath>
     <TargetName>ECS</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

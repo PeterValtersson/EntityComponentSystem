@@ -1,6 +1,6 @@
 #include <Managers\TransformManager_Interface.h>
 #include "TransformManager.h"
-DECLDIR_ECS ECS::TransformManager_Interface * TransformManager_CreateTransformManager_C(ECS::TransformManagerInitializationInfo ii)
+DECLDIR_ECS ECS::TransformManager_Interface * TransformManager_CreateTransformManager_C(ECS::TransformManager_InitializationInfo ii)
 {
 	return new ECS::TransformManager(ii);
 }

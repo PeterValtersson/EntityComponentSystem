@@ -1,7 +1,7 @@
 #include "SceneManager.h"
 #include <Profiler.h>
 #include <Utilz\StringReadWrite.h>
-ECS::SceneManager::SceneManager(SceneManagerInitializationInfo ii) : initInfo(ii)
+ECS::SceneManager::SceneManager(SceneManager_InitializationInfo ii) : initInfo(ii)
 {
 	_ASSERT_EXPR(initInfo.entityManager, L"SceneManager must have entitymanager");
 	_ASSERT_EXPR(initInfo.transformManager, L"SceneManager must have transform manager");
