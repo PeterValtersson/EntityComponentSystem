@@ -4,3 +4,8 @@ DECLDIR_ECS ECS::RenderableManager_Interface * CreateRenderableManager(ECS::Rend
 {
 	return new ECS::RenderableManager(ii);
 }
+
+DECLDIR_ECS void RenderableManager_Create_C(ECS::RenderableManager_Interface * rm, uint32_t entity)
+{
+	rm->Create(entity);
+}
