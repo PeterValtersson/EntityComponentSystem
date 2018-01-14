@@ -20,12 +20,12 @@ namespace Tests
 		{
 			auto em = EntityManager_CreateEntityManager_C();
 
-			TransformManagerInitializationInfo tmii;
+			TransformManager_InitializationInfo tmii;
 			tmii.entityManager = em;
 			auto tm = TransformManager_CreateTransformManager_C(tmii);
 			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilz::GUID("Transform").id);
 
-			SceneManagerInitializationInfo smii;
+			SceneManager_InitializationInfo smii;
 			smii.entityManager = em;
 			smii.transformManager = tm;
 			auto sm = SceneManager_CreateSceneManager_C(smii);
@@ -56,12 +56,12 @@ namespace Tests
 		{
 			auto em = EntityManager_CreateEntityManager_C();
 
-			TransformManagerInitializationInfo tmii;
+			TransformManager_InitializationInfo tmii;
 			tmii.entityManager = em;
 			auto tm = TransformManager_CreateTransformManager_C(tmii);
 			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilz::GUID("Transform").id);
 
-			SceneManagerInitializationInfo smii;
+			SceneManager_InitializationInfo smii;
 			smii.entityManager = em;
 			smii.transformManager = tm;
 			auto sm = SceneManager_CreateSceneManager_C(smii);
@@ -102,12 +102,12 @@ namespace Tests
 		{
 			auto em = EntityManager_CreateEntityManager_C();
 
-			TransformManagerInitializationInfo tmii;
+			TransformManager_InitializationInfo tmii;
 			tmii.entityManager = em;
 			auto tm = TransformManager_CreateTransformManager_C(tmii);
 			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilz::GUID("Transform").id);
 
-			SceneManagerInitializationInfo smii;
+			SceneManager_InitializationInfo smii;
 			smii.entityManager = em;
 			smii.transformManager = tm;
 			auto sm = SceneManager_CreateSceneManager_C(smii);
@@ -199,13 +199,13 @@ namespace Tests
 
 			auto em = EntityManager_CreateEntityManager_C();
 
-			TransformManagerInitializationInfo tmii;
+			TransformManager_InitializationInfo tmii;
 			tmii.entityManager = em;
 			auto tm = TransformManager_CreateTransformManager_C(tmii);
 			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilz::GUID("Transform").id);
 
 
-			SceneManagerInitializationInfo smii;
+			SceneManager_InitializationInfo smii;
 			smii.entityManager = em;
 			smii.transformManager = tm;
 			auto sm = SceneManager_CreateSceneManager_C(smii);

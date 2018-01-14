@@ -673,15 +673,15 @@ void ECS::SceneManager::DestroyAll()noexcept
 
 }
 
-void ECS::SceneManager::ToggleActive(Entity entity, bool active)
+void ECS::SceneManager::ToggleActive(Entity entity, bool active)noexcept
 {
 }
 
-void ECS::SceneManager::ToggleActive(const Entity entities[], uint32_t numEntites, bool active)
+void ECS::SceneManager::ToggleActive(const Entity entities[], uint32_t numEntites, bool active)noexcept
 {
 }
 
-void ECS::SceneManager::WriteToFile(std::ofstream & file) const
+void ECS::SceneManager::WriteToFile(std::ofstream & file) const 
 {
 }
 
