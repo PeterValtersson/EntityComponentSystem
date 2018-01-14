@@ -1,7 +1,7 @@
 #ifndef _ECS_RENDERABLE_MANAGER_H_
 #define _ECS_RENDERABLE_MANAGER_H_
 #include <Managers\RenderableManager_Interface.h>
-#include <Utilz\Sofa.h>
+#include <Sofa.h>
 namespace ECS
 {
 	class RenderableManager : public RenderableManager_Interface
@@ -41,7 +41,7 @@ namespace ECS
 
 		RenderableManager_InitializationInfo initInfo;
 
-		Utilz::Sofa<
+		Sofa<
 			Entity, Entity::Hasher, // Entity
 			bool, //visible
 			ResourceHandler::Resource // Mesh
@@ -55,7 +55,7 @@ namespace ECS
 				Visible,
 				Mesh
 			};
-		}
+		};
 	};
 }
 #endif
