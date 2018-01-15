@@ -35,6 +35,13 @@ namespace ECS
 	}
 	void RenderableManager::CreateFromResource(Entity entity, ResourceHandler::Resource resource)noexcept
 	{
+		StartProfile;
+		if (auto find = entries.find(entity); find.has_value())
+			return;
+
+		size_t index = entries.add(entity);
+		entries.get<EntryNames::Visible>(index) = false;
+		entries.get<EntryNames::Mesh>(index) = resource;
 	}
 	void RenderableManager::CreateFromStream(Entity entity, std::istream * stream)noexcept
 	{
@@ -45,12 +52,21 @@ namespace ECS
 	}
 	void RenderableManager::Destroy(Entity entity)noexcept
 	{
+		StartProfile;
+		ToggleActive(entity, false);
+		entries.erase(entity);
 	}
 	void RenderableManager::DestroyEntities(const Entity entities[], uint32_t numEntities)noexcept
 	{
+		StartProfile;
+		for (uint32_t i = 0; i < numEntities; i++) {
+			ToggleActive(entities[i], false);
+			entries.erase(entities[i]);
+		}
 	}
 	void RenderableManager::DestroyAll()noexcept
 	{
+		entries.clear();
 	}	
 	void RenderableManager::ToggleActive(Entity entity, bool active)noexcept
 	{
@@ -65,7 +81,10 @@ namespace ECS
 			if (active)
 			{
 				entries.get<EntryNames::Mesh>(find->second).CheckIn();
-				//if(entries.get<EntryNames::Mesh>(find->second).PeekStatus() & LoadStatus::LOADED)
+				if (entries.get<EntryNames::Mesh>(find->second).PeekStatus() & LoadStatus::LOADED)
+				{
+
+				}
 				//initInfo.renderer->AddRenderJob();
 			}
 			else

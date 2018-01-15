@@ -40,6 +40,7 @@ namespace ECS
 		virtual void GarbageCollection()noexcept override;
 
 		RenderableManager_InitializationInfo initInfo;
+		uint32_t version = 0;
 
 		Sofa<
 			Entity, Entity::Hasher, // Entity
