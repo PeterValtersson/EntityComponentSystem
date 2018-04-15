@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -19,46 +19,40 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{5E66CA11-14B0-4802-88D1-4284E0C43F3A}</ProjectGuid>
-    <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Tests</RootNamespace>
+    <ProjectGuid>{64A37052-155C-41C3-8967-CAADB39D3E23}</ProjectGuid>
+    <RootNamespace>OBJParser</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
-    <ProjectSubType>NativeUnitTestProject</ProjectSubType>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
-    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
-    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+    <Import Project="custom_build_rules\win_flex_bison_custom_build.props" />
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
@@ -75,122 +69,102 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
-    <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
-    <IncludePath>$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/OBJParser\FlexLexer;$(SolutionDir)../../CompileTimeGUID/include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)Include/;$(IncludePath)</IncludePath>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(SolutionDir)$(ProjectName)\FlexLexer;$(IncludePath);$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/Include/</IncludePath>
     <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
     <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
-    <IncludePath>$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/OBJParser\FlexLexer;$(SolutionDir)../../CompileTimeGUID/include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)Include/;$(IncludePath)</IncludePath>
+    <TargetExt>.dll</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/OBJParser\FlexLexer;$(IncludePath);$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/Include/</IncludePath>
+    <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
+    <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/OBJParser\FlexLexer;$(IncludePath);$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/Include/</IncludePath>
     <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
     <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
-    <IncludePath>$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/OBJParser\FlexLexer;$(SolutionDir)../../CompileTimeGUID/include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)Include/;$(IncludePath)</IncludePath>
+    <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(SolutionDir)$(ProjectName)\FlexLexer;$(IncludePath);$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/Include/</IncludePath>
     <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
     <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
-    <IncludePath>$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/OBJParser\FlexLexer;$(SolutionDir)../../CompileTimeGUID/include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)Include/;$(IncludePath)</IncludePath>
+    <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <UseFullPaths>true</UseFullPaths>
+      <SDLCheck>true</SDLCheck>
     </ClCompile>
-    <Link>
-      <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <UseFullPaths>true</UseFullPaths>
+      <SDLCheck>false</SDLCheck>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SubSystem>NotSet</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <UseFullPaths>true</UseFullPaths>
+      <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <UseFullPaths>true</UseFullPaths>
+      <SDLCheck>false</SDLCheck>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SubSystem>NotSet</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="targetver.h" />
+    <ClCompile Include="OBJPassthrough.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="ObjParser.cpp" />
+    <ClCompile Include="parser.tab.cpp" />
+    <ClCompile Include="Parsers.cpp" />
+    <ClCompile Include="scanner.flex.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="OBJParserTest.cpp" />
-    <ClCompile Include="SceneManagerTest.cpp" />
-    <ClCompile Include="TransformManagerTest.cpp" />
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="EntityManagerTest.cpp" />
+    <ClInclude Include="..\Include\ArfData.h" />
+    <ClInclude Include="OBJPassthrough.h" />
+    <ClInclude Include="location.hh" />
+    <ClInclude Include="ObjParser.h" />
+    <ClInclude Include="parser.tab.h" />
+    <ClInclude Include="Parsers.h" />
+    <ClInclude Include="position.hh" />
+    <ClInclude Include="scanner.h" />
+    <ClInclude Include="stack.hh" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\ResourceHandler\ResourceHandler\ResourceHandler\ResourceHandler.vcxproj">
-      <Project>{d4cccf45-cbb6-406f-8b19-53666ae769b2}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\EntityComponentSystem\EntityComponentSystem.vcxproj">
-      <Project>{70e14de8-7ff0-4249-9b02-ed33116c837d}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\OBJParser\OBJParser.vcxproj">
-      <Project>{64a37052-155c-41c3-8967-caadb39d3e23}</Project>
-    </ProjectReference>
+    <Bison Include="parser.y">
+      <Warnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">all</Warnings>
+    </Bison>
+  </ItemGroup>
+  <ItemGroup>
+    <Flex Include="scanner.l" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="custom_build_rules\win_flex_bison_custom_build.targets" />
   </ImportGroup>
 </Project>
