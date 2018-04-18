@@ -70,24 +70,24 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)$(ProjectName)\FlexLexer;$(IncludePath);$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/Include/</IncludePath>
+    <IncludePath>$(SolutionDir)$(ProjectName)\FlexLexer;$(IncludePath);$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/Include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/</IncludePath>
     <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
     <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/OBJParser\FlexLexer;$(IncludePath);$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/Include/</IncludePath>
+    <IncludePath>$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/OBJParser\FlexLexer;$(IncludePath);$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/Include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/</IncludePath>
     <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
     <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/OBJParser\FlexLexer;$(IncludePath);$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/Include/</IncludePath>
+    <IncludePath>$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/OBJParser\FlexLexer;$(IncludePath);$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/Include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/</IncludePath>
     <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
     <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)$(ProjectName)\FlexLexer;$(IncludePath);$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/Include/</IncludePath>
+    <IncludePath>$(SolutionDir)$(ProjectName)\FlexLexer;$(IncludePath);$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/Include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/</IncludePath>
     <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
     <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
     <TargetExt>.dll</TargetExt>
