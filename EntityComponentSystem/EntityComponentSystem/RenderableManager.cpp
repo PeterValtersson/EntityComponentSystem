@@ -132,7 +132,7 @@ namespace ECS
 	void RenderableManager::Frame()noexcept
 	{
 	}
-	Utilz::GUID RenderableManager::GetManagerType() const noexcept
+	Utilities::GUID RenderableManager::GetManagerType() const noexcept
 	{
 		return "Renderable";
 	}

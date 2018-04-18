@@ -55,7 +55,7 @@ namespace ECS
 		virtual uint32_t GetNumberOfRegisteredEntities()const noexcept override;
 		virtual void GetRegisteredEntities(Entity entities[], uint32_t numEntities)const noexcept override;
 		virtual void Frame()noexcept override;
-		virtual Utilz::GUID GetManagerType()const noexcept override;
+		virtual Utilities::GUID GetManagerType()const noexcept override;
 
 		virtual uint64_t GetMemoryUsage()const noexcept override;
 		virtual void ShrinkToFit()noexcept override;
@@ -70,7 +70,7 @@ namespace ECS
 		uint32_t version = 0;
 		std::default_random_engine generator;
 		std::vector<Manager_TransformUser*> transformUsers;
-		SofA::Array::SofA<
+		Utilities::SofA::Array::SofA<
 			Entity, Entity::Hasher,
 			XMFLOAT3,
 			XMFLOAT4,

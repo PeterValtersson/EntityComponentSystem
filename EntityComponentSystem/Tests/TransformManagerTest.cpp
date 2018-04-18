@@ -23,7 +23,7 @@ namespace Tests
 			TransformManager_InitializationInfo tmii;
 			tmii.entityManager = em;
 			auto tm = TransformManager_CreateTransformManager_C(tmii);
-			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilz::GUID("Transform").id);
+			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilities::GUID("Transform").id);
 			std::vector<Entity> ents;
 			ents.resize(10000);
 			EntityManager_CreateMultiple_C(em, (uint32_t*)ents.data(), (uint32_t)ents.size());
@@ -52,7 +52,7 @@ namespace Tests
 			TransformManager_InitializationInfo tmii;
 			tmii.entityManager = em;
 			auto tm = TransformManager_CreateTransformManager_C(tmii);
-			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilz::GUID("Transform").id);
+			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilities::GUID("Transform").id);
 			std::vector<Entity> ents;
 			ents.resize(10000);
 			EntityManager_CreateMultiple_C(em, (uint32_t*)ents.data(), (uint32_t)ents.size());
@@ -75,7 +75,7 @@ namespace Tests
 			TransformManager_InitializationInfo tmii;
 			tmii.entityManager = em;
 			auto tm = TransformManager_CreateTransformManager_C(tmii);
-			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilz::GUID("Transform").id);
+			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilities::GUID("Transform").id);
 			std::vector<Entity> ents;
 			ents.resize(10000);
 			EntityManager_CreateMultiple_C(em, (uint32_t*)ents.data(), (uint32_t)ents.size());
@@ -115,7 +115,7 @@ namespace Tests
 			TransformManager_InitializationInfo tmii;
 			tmii.entityManager = em;
 			auto tm = TransformManager_CreateTransformManager_C(tmii);
-			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilz::GUID("Transform").id);
+			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilities::GUID("Transform").id);
 			std::vector<Entity> ents;
 			ents.resize(10000);
 			EntityManager_CreateMultiple_C(em, (uint32_t*)ents.data(), (uint32_t)ents.size());
@@ -187,7 +187,7 @@ namespace Tests
 			TransformManager_InitializationInfo tmii;
 			tmii.entityManager = em;
 			auto tm = TransformManager_CreateTransformManager_C(tmii);
-			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilz::GUID("Transform").id);
+			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilities::GUID("Transform").id);
 			std::vector<Entity> ents;
 			ents.resize(1000);
 			EntityManager_CreateMultiple_C(em, (uint32_t*)ents.data(), (uint32_t)ents.size());
@@ -236,7 +236,7 @@ namespace Tests
 			TransformManager_InitializationInfo tmii;
 			tmii.entityManager = em;
 			auto tm = TransformManager_CreateTransformManager_C(tmii);
-			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilz::GUID("Transform").id);
+			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilities::GUID("Transform").id);
 			
 			auto ent = em->Create();
 			tm->Create(ent, { 1.0f }, {});
@@ -269,7 +269,7 @@ namespace Tests
 			fs::remove("wrcr.dat", err);
 			auto bl = CreateFileSystem(ResourceHandler::FileSystemType::Binary);
 			bl->Init("wrcr.dat", ResourceHandler::Mode::EDIT);
-			ThreadPool pool(4);
+			Utilities::ThreadPool pool(4);
 			auto rh = CreateResourceHandler(bl, &pool);
 
 
@@ -280,7 +280,7 @@ namespace Tests
 			TransformManager_InitializationInfo tmii;
 			tmii.entityManager = em;
 			auto tm = TransformManager_CreateTransformManager_C(tmii);
-			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilz::GUID("Transform").id);
+			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilities::GUID("Transform").id);
 
 			auto ent = em->Create();
 			tm->Create(ent, { 1.0f }, {});

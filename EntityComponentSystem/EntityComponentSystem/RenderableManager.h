@@ -28,7 +28,7 @@ namespace ECS
 
 		virtual void Frame()noexcept override;
 
-		virtual Utilz::GUID GetManagerType()const noexcept override;
+		virtual Utilities::GUID GetManagerType()const noexcept override;
 
 		virtual uint64_t GetMemoryUsage()const noexcept override;
 		virtual void ShrinkToFit()noexcept override;
@@ -42,7 +42,7 @@ namespace ECS
 		RenderableManager_InitializationInfo initInfo;
 		uint32_t version = 0;
 
-		SofA::Array::SofA<
+		Utilities::SofA::Array::SofA<
 			Entity, Entity::Hasher, // Entity
 			bool, //visible
 			ResourceHandler::Resource // Mesh

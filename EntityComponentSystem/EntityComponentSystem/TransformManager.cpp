@@ -442,7 +442,7 @@ namespace ECS
 		entries.get<EntryNames::Flags>(index) = TransformFlags::NONE;
 	}
 
-	Utilz::GUID TransformManager::GetManagerType() const noexcept
+	Utilities::GUID TransformManager::GetManagerType() const noexcept
 	{
 		return "Transform";
 	}

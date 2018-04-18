@@ -72,5 +72,5 @@ DECLDIR_ECS uint32_t SceneManager_GetNumberOfChildResourcesOfSceneResource_C(ECS
 
 DECLDIR_ECS void SceneManager_GetChildResourcesOfSceneResource_C(ECS::SceneManager_Interface * sm, uint32_t guid, uint32_t * resources, uint32_t numResources)
 {
-	sm->GetChildResourcesOfSceneResource(ResourceHandler::Resource(guid, sm->GetManagerType()), (Utilz::GUID*)resources, numResources);
+	sm->GetChildResourcesOfSceneResource(ResourceHandler::Resource(guid, sm->GetManagerType()), (Utilities::GUID*)resources, numResources);
 }

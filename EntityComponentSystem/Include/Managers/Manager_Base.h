@@ -31,7 +31,7 @@ namespace ECS
 	
 		virtual void Frame()noexcept = 0;
 
-		virtual Utilz::GUID GetManagerType()const noexcept = 0;
+		virtual Utilities::GUID GetManagerType()const noexcept = 0;
 	protected:
 		Manager_Base(){}
 

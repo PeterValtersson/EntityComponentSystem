@@ -29,7 +29,7 @@ namespace ECS
 		virtual void SetNameOfEntityInScene(Entity scene, Entity entity, const std::string& name)noexcept = 0;
 		virtual const char* GetNameOfEntityInScene(Entity scene, Entity entity)const noexcept = 0;
 		virtual uint32_t GetNumberOfChildResourcesOfSceneResource(ResourceHandler::Resource resource)const noexcept = 0;
-		virtual void GetChildResourcesOfSceneResource(ResourceHandler::Resource resource, Utilz::GUID resources[], uint32_t num)const noexcept = 0;
+		virtual void GetChildResourcesOfSceneResource(ResourceHandler::Resource resource, Utilities::GUID resources[], uint32_t num)const noexcept = 0;
 		virtual void RegisterManager(Manager_Base* manager)noexcept = 0;
 	protected:
 		SceneManager_Interface() {}

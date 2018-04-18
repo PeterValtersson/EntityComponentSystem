@@ -22,7 +22,7 @@ namespace ECS
 		virtual void SetNameOfEntityInScene(Entity scene, Entity entity, const std::string& name)noexcept override;
 		virtual const char* GetNameOfEntityInScene(Entity scene, Entity entity)const noexcept override;
 		virtual uint32_t GetNumberOfChildResourcesOfSceneResource(ResourceHandler::Resource resource)const noexcept override;
-		virtual void GetChildResourcesOfSceneResource(ResourceHandler::Resource resource, Utilz::GUID resources[], uint32_t num)const noexcept override;
+		virtual void GetChildResourcesOfSceneResource(ResourceHandler::Resource resource, Utilities::GUID resources[], uint32_t num)const noexcept override;
 
 
 		virtual void CreateFromResource(Entity entity, ResourceHandler::Resource resource)noexcept override;
@@ -41,7 +41,7 @@ namespace ECS
 		virtual void GetRegisteredEntities(Entity entities[], uint32_t numEntities)const noexcept override;
 
 		virtual void Frame()noexcept override;
-		virtual Utilz::GUID GetManagerType()const noexcept override;
+		virtual Utilities::GUID GetManagerType()const noexcept override;
 
 		virtual uint64_t GetMemoryUsage()const noexcept override;
 		virtual void ShrinkToFit()noexcept override;
