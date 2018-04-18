@@ -4,7 +4,8 @@
 #include <Managers\TransformManager_Interface.h>
 #include <ResourceHandler\ResourceHandler_Interface.h>
 #include <filesystem>
-#include <Utilz\ThreadPool.h>
+#include <ThreadPool.h>
+
 namespace fs = std::experimental::filesystem;
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace ECS;
@@ -268,7 +269,7 @@ namespace Tests
 			fs::remove("wrcr.dat", err);
 			auto bl = CreateFileSystem(ResourceHandler::FileSystemType::Binary);
 			bl->Init("wrcr.dat", ResourceHandler::Mode::EDIT);
-			Utilz::ThreadPool pool(4);
+			ThreadPool pool(4);
 			auto rh = CreateResourceHandler(bl, &pool);
 
 

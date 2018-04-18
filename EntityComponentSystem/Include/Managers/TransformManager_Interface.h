@@ -2,7 +2,7 @@
 #define _ECS_TRANSFORM_MANAGER_INTERFACE_H_
 #include <DLLExport.h>
 #include <Managers\Manager_Base.h>
-#include <Utilz\Flags.h>
+#include <Flags.h>
 
 namespace ECS
 {

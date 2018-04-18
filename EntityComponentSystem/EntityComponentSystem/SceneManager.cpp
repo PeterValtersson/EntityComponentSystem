@@ -1,6 +1,7 @@
 #include "SceneManager.h"
 #include <Profiler.h>
-#include <Utilz\StringReadWrite.h>
+#include <StringReadWrite.h>
+
 ECS::SceneManager::SceneManager(SceneManager_InitializationInfo ii) : initInfo(ii)
 {
 	_ASSERT_EXPR(initInfo.entityManager, L"SceneManager must have entitymanager");

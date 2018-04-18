@@ -42,7 +42,7 @@ namespace ECS
 		RenderableManager_InitializationInfo initInfo;
 		uint32_t version = 0;
 
-		Sofa<
+		SofA::Array::SofA<
 			Entity, Entity::Hasher, // Entity
 			bool, //visible
 			ResourceHandler::Resource // Mesh

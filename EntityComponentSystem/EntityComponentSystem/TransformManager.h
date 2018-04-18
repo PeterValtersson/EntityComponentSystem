@@ -70,7 +70,7 @@ namespace ECS
 		uint32_t version = 0;
 		std::default_random_engine generator;
 		std::vector<Manager_TransformUser*> transformUsers;
-		Sofa<
+		SofA::Array::SofA<
 			Entity, Entity::Hasher,
 			XMFLOAT3,
 			XMFLOAT4,

@@ -79,25 +79,25 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
     <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
-    <IncludePath>$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/OBJParser\FlexLexer;$(SolutionDir)../../CompileTimeGUID/include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/OBJParser\FlexLexer;$(SolutionDir)../../Utilities/Utilities/Include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)Include/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
     <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
-    <IncludePath>$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/OBJParser\FlexLexer;$(SolutionDir)../../CompileTimeGUID/include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/OBJParser\FlexLexer;$(SolutionDir)../../Utilities/Utilities/Include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)Include/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
     <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
-    <IncludePath>$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/OBJParser\FlexLexer;$(SolutionDir)../../CompileTimeGUID/include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/OBJParser\FlexLexer;$(SolutionDir)../../Utilities/Utilities/Include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)Include/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
     <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
-    <IncludePath>$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/OBJParser\FlexLexer;$(SolutionDir)../../CompileTimeGUID/include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/OBJParser\FlexLexer;$(SolutionDir)../../Utilities/Utilities/Include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)Include/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
