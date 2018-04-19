@@ -233,11 +233,11 @@ namespace Tests
 			sm->AddEntityToScene(childScene, childScene2, "Child2");
 
 			{
-				Assert::AreEqual(0, Manager_Base_WriteComponent_C(sm, bl, scene, "World", "Scene").errornr);
+				Assert::AreEqual("Success"_hash, Manager_Base_WriteComponent_C(sm, bl, scene, "World", "Scene").hash);
 				sm->SetNameOfScene(scene, "NewWorld");
-				Assert::AreEqual(0, Manager_Base_WriteComponent_C(sm, bl, scene, "World", "Scene").errornr);
-				Assert::AreEqual(0, Manager_Base_WriteComponent_C(sm, bl, childScene, "Child", "Scene").errornr);
-				Assert::AreEqual(0, Manager_Base_WriteComponent_C(sm, bl, childScene2, "Child2", "Scene").errornr);
+				Assert::AreEqual("Success"_hash, Manager_Base_WriteComponent_C(sm, bl, scene, "World", "Scene").hash);
+				Assert::AreEqual("Success"_hash, Manager_Base_WriteComponent_C(sm, bl, childScene, "Child", "Scene").hash);
+				Assert::AreEqual("Success"_hash, Manager_Base_WriteComponent_C(sm, bl, childScene2, "Child2", "Scene").hash);
 
 				uint32_t numRes = 0;
 				numRes = SceneManager_GetNumberOfChildResourcesOfSceneResource_C(sm, Utilities::GUID("World"));

@@ -1,5 +1,5 @@
 #include "OBJPassthrough.h"
-#include <File_Error.h>
+
 struct membuf : std::streambuf
 {
 	membuf(char* begin, char* end) {

@@ -290,7 +290,7 @@ namespace Tests
 			Assert::AreEqual(0.0f, tm->GetPosition(ent).y);
 			Assert::AreEqual(0.0f, tm->GetPosition(ent).z);
 
-			Assert::AreEqual(0, Manager_Base_WriteComponent_C(tm, bl, ent, "Dog", "Transform").errornr);
+			Assert::AreEqual("Success"_hash, Manager_Base_WriteComponent_C(tm, bl, ent, "Dog", "Transform").hash);
 			tm->Destroy(ent);
 			Manager_Base_CreateFromResource_C(tm, ent, "Dog", "Transform");
 
