@@ -23,6 +23,7 @@
     <ClInclude Include="..\Include\Entity.h" />
     <ClInclude Include="..\Include\EntityManager_Interface.h" />
     <ClInclude Include="..\Include\Managers\Manager_Base.h" />
+    <ClInclude Include="..\Include\Managers\MeshLibrary.h" />
     <ClInclude Include="..\Include\Managers\RenderableManager_Interface.h" />
     <ClInclude Include="..\Include\Managers\SceneManager_Interface.h" />
     <ClInclude Include="..\Include\Managers\TransformManager_Interface.h" />
@@ -33,10 +34,11 @@
     <ClInclude Include="TransformManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Include\Managers\Manager_Base.cpp" />
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="EntityManager_Interface.cpp" />
+    <ClCompile Include="Manager_Base.cpp" />
     <ClCompile Include="Memory_Base.cpp" />
+    <ClCompile Include="MeshLibrary.cpp" />
     <ClCompile Include="RenderableManager.cpp" />
     <ClCompile Include="RenderableManager_Interface.cpp" />
     <ClCompile Include="SceneManager.cpp" />

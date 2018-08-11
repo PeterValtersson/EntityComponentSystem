@@ -7,9 +7,13 @@ namespace ECS
 	RenderableManager::RenderableManager(const RenderableManager_InitializationInfo& ii)
 		:initInfo(ii)
 	{
-		_ASSERT_EXPR(ii.entityManager, L"RenderableManager must have a entity manager");
-		_ASSERT_EXPR(ii.transformManager, L"RenderableManager must have a transform manager");
-		_ASSERT_EXPR(ii.renderer, L"RenderableManager must have a renderer");
+		if (!ii.renderer)
+			THROW_ERROR("Renderable Manager must have a renderer");
+		if (!ii.transformManager)
+			THROW_ERROR("Renderable Manager must have a transform manager");
+		if (!ii.entityManager)
+			THROW_ERROR("Renderable Manager must have a entity manager");
+	
 		initInfo.transformManager->RegisterTransformUser(this);
 	}
 
@@ -19,7 +23,7 @@ namespace ECS
 	}
 
 
-	void RenderableManager::Create(Entity entity)noexcept
+	void RenderableManager::Create(Entity entity, ResourceHandler::Resource mesh, ResourceHandler::Resource defaultMesh, ResourceHandler::Resource shader, ResourceHandler::Resource defaultShader)noexcept
 	{
 		StartProfile;
 		if (auto find = entries.find(entity); find.has_value())
@@ -27,21 +31,40 @@ namespace ECS
 		
 		size_t index = entries.add(entity);
 		entries.get<EntryNames::Visible>(index) = false;
-		entries.get<EntryNames::Mesh>(index) = Resource("DefaultMesh", "StaticMesh");
+		entries.get<EntryNames::Mesh>(index) = mesh;
+		entries.get<EntryNames::DefaultMesh>(index) = defaultMesh;
+		entries.get<EntryNames::Shader>(index) = shader;
+		entries.get<EntryNames::DefaultShader>(index) = defaultShader;
 	}
 	bool RenderableManager::IsRegistered(Entity entity) const noexcept
 	{
 		return entries.find(entity).has_value();
 	}
-	void RenderableManager::CreateFromResource(Entity entity, ResourceHandler::Resource resource)noexcept
+	void RenderableManager::CreateFromResource(Entity entity, ResourceHandler::Resource resource)
 	{
 		StartProfile;
 		if (auto find = entries.find(entity); find.has_value())
 			return;
-
+		resource.CheckIn();
+		ResourceData<RenderableManager_ResourceInfo> info;
+		
 		size_t index = entries.add(entity);
 		entries.get<EntryNames::Visible>(index) = false;
-		entries.get<EntryNames::Mesh>(index) = resource;
+
+		auto status = resource.GetData(info);
+		if (status != ResourceHandler::LoadStatus::LOADED)
+		{
+			THROW_ERROR_EX("Could not CreateFromResource, Could not load: ", resource.GUID());
+		}
+		entries.get<EntryNames::Mesh>(index) = info->mesh;
+		entries.get<EntryNames::Mesh>(index).Reset();
+		entries.get<EntryNames::DefaultMesh>(index) = info->defaultMesh;
+		entries.get<EntryNames::DefaultMesh>(index).Reset();
+
+		entries.get<EntryNames::Shader>(index) = info->shader;
+		entries.get<EntryNames::Shader>(index).Reset();
+		entries.get<EntryNames::DefaultShader>(index) = info->defaultShader;
+		entries.get<EntryNames::DefaultShader>(index).Reset();
 	}
 	void RenderableManager::CreateFromStream(Entity entity, std::istream * stream)noexcept
 	{
@@ -83,13 +106,27 @@ namespace ECS
 				entries.get<EntryNames::Mesh>(find->second).CheckIn();
 				if (entries.get<EntryNames::Mesh>(find->second).PeekStatus() & LoadStatus::LOADED)
 				{
-
+					//initInfo.renderer->AddRenderJob();
 				}
-				//initInfo.renderer->AddRenderJob();
+				else
+				{
+					entitiesToSwitchMesh.push_back(entity);
+				}
+
+				entries.get<EntryNames::Shader>(find->second).CheckIn();
+				if (entries.get<EntryNames::Shader>(find->second).PeekStatus() & LoadStatus::LOADED)
+				{
+					//initInfo.renderer->AddRenderJob();
+				}
+				else
+				{
+					entitiesToSwitchShader.push_back(entity);
+				}
 			}
 			else
 			{
 				entries.get<EntryNames::Mesh>(find->second).CheckOut();
+				entries.get<EntryNames::Shader>(find->second).CheckOut();
 				//initInfo.renderer->RemoveRenderJob();
 			}
 		}
@@ -110,12 +147,29 @@ namespace ECS
 				if (active)
 				{
 					entries.get<EntryNames::Mesh>(find->second).CheckIn();
-					//if(entries.get<EntryNames::Mesh>(find->second).PeekStatus() & LoadStatus::LOADED)
-					//initInfo.renderer->AddRenderJob();
+					if (entries.get<EntryNames::Mesh>(find->second).PeekStatus() & LoadStatus::LOADED)
+					{
+						//initInfo.renderer->AddRenderJob();
+					}
+					else
+					{
+						entitiesToSwitchMesh.push_back(entities[i]);
+					}
+
+					entries.get<EntryNames::Shader>(find->second).CheckIn();
+					if (entries.get<EntryNames::Shader>(find->second).PeekStatus() & LoadStatus::LOADED)
+					{
+						//initInfo.renderer->AddRenderJob();
+					}
+					else
+					{
+						entitiesToSwitchShader.push_back(entities[i]);
+					}
 				}
 				else
 				{
 					entries.get<EntryNames::Mesh>(find->second).CheckOut();
+					entries.get<EntryNames::Shader>(find->second).CheckOut();
 					//initInfo.renderer->RemoveRenderJob();
 				}
 			}

@@ -374,7 +374,7 @@ namespace Tests
 			
 			void* parsedData = nullptr;
 			uint64_t parsedSize = 0;
-			Assert::AreEqual(0, Parse(123, (void*)OBJS::test1.data(), OBJS::test1.size(), &parsedData, &parsedSize));
+			Assert::AreEqual("Success"_hash, Parse(123, (void*)OBJS::test1.data(), OBJS::test1.size(), &parsedData, &parsedSize).hash);
 			auto& data = *(ArfData::ArfData*)parsedData;
 			Assert::AreEqual(2u, data.data.NumPos);
 			Assert::AreEqual(2u, data.data.NumTex);
@@ -393,7 +393,7 @@ namespace Tests
 
 			void* parsedData = nullptr;
 			uint64_t parsedSize = 0;
-			Assert::AreEqual(0, Parse(123, (void*)OBJS::tree.data(), OBJS::tree.size(), &parsedData, &parsedSize));
+			Assert::AreEqual("Success"_hash, Parse(123, (void*)OBJS::tree.data(), OBJS::tree.size(), &parsedData, &parsedSize).hash);
 			auto& data = *(ArfData::ArfData*)parsedData;
 			auto a = data.pointers;
 			Assert::AreEqual(90u, data.data.NumPos);

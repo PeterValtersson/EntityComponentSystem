@@ -5,7 +5,15 @@ DECLDIR_ECS ECS::RenderableManager_Interface * CreateRenderableManager(ECS::Rend
 	return new ECS::RenderableManager(ii);
 }
 
-DECLDIR_ECS void RenderableManager_Create_C(ECS::RenderableManager_Interface * rm, uint32_t entity)
+DECLDIR_ECS void RenderableManager_Create_C(ECS::RenderableManager_Interface * rm, uint32_t entity,
+	const char* mesh, const char* meshType,
+	const char* defaultMesh, const char* defaultMeshType,
+	const char* shader, const char* shaderType,
+	const char* defaultShader, const char* defaultShaderType)
 {
-	rm->Create(entity);
+	rm->Create(entity,
+		ResourceHandler::Resource(std::string(mesh), std::string(meshType)),
+		ResourceHandler::Resource(std::string(defaultMesh), std::string(defaultMeshType)),
+		ResourceHandler::Resource(std::string(shader), std::string(shaderType)),
+		ResourceHandler::Resource(std::string(defaultShader), std::string(defaultShaderType)));
 }

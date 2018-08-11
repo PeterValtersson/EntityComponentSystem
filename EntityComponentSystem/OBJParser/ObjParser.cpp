@@ -171,23 +171,22 @@ void ObjParser::Interpreter::AddNormal(const ArfData::Normal & norm)
 	data->data.NumNorm++;
 }
 
-void ObjParser::Interpreter::AddFace(const ArfData::Face & face)
+void ObjParser::Interpreter::AddFace(const std::vector<std::vector<uint32_t>>& face)
 {
 	if (data->data.NumFace >= data->data.FaceCap)
 	{
 		// Allocate more space->
 		Alloc(ALLOC_FACE);
 	}
-
-	if (face.indexCount == 4)
+	if (face.size() == 4)
 	{
 		std::vector<std::vector<uint32_t>> face1v;
 		for (uint8_t i = 0; i < 3; i++)
 		{
 			std::vector<uint32_t> in;
-			for (uint8_t j = 0; j < face.indices[i].indexCount; j++)
+			for (uint8_t j = 0; j < 3; j++)
 			{
-				in.push_back(face.indices[i].index[j]);
+				in.push_back(face[i][j]);
 			}
 			face1v.push_back(in);
 		}
@@ -201,24 +200,25 @@ void ObjParser::Interpreter::AddFace(const ArfData::Face & face)
 		for (uint8_t i = 0; i < 3; i++)
 		{
 			std::vector<uint32_t> in;
-			for (uint8_t j = 0; j < face.indices[indices[i]].indexCount; j++)
+			for (uint8_t j = 0; j < 3; j++)
 			{
-				in.push_back(face.indices[indices[i]].index[j]);
+				in.push_back(face[indices[i]][j]);
 			}
 			face1v.push_back(in);
 		}
+
 		data->pointers.faces[data->data.NumFace] = ArfData::Face(face1v);
 		if (data->data.NumSubMesh)
 			data->pointers.subMesh[data->data.NumSubMesh - 1].faceCount++;
 		data->data.NumFace++;
 	}
-	else if (face.indexCount == 2)
-		throw "Fuck yo lines bitch";
+	else if (face.size() == 2)
+		throw "Lines not supported";
+	else if (face.size() == 1)
+		throw "Points not supported";
 	else
 	{
-
-
-		data->pointers.faces[data->data.NumFace] = face;
+		data->pointers.faces[data->data.NumFace] = ArfData::Face(face);
 		if (data->data.NumSubMesh)
 			data->pointers.subMesh[data->data.NumSubMesh - 1].faceCount++;
 		data->data.NumFace++;
@@ -278,20 +278,20 @@ std::string Interpreter::str() const
 			for (uint64_t i = data->pointers.subMesh[n].faceStart; i < data->pointers.subMesh[n].faceCount + data->pointers.subMesh[n].faceStart; i++)
 			{
 				s << "\t\t";
-				for (uint8_t j = 0; j < data->pointers.faces[i].indexCount; j++)
+				for (uint8_t j = 0; j < 3; j++)// data->pointers.faces[i].indexCount; j++)
 				{
-					for (uint8_t k = 0; k < data->pointers.faces[i].indices[j].indexCount - 1; k++)
+					for (uint8_t k = 0; k < 3; k++)// data->pointers.faces[i].indices[j].indexCount - 1; k++)
 					{
 						s << data->pointers.faces[i].indices[j].index[k] << "/";
 					}
-					if (data->pointers.faces[i].indices[j].indexCount > 0)
-						s << data->pointers.faces[i].indices[j].index[data->pointers.faces[i].indices[j].indexCount - 1] << " ";
+					//if (data->pointers.faces[i].indices[j].indexCount > 0)
+					//	s << data->pointers.faces[i].indices[j].index[data->pointers.faces[i].indices[j].indexCount - 1] << " ";
 				}
 				s << endl;
 			}
 		}
 	}
-	else
+	/*else
 	{
 		s << "Faces: " << endl;
 		for (uint64_t i = 0; i < data->data.NumFace; i++)
@@ -308,7 +308,7 @@ std::string Interpreter::str() const
 			}
 			s << endl;
 		}
-	}
+	}*/
     return s.str();
 }
 

@@ -16,8 +16,8 @@ namespace ECS
 	{
 	public:
 		virtual bool IsRegistered(Entity entity)const noexcept = 0;
-		virtual void CreateFromResource(Entity entity, ResourceHandler::Resource resource)noexcept = 0;
-		virtual void CreateFromStream(Entity entity, std::istream* stream)noexcept = 0;
+		virtual void CreateFromResource(Entity entity, ResourceHandler::Resource resource) = 0;
+		virtual void CreateFromStream(Entity entity, std::istream* stream) = 0;
 		virtual uint64_t GetDataWriter(Entity entity, std::function<bool(std::ostream* file)>& writer)const noexcept = 0;
 		virtual void Destroy(Entity entity)noexcept = 0;
 		virtual void DestroyEntities(const Entity entities[], uint32_t numEntities)noexcept = 0;

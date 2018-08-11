@@ -99,7 +99,7 @@ statement		: OBJECT optname 							{ driver.AddSubMesh($2);}
 				| USEMTL NAME								{ }					
 				| S BOOLEAN									{ }
 				| S INTEGER 								{ }
-				| FACE createface							{ driver.AddFace(ArfData::Face($2));}
+				| FACE createface							{ driver.AddFace($2);}
 				;	
 
 real			: REAL										{ $$ = $1; }

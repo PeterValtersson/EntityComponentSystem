@@ -73,7 +73,7 @@ namespace ObjParser {
 		void AddPosition(const ArfData::Position& pos);
 		void AddTexCoord(const ArfData::TexCoord& tex);
 		void AddNormal(const ArfData::Normal& norm);
-		void AddFace(const ArfData::Face& face);
+		void AddFace(const std::vector<std::vector<uint32_t>>& face);
 		void AddSubMesh(const string& name);
 
 		// Used internally by Scanner YY_USER_ACTION to update location indicator

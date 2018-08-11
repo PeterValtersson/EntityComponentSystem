@@ -54,6 +54,9 @@
     <ClInclude Include="RenderableManager.h">
       <Filter>Managers\RenderableManager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\Managers\MeshLibrary.h">
+      <Filter>Managers\RenderableManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EntityManager.cpp">
@@ -62,7 +65,6 @@
     <ClCompile Include="EntityManager_Interface.cpp">
       <Filter>Entity</Filter>
     </ClCompile>
-    <ClCompile Include="Memory_Base.cpp" />
     <ClCompile Include="TransformManager_Interface.cpp">
       <Filter>Managers\TransformManager</Filter>
     </ClCompile>
@@ -71,9 +73,6 @@
     </ClCompile>
     <ClCompile Include="SceneManager_Interface.cpp">
       <Filter>Managers\SceneManager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Include\Managers\Manager_Base.cpp">
-      <Filter>Managers</Filter>
     </ClCompile>
     <ClCompile Include="SceneManager.cpp">
       <Filter>Managers\SceneManager</Filter>
@@ -84,5 +83,12 @@
     <ClCompile Include="RenderableManager.cpp">
       <Filter>Managers\RenderableManager</Filter>
     </ClCompile>
+    <ClCompile Include="MeshLibrary.cpp">
+      <Filter>Managers\RenderableManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager_Base.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Memory_Base.cpp" />
   </ItemGroup>
 </Project>

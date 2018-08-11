@@ -45,21 +45,19 @@ namespace ArfData
 
 	struct Indices
 	{
-		uint8_t indexCount;
-		uint32_t index[3];// array of size 4.
+//		uint8_t indexCount;
+		uint32_t index[3];
 	};
 
 	struct Face
 	{
-		uint8_t indexCount;
-		Indices indices[4]; // Array of size 4.
-		Face(std::vector<std::vector<uint32_t>>& face) : indexCount(0)
+		//uint8_t indexCount;
+		Indices indices[3];
+		Face(const std::vector<std::vector<uint32_t>>& face) //: indexCount(0)
 		{
-			indexCount = face.size();
-
-			for (uint8_t i = 0; i < indexCount; i++)
+			for (uint8_t i = 0; i < 3; i++)
 			{
-				indices[i].indexCount = face[i].size();
+				//indices[i].indexCount = face[i].size();
 				for (uint8_t j = 0; j < face[i].size(); j++)
 				{
 					indices[i].index[j] = face[i][j];
@@ -68,7 +66,6 @@ namespace ArfData
 		}
 
 	};
-
 	struct SubMesh
 	{
 		char name[SUBMESH_NAME_MAX_LENGHT];

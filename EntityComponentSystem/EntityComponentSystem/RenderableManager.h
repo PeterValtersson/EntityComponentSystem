@@ -10,10 +10,10 @@ namespace ECS
 		RenderableManager(const RenderableManager_InitializationInfo& ii);
 		~RenderableManager();
 
-		virtual void Create(Entity entity)noexcept override;
+		virtual void Create(Entity entity, ResourceHandler::Resource mesh, ResourceHandler::Resource defaultMesh, ResourceHandler::Resource shader, ResourceHandler::Resource defaultShader)noexcept override;
 
 		virtual bool IsRegistered(Entity entity)const noexcept override;
-		virtual void CreateFromResource(Entity entity, ResourceHandler::Resource resource)noexcept override;
+		virtual void CreateFromResource(Entity entity, ResourceHandler::Resource resource) override;
 		virtual void CreateFromStream(Entity entity, std::istream* stream)noexcept override;
 		virtual uint64_t GetDataWriter(Entity entity, std::function<bool(std::ostream* file)>& writer)const noexcept override;
 		virtual void Destroy(Entity entity)noexcept override;
@@ -45,7 +45,10 @@ namespace ECS
 		Utilities::SofA::Array::SofA<
 			Entity, Entity::Hasher, // Entity
 			bool, //visible
-			ResourceHandler::Resource // Mesh
+			ResourceHandler::Resource, // Mesh
+			ResourceHandler::Resource, // Default Mesh
+			ResourceHandler::Resource, // Shader
+			ResourceHandler::Resource // Default Shader
 		>entries;
 
 		struct EntryNames
@@ -54,9 +57,15 @@ namespace ECS
 			{
 				Entity,
 				Visible,
-				Mesh
+				Mesh,
+				DefaultMesh,
+				Shader,
+				DefaultShader
 			};
 		};
+
+		std::vector<Entity> entitiesToSwitchMesh;
+		std::vector<Entity> entitiesToSwitchShader;
 	};
 }
 #endif

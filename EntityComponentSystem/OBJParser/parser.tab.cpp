@@ -717,7 +717,7 @@ namespace  ObjParser  {
 
   case 13:
 #line 102 "parser.y" // lalr1.cc:846
-    { driver.AddFace(ArfData::Face(yystack_[0].value.as< std::vector<std::vector<uint32_t>> > ()));}
+    { driver.AddFace(yystack_[0].value.as< std::vector<std::vector<uint32_t>> > ());}
 #line 722 "parser.tab.cpp" // lalr1.cc:846
     break;
 
