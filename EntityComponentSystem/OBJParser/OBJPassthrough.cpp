@@ -42,35 +42,74 @@ DLL_EXPORT Utilities::Error DestroyParsedData(uint32_t guid, void * data, uint64
 	operator delete(data);
 	RETURN_SUCCESS;
 }
-
+struct LoadData
+{
+	uint8_t numSubmeshes;
+	ArfData::SubMesh* subMeshes;
+};
 DLL_EXPORT Utilities::Error Load(uint32_t guid, void * data, uint64_t size, void ** loadedDataRAM, uint64_t * loadedSizeRAM, uint64_t * loadedSizeVRAM)
 {
 	auto ph = Graphics::Get()->GetPipelineHandler();
 
 	ArfData::ArfData& adata = *(ArfData::ArfData*)data;
+	*loadedSizeRAM = sizeof(uint8_t) + sizeof(ArfData::SubMesh)*adata.data.NumSubMesh;
+	auto ldata = new LoadData();
+	ldata->numSubmeshes = adata.data.NumSubMesh;
+	ldata->subMeshes = new ArfData::SubMesh[ldata->numSubmeshes];
+	memcpy(ldata->subMeshes, adata.pointers.subMesh, sizeof(ArfData::SubMesh)*adata.data.NumSubMesh);
 
-
+	*loadedDataRAM = ldata;
+	*loadedSizeVRAM = 0;
+	if (adata.data.NumPos == 0)
+		RETURN_ERROR_EX("Mesh with no positions", guid);
+	if(adata.data.NumFace == 0)
+		RETURN_ERROR_EX("Mesh with no faces", guid);
 	PASS_IF_ERROR(
 		ph->CreateBuffer(
-		Utilities::GUID(guid) + Utilities::GUID("Positions"), 
-		Graphics::Pipeline::Buffer::StructuredBuffer(adata.pointers.positions, sizeof(ArfData::Position), adata.data.NumPos)));
+			Utilities::GUID(guid) + Utilities::GUID("Positions"),
+			Graphics::Pipeline::Buffer::StructuredBuffer(adata.pointers.positions, sizeof(ArfData::Position), adata.data.NumPos)));
 	
-	auto r = ph->CreateBuffer(
-		Utilities::GUID(guid) + Utilities::GUID("Normals"),
-		Graphics::Pipeline::Buffer::StructuredBuffer(adata.pointers.normals, sizeof(ArfData::Normal), adata.data.NumNorm));
-	if (r.hash != "Success"_hash)
-	{
-		ph->DestroyBuffer(Utilities::GUID(guid) + Utilities::GUID("Normals"));
-		return r;
-	}
+	*loadedSizeVRAM += sizeof(ArfData::Position)*adata.data.NumPos;
+	
 
-	r = ph->CreateBuffer(
-		Utilities::GUID(guid) + Utilities::GUID("TexCoords"),
-		Graphics::Pipeline::Buffer::StructuredBuffer(adata.pointers.texCoords, sizeof(ArfData::TexCoord), adata.data.NumTex));
-	if (r.hash != "Success"_hash)
+	if (adata.data.NumNorm > 0)
 	{
-		ph->DestroyBuffer(Utilities::GUID(guid) + Utilities::GUID("TexCoords"));
-		return r;
+		auto& r = ph->CreateBuffer(
+			Utilities::GUID(guid) + Utilities::GUID("Normals"),
+			Graphics::Pipeline::Buffer::StructuredBuffer(adata.pointers.normals, sizeof(ArfData::Normal), adata.data.NumNorm));
+		if (r.hash != "Success"_hash)
+		{
+			ph->DestroyBuffer(Utilities::GUID(guid) + Utilities::GUID("Positions"));
+			return r;
+		}
+		*loadedSizeVRAM += sizeof(ArfData::Normal)*adata.data.NumNorm;
+	}
+	if (adata.data.NumTex > 0)
+	{
+		auto& r = ph->CreateBuffer(
+			Utilities::GUID(guid) + Utilities::GUID("TexCoords"),
+			Graphics::Pipeline::Buffer::StructuredBuffer(adata.pointers.texCoords, sizeof(ArfData::TexCoord), adata.data.NumTex));
+		if (r.hash != "Success"_hash)
+		{
+			ph->DestroyBuffer(Utilities::GUID(guid) + Utilities::GUID("Positions"));
+			ph->DestroyBuffer(Utilities::GUID(guid) + Utilities::GUID("Normals"));
+			return r;
+		}
+	
+	*loadedSizeVRAM += sizeof(ArfData::TexCoord)*adata.data.NumTex;
+	}
+	{
+		auto& r = ph->CreateBuffer(
+			Utilities::GUID(guid) + Utilities::GUID("Faces"),
+			Graphics::Pipeline::Buffer::StructuredBuffer(adata.pointers.faces, sizeof(ArfData::Face), adata.data.NumFace));
+		if (r.hash != "Success"_hash)
+		{
+			ph->DestroyBuffer(Utilities::GUID(guid) + Utilities::GUID("Positions"));
+			ph->DestroyBuffer(Utilities::GUID(guid) + Utilities::GUID("Normals"));
+			ph->DestroyBuffer(Utilities::GUID(guid) + Utilities::GUID("TexCoords"));
+			return r;
+		}
+		*loadedSizeVRAM += sizeof(ArfData::Face)*adata.data.NumFace;
 	}
 
 	RETURN_SUCCESS;
@@ -78,5 +117,13 @@ DLL_EXPORT Utilities::Error Load(uint32_t guid, void * data, uint64_t size, void
 
 DLL_EXPORT Utilities::Error Unload(uint32_t guid, void * dataRAM, uint64_t sizeRAM, uint64_t sizeVRAM)
 {
+	auto ph = Graphics::Get()->GetPipelineHandler();
+	ph->DestroyBuffer(Utilities::GUID(guid) + Utilities::GUID("Positions"));
+	ph->DestroyBuffer(Utilities::GUID(guid) + Utilities::GUID("Normals"));
+	ph->DestroyBuffer(Utilities::GUID(guid) + Utilities::GUID("TexCoords"));
+	ph->DestroyBuffer(Utilities::GUID(guid) + Utilities::GUID("Faces"));
+	auto ldata = (LoadData*)dataRAM;
+	delete[] ldata->subMeshes;
+	delete ldata;
 	RETURN_SUCCESS;
 }

@@ -45,15 +45,15 @@ namespace ArfData
 
 	struct Indices
 	{
-//		uint8_t indexCount;
+//		uint8_t indexCount; // Pos/normal/tex
 		uint32_t index[3];
 	};
 
 	struct Face
 	{
 		//uint8_t indexCount;
-		Indices indices[3];
-		Face(const std::vector<std::vector<uint32_t>>& face) //: indexCount(0)
+		Indices indices[3]; 
+		Face(const std::vector<std::vector<uint32_t>>& face) 
 		{
 			for (uint8_t i = 0; i < 3; i++)
 			{
@@ -71,6 +71,7 @@ namespace ArfData
 		char name[SUBMESH_NAME_MAX_LENGHT];
 		uint32_t faceStart;
 		uint32_t faceCount;
+		uint8_t pos_norm_text;
 	};
 
 	struct Data

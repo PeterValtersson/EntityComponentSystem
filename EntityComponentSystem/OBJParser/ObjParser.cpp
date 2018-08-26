@@ -144,6 +144,7 @@ void ObjParser::Interpreter::AddPosition(const ArfData::Position & pos)
 	}
 
 	data->pointers.positions[data->data.NumPos] = pos;
+	data->pointers.subMesh[data->data.NumSubMesh].pos_norm_text |= 1;
 	data->data.NumPos++;
 }
 
@@ -156,6 +157,7 @@ void ObjParser::Interpreter::AddTexCoord(const ArfData::TexCoord & tex)
 	}
 
 	data->pointers.texCoords[data->data.NumTex] = tex;
+	data->pointers.subMesh[data->data.NumSubMesh].pos_norm_text |= 1 << 1;
 	data->data.NumTex++;
 }
 
@@ -168,6 +170,7 @@ void ObjParser::Interpreter::AddNormal(const ArfData::Normal & norm)
 	}
 
 	data->pointers.normals[data->data.NumNorm] = norm;
+	data->pointers.subMesh[data->data.NumSubMesh].pos_norm_text |= 1 << 2;
 	data->data.NumNorm++;
 }
 
@@ -247,6 +250,8 @@ void ObjParser::Interpreter::AddSubMesh(const string & name)
 	data->pointers.subMesh[data->data.NumSubMesh].name[size] = '\0';
 	data->pointers.subMesh[data->data.NumSubMesh].faceStart = data->data.NumFace;
 	data->pointers.subMesh[data->data.NumSubMesh].faceCount = 0;
+	data->pointers.subMesh[data->data.NumSubMesh].pos_norm_text = 0;
+
 	data->data.NumSubMesh++;
 }
 
