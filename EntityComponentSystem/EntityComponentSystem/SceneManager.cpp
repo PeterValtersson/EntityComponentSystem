@@ -20,13 +20,13 @@ struct OneShotReadBuf : public std::streambuf
 		setg(s, s, s + n);
 	}
 };
-uint32_t ECS::SceneManager::GetNumberOfChildResourcesOfSceneResource(ResourceHandler::Resource resource) const noexcept
+uint32_t ECS::SceneManager::GetNumberOfChildResourcesOfSceneResource(ResourceHandler::Resource resource) const 
 {
 	StartProfile;
 
-	if (ResourceData<char*> data; resource.GetData(data.GetVoid()) & ResourceHandler::LoadStatus::LOADED)
 	{
-		OneShotReadBuf osrb(data.Get(), data.GetVoid().size);
+		ResourceHandler::ResourceData<char*> data(resource);
+		OneShotReadBuf osrb(data.Get(), data.GetSize());
 		std::istream istr(&osrb);
 		auto stream = &istr;
 
@@ -42,12 +42,12 @@ uint32_t ECS::SceneManager::GetNumberOfChildResourcesOfSceneResource(ResourceHan
 	return 0;
 }
 
-void ECS::SceneManager::GetChildResourcesOfSceneResource(ResourceHandler::Resource resource, Utilities::GUID resources[], uint32_t num) const noexcept
+void ECS::SceneManager::GetChildResourcesOfSceneResource(ResourceHandler::Resource resource, Utilities::GUID resources[], uint32_t num) const 
 {
 	StartProfile;
-	if (ResourceData<char*> data; resource.GetData(data.GetVoid()) & ResourceHandler::LoadStatus::LOADED)
 	{
-		OneShotReadBuf osrb(data.Get(), data.GetVoid().size);
+		ResourceHandler::ResourceData<char*> data(resource);
+		OneShotReadBuf osrb(data.Get(), data.GetSize());
 		std::istream istr(&osrb);
 		auto stream = &istr;
 
@@ -160,7 +160,7 @@ void ECS::SceneManager::RegisterManager(Manager_Base * manager)noexcept
 }
 
 
-void ECS::SceneManager::CreateFromResource(Entity entity, ResourceHandler::Resource resource)noexcept
+void ECS::SceneManager::CreateFromResource(Entity entity, ResourceHandler::Resource resource)
 {
 	StartProfile;
 	if (auto find = entityToEntry.find(entity); find != entityToEntry.end())
@@ -169,10 +169,9 @@ void ECS::SceneManager::CreateFromResource(Entity entity, ResourceHandler::Resou
 	if (!initInfo.entityManager->IsAlive(entity))
 		return;
 
-
-	if (ResourceData<char*> data; resource.GetData(data.GetVoid()) & ResourceHandler::LoadStatus::LOADED)
 	{
-		OneShotReadBuf osrb(data.Get(), data.GetVoid().size);
+		 ResourceHandler::ResourceData<char*> data(resource);
+		OneShotReadBuf osrb(data.Get(), data.GetSize());
 		std::istream istr(&osrb);
 		CreateFromStream(entity, &istr);
 

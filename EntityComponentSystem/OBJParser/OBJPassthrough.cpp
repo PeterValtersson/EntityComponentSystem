@@ -33,7 +33,7 @@ DLL_EXPORT Utilities::Error Parse(uint32_t guid, void * data, uint64_t size, voi
 		RETURN_ERROR_EX("Could not parse resource: ", guid);
 
 	*parsedData = parser.GetData();
-
+	*parsedSize = (*(ArfData::ArfData*)parsedData).data.allocated + sizeof(ArfData::ArfData);
 	RETURN_SUCCESS;
 }
 
@@ -42,7 +42,7 @@ DLL_EXPORT Utilities::Error DestroyParsedData(uint32_t guid, void * data, uint64
 	operator delete(data);
 	RETURN_SUCCESS;
 }
-struct LoadData
+struct MeshInfo
 {
 	uint8_t numSubmeshes;
 	ArfData::SubMesh* subMeshes;
@@ -53,7 +53,7 @@ DLL_EXPORT Utilities::Error Load(uint32_t guid, void * data, uint64_t size, void
 
 	ArfData::ArfData& adata = *(ArfData::ArfData*)data;
 	*loadedSizeRAM = sizeof(uint8_t) + sizeof(ArfData::SubMesh)*adata.data.NumSubMesh;
-	auto ldata = new LoadData();
+	auto ldata = new MeshInfo();
 	ldata->numSubmeshes = adata.data.NumSubMesh;
 	ldata->subMeshes = new ArfData::SubMesh[ldata->numSubmeshes];
 	memcpy(ldata->subMeshes, adata.pointers.subMesh, sizeof(ArfData::SubMesh)*adata.data.NumSubMesh);
@@ -122,7 +122,7 @@ DLL_EXPORT Utilities::Error Unload(uint32_t guid, void * dataRAM, uint64_t sizeR
 	ph->DestroyBuffer(Utilities::GUID(guid) + Utilities::GUID("Normals"));
 	ph->DestroyBuffer(Utilities::GUID(guid) + Utilities::GUID("TexCoords"));
 	ph->DestroyBuffer(Utilities::GUID(guid) + Utilities::GUID("Faces"));
-	auto ldata = (LoadData*)dataRAM;
+	auto ldata = (MeshInfo*)dataRAM;
 	delete[] ldata->subMeshes;
 	delete ldata;
 	RETURN_SUCCESS;

@@ -384,7 +384,7 @@ namespace ECS
 		return entries.find(entity).has_value();
 	}
 
-	void TransformManager::CreateFromResource(Entity entity, ResourceHandler::Resource resource)noexcept
+	void TransformManager::CreateFromResource(Entity entity, ResourceHandler::Resource resource)
 	{
 		struct Component
 		{
@@ -400,10 +400,9 @@ namespace ECS
 
 		if (!initInfo.entityManager->IsAlive(entity))
 			return;
-
-		
-		if (ResourceData<Component> data; resource.GetData(data.GetVoid()) & ResourceHandler::LoadStatus::LOADED)
+	
 		{
+			ResourceHandler::ResourceData<Component> data(resource);
 			auto index = entries.add(entity);
 
 			entries.get<EntryNames::Position>(index) = data.Get().pos;

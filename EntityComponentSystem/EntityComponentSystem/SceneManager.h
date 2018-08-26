@@ -21,11 +21,11 @@ namespace ECS
 		virtual const char* GetNameOfScene(Entity scene)const noexcept override;
 		virtual void SetNameOfEntityInScene(Entity scene, Entity entity, const std::string& name)noexcept override;
 		virtual const char* GetNameOfEntityInScene(Entity scene, Entity entity)const noexcept override;
-		virtual uint32_t GetNumberOfChildResourcesOfSceneResource(ResourceHandler::Resource resource)const noexcept override;
-		virtual void GetChildResourcesOfSceneResource(ResourceHandler::Resource resource, Utilities::GUID resources[], uint32_t num)const noexcept override;
+		virtual uint32_t GetNumberOfChildResourcesOfSceneResource(ResourceHandler::Resource resource)const override;
+		virtual void GetChildResourcesOfSceneResource(ResourceHandler::Resource resource, Utilities::GUID resources[], uint32_t num)const override;
 
 
-		virtual void CreateFromResource(Entity entity, ResourceHandler::Resource resource)noexcept override;
+		virtual void CreateFromResource(Entity entity, ResourceHandler::Resource resource) override;
 		virtual void CreateFromStream(Entity entity, std::istream* stream)noexcept override;
 		virtual uint64_t GetDataWriter(Entity entity, std::function<bool(std::ostream* file)>& writer)const noexcept override;
 

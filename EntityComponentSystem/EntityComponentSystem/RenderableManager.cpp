@@ -45,17 +45,11 @@ namespace ECS
 		StartProfile;
 		if (auto find = entries.find(entity); find.has_value())
 			return;
-		resource.CheckIn();
-		ResourceData<RenderableManager_ResourceInfo> info;
+
+		ResourceData<RenderableManager_ResourceInfo> info(resource);
 		
 		size_t index = entries.add(entity);
 		entries.get<EntryNames::Visible>(index) = false;
-
-		auto status = resource.GetData(info);
-		if (status != ResourceHandler::LoadStatus::LOADED)
-		{
-			THROW_ERROR_EX("Could not CreateFromResource, Could not load: ", resource.GUID());
-		}
 		entries.get<EntryNames::Mesh>(index) = info->mesh;
 		entries.get<EntryNames::Mesh>(index).Reset();
 		entries.get<EntryNames::DefaultMesh>(index) = info->defaultMesh;
