@@ -30,8 +30,8 @@ namespace ECS
 		RenderableManager_Interface() {  };
 	};
 }
-DECLDIR_ECS ECS::RenderableManager_Interface* RenderableManager_CreateRenderableManager(ECS::RenderableManager_InitializationInfo ii);
-DECLDIR_ECS void RenderableManager_Create_C(ECS::RenderableManager_Interface* rm, uint32_t entity, 
+DECLDIR_ECS_C ECS::RenderableManager_Interface* RenderableManager_CreateRenderableManager(ECS::RenderableManager_InitializationInfo ii);
+DECLDIR_ECS_C void RenderableManager_Create_C(ECS::RenderableManager_Interface* rm, uint32_t entity, 
 	const char* mesh, const char* meshType,
 	const char* defaultMesh, const char* defaultMeshType,
 	const char* shader, const char* shaderType,

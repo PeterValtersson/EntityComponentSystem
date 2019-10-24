@@ -288,7 +288,7 @@ uint64_t ECS::SceneManager::GetDataWriter(Entity entity, std::function<bool(std:
 		{
 			if (m == this)
 				continue;
-			if (m->IsRegistered(entity))
+			if (m->is_registered(entity))
 			{
 				Component comp{ m->GetManagerType() };
 
@@ -312,7 +312,7 @@ uint64_t ECS::SceneManager::GetDataWriter(Entity entity, std::function<bool(std:
 			WriteInfo info{ names[i], 0 };
 			size += sizeof(uint32_t) + static_cast<uint64_t>(info.name.size());
 			size += sizeof(uint32_t);
-			if (IsRegistered(e))
+			if (is_registered(e))
 			{
 				Component comp{ GetManagerType() };
 				comp.writer = [](std::ostream* out)
@@ -329,7 +329,7 @@ uint64_t ECS::SceneManager::GetDataWriter(Entity entity, std::function<bool(std:
 				for (auto m : managers)
 				{
 
-					if (m->IsRegistered(e))
+					if (m->is_registered(e))
 					{
 						Component comp{ m->GetManagerType() };
 						uint64_t writerSize = 0;
@@ -624,12 +624,12 @@ void ECS::SceneManager::Frame()noexcept
 	StartProfile;
 }
 
-uint64_t ECS::SceneManager::GetMemoryUsage() const noexcept
+uint64_t ECS::SceneManager::get_memory_usage() const noexcept
 {
 	return uint64_t();
 }
 
-void ECS::SceneManager::ShrinkToFit() noexcept
+void ECS::SceneManager::shrink_to_fit() noexcept
 {
 	StartProfile;
 	for (auto& eis : entries.entitiesInScene)
@@ -646,7 +646,7 @@ void ECS::SceneManager::ShrinkToFit() noexcept
 
 
 
-bool ECS::SceneManager::IsRegistered(Entity entity) const noexcept
+bool ECS::SceneManager::is_registered(Entity entity) const noexcept
 {
 	return entityToEntry.find(entity) != entityToEntry.end();
 }
@@ -681,11 +681,11 @@ void ECS::SceneManager::ToggleActive(const Entity entities[], uint32_t numEntite
 {
 }
 
-void ECS::SceneManager::WriteToFile(std::ofstream & file) const 
+void ECS::SceneManager::write_to_file(std::ofstream & file) const 
 {
 }
 
-void ECS::SceneManager::CreateFromFile(std::ifstream & file)
+void ECS::SceneManager::create_from_file(std::ifstream & file)
 {
 }
 

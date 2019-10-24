@@ -9,18 +9,18 @@ namespace ECS
 	{
 	public:
 		virtual ~Memory_Base() {}
-		virtual uint64_t GetMemoryUsage()const noexcept = 0;
-		virtual void ShrinkToFit() noexcept = 0;
-		virtual void WriteToFile(std::ofstream& file)const = 0;
-		virtual void CreateFromFile(std::ifstream& file) = 0;
+		virtual size_t get_memory_usage()const noexcept = 0;
+		virtual void shrink_to_fit() noexcept = 0;
+		virtual void write_to_file(std::ofstream& file)const = 0;
+		virtual void create_from_file(std::ifstream& file) = 0;
 	protected:
 		Memory_Base() {}
 	};
-}
+}/*
 
-DECLDIR_ECS uint64_t Memory_Base_GetMemoryUsage_C(ECS::Memory_Base* mb);
-DECLDIR_ECS void Memory_Base_ShrinkToFit_C(ECS::Memory_Base* mb);
-DECLDIR_ECS void Memory_Base_WriteToFile_C(ECS::Memory_Base* mb, std::ofstream* file);
-DECLDIR_ECS void Memory_Base_CreateFromFile_C(ECS::Memory_Base* mb, std::ifstream* file);
-DECLDIR_ECS void Delete_C(ECS::Memory_Base* mb);
+DECLDIR_ECS_C size_t Memory_Base_GetMemoryUsage_C(ECS::Memory_Base* mb);
+DECLDIR_ECS_C void Memory_Base_ShrinkToFit_C(ECS::Memory_Base* mb);
+DECLDIR_ECS_C void Memory_Base_WriteToFile_C(ECS::Memory_Base* mb, std::ofstream* file);
+DECLDIR_ECS_C void Memory_Base_CreateFromFile_C(ECS::Memory_Base* mb, std::ifstream* file);
+DECLDIR_ECS_C void Delete_C(ECS::Memory_Base* mb);*/
 #endif

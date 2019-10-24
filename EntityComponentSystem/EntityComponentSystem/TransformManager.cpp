@@ -325,11 +325,11 @@ namespace ECS
 				entries.destroy(find->second);
 		}
 	}
-	uint64_t TransformManager::GetMemoryUsage() const noexcept
+	uint64_t TransformManager::get_memory_usage() const noexcept
 	{
-		return entries.GetMemoryUsage() + sizeof(*this);
+		return entries.get_memory_usage() + sizeof(*this);
 	}
-	void TransformManager::ShrinkToFit()noexcept
+	void TransformManager::shrink_to_fit()noexcept
 	{
 		StartProfile;
 		entries.shrink_to_fit();
@@ -379,7 +379,7 @@ namespace ECS
 
 	}
 
-	bool TransformManager::IsRegistered(Entity entity) const noexcept
+	bool TransformManager::is_registered(Entity entity) const noexcept
 	{
 		return entries.find(entity).has_value();
 	}
@@ -460,7 +460,7 @@ namespace ECS
 	{
 	}
 
-	void TransformManager::WriteToFile(std::ofstream & file) const
+	void TransformManager::write_to_file(std::ofstream & file) const
 	{
 		StartProfile;
 		file.write((char*)&version, sizeof(version));
@@ -474,7 +474,7 @@ namespace ECS
 		file.write((char*)entries.getConst<EntryNames::Child>(), sizeof(uint32_t)*used);
 		file.write((char*)entries.getConst<EntryNames::Sibling>(), sizeof(uint32_t)*used);
 	}
-	void TransformManager::CreateFromFile(std::ifstream & file)
+	void TransformManager::create_from_file(std::ifstream & file)
 	{
 		StartProfile;
 		uint32_t ver = 0;

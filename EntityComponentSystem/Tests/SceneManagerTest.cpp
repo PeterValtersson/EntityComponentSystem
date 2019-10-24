@@ -261,14 +261,14 @@ namespace Tests
 				Assert::AreEqual(3u, sm->GetNumberOfRegisteredEntities());
 				Assert::AreEqual(2u, sm->GetNumberOfEntitiesInScene(sceneNew));
 				Assert::AreEqual(5u, tm->GetNumberOfRegisteredEntities());
-				Assert::IsTrue(tm->IsRegistered(sceneNew));
+				Assert::IsTrue(tm->is_registered(sceneNew));
 				Assert::AreEqual("NewWorld", sm->GetNameOfScene(sceneNew));
 				Entity ents[2];
 				sm->GetEntitiesInScene(sceneNew, ents);
 				Assert::AreEqual("E1", sm->GetNameOfEntityInScene(sceneNew, ents[0]));
 				Assert::AreEqual("Child", sm->GetNameOfEntityInScene(sceneNew, ents[1]));
 				Entity ents2[2];
-				Assert::IsTrue(sm->IsRegistered(ents[1]));
+				Assert::IsTrue(sm->is_registered(ents[1]));
 				Assert::AreEqual(2u, sm->GetNumberOfEntitiesInScene(ents[1]));
 				sm->GetEntitiesInScene(ents[1], ents2);
 				Assert::AreEqual("E2", sm->GetNameOfEntityInScene(ents[1], ents2[0]));

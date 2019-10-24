@@ -23,10 +23,10 @@ namespace ECS
 		virtual void UnregisterManagerForDestroyNow(Manager_Base* manager)noexcept   override;
 
 
-		virtual uint64_t GetMemoryUsage()const noexcept override;
-		virtual void ShrinkToFit() noexcept override;
-		virtual void WriteToFile(std::ofstream& file)const override;
-		virtual void CreateFromFile(std::ifstream& file)override;
+		virtual uint64_t get_memory_usage()const noexcept override;
+		virtual void shrink_to_fit() noexcept override;
+		virtual void write_to_file(std::ofstream& file)const override;
+		virtual void create_from_file(std::ifstream& file)override;
 	private:
 		std::vector<Entity::GENERATION_TYPE> generation;
 		std::stack<decltype(Entity::id) > freeIndices;

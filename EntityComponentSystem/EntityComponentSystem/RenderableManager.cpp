@@ -36,7 +36,7 @@ namespace ECS
 		entries.get<EntryNames::Shader>(index) = shader;
 		entries.get<EntryNames::DefaultShader>(index) = defaultShader;
 	}
-	bool RenderableManager::IsRegistered(Entity entity) const noexcept
+	bool RenderableManager::is_registered(Entity entity) const noexcept
 	{
 		return entries.find(entity).has_value();
 	}
@@ -185,16 +185,16 @@ namespace ECS
 		return "Renderable";
 	}
 
-	void RenderableManager::CreateFromFile(std::ifstream & file)noexcept
+	void RenderableManager::create_from_file(std::ifstream & file)noexcept
 	{
 	}
-	void RenderableManager::WriteToFile(std::ofstream & file) const noexcept
+	void RenderableManager::write_to_file(std::ofstream & file) const noexcept
 	{
 	}
-	void RenderableManager::ShrinkToFit()noexcept
+	void RenderableManager::shrink_to_fit()noexcept
 	{
 	}
-	uint64_t RenderableManager::GetMemoryUsage() const noexcept
+	uint64_t RenderableManager::get_memory_usage() const noexcept
 	{
 		return uint64_t();
 	}

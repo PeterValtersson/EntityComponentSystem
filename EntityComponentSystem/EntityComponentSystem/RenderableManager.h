@@ -12,7 +12,7 @@ namespace ECS
 
 		virtual void Create(Entity entity, ResourceHandler::Resource mesh, ResourceHandler::Resource defaultMesh, ResourceHandler::Resource shader, ResourceHandler::Resource defaultShader)noexcept override;
 
-		virtual bool IsRegistered(Entity entity)const noexcept override;
+		virtual bool is_registered(Entity entity)const noexcept override;
 		virtual void CreateFromResource(Entity entity, ResourceHandler::Resource resource) override;
 		virtual void CreateFromStream(Entity entity, std::istream* stream)noexcept override;
 		virtual uint64_t GetDataWriter(Entity entity, std::function<bool(std::ostream* file)>& writer)const noexcept override;
@@ -30,10 +30,10 @@ namespace ECS
 
 		virtual Utilities::GUID GetManagerType()const noexcept override;
 
-		virtual uint64_t GetMemoryUsage()const noexcept override;
-		virtual void ShrinkToFit()noexcept override;
-		virtual void WriteToFile(std::ofstream& file)const noexcept override;
-		virtual void CreateFromFile(std::ifstream& file)noexcept override;
+		virtual uint64_t get_memory_usage()const noexcept override;
+		virtual void shrink_to_fit()noexcept override;
+		virtual void write_to_file(std::ofstream& file)const noexcept override;
+		virtual void create_from_file(std::ifstream& file)noexcept override;
 
 		virtual void UpdateEntityTransforms(const Matrix transforms[], const Entity entities[], uint32_t numEntities)noexcept override;
 	protected:

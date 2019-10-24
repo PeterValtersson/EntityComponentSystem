@@ -141,7 +141,7 @@ namespace ECS
 				managers.pop_back();
 			}
 	}
-	uint64_t EntityManager::GetMemoryUsage() const noexcept
+	uint64_t EntityManager::get_memory_usage() const noexcept
 	{
 		StartProfile;
 		uint64_t size = 0;
@@ -151,13 +151,13 @@ namespace ECS
 		size += sizeof(*this);
 		return  size;
 	}
-	void EntityManager::ShrinkToFit()noexcept
+	void EntityManager::shrink_to_fit()noexcept
 	{
 		StartProfile;
 		generation.shrink_to_fit();
 		managers.shrink_to_fit();
 	}
-	void EntityManager::WriteToFile(std::ofstream & file) const
+	void EntityManager::write_to_file(std::ofstream & file) const
 	{
 		StartProfile;
 		uint32_t size = static_cast<uint32_t>(generation.size());
@@ -178,7 +178,7 @@ namespace ECS
 
 	}
 
-	void EntityManager::CreateFromFile(std::ifstream & file)
+	void EntityManager::create_from_file(std::ifstream & file)
 	{
 		StartProfile;
 		uint32_t size = 0;

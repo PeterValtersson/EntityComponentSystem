@@ -44,7 +44,7 @@ namespace ECS
 		virtual void CreateFromStream(Entity entity, std::istream* stream)noexcept override;
 		virtual uint64_t GetDataWriter(Entity entity, std::function<bool(std::ostream* file)>& writer)const noexcept override;
 
-		virtual bool IsRegistered(Entity entity)const noexcept override;
+		virtual bool is_registered(Entity entity)const noexcept override;
 		virtual void Destroy(Entity entity)noexcept override;
 		virtual void DestroyEntities(const Entity entities[], uint32_t numEntities)noexcept override;
 		virtual void DestroyAll()noexcept override;
@@ -57,10 +57,10 @@ namespace ECS
 		virtual void Frame()noexcept override;
 		virtual Utilities::GUID GetManagerType()const noexcept override;
 
-		virtual uint64_t GetMemoryUsage()const noexcept override;
-		virtual void ShrinkToFit()noexcept override;
-		virtual void WriteToFile(std::ofstream& file)const override;
-		virtual void CreateFromFile(std::ifstream& file) override;
+		virtual uint64_t get_memory_usage()const noexcept override;
+		virtual void shrink_to_fit()noexcept override;
+		virtual void write_to_file(std::ofstream& file)const override;
+		virtual void create_from_file(std::ifstream& file) override;
 	private:
 		virtual void GarbageCollection()noexcept override;
 		void UpdateDirtyEntities()noexcept;
