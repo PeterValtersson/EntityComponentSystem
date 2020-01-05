@@ -25,8 +25,8 @@ namespace ECS
 
 		virtual uint64_t get_memory_usage()const noexcept override;
 		virtual void shrink_to_fit() noexcept override;
-		virtual void write_to_file(std::ofstream& file)const override;
-		virtual void create_from_file(std::ifstream& file)override;
+		virtual void write_to_stream(std::ostream& stream)const override;
+		virtual void create_from_stream(std::istream& stream )override;
 	private:
 		std::vector<Entity::GENERATION_TYPE> generation;
 		std::stack<decltype(Entity::id) > freeIndices;

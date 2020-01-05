@@ -3,6 +3,8 @@
 #include <stdint.h>
 #include "DLLExport.h"
 #include <fstream>
+#include <memory>
+
 namespace ECS
 {
 	class Memory_Base
@@ -10,9 +12,9 @@ namespace ECS
 	public:
 		virtual ~Memory_Base() {}
 		virtual size_t get_memory_usage()const noexcept = 0;
-		virtual void shrink_to_fit() noexcept = 0;
-		virtual void write_to_file(std::ofstream& file)const = 0;
-		virtual void create_from_file(std::ifstream& file) = 0;
+		virtual void shrink_to_fit() = 0;
+		virtual void write_to_stream(std::ostream& stream)const = 0;
+		virtual void create_from_stream(std::istream& stream) = 0;
 	protected:
 		Memory_Base() {}
 	};

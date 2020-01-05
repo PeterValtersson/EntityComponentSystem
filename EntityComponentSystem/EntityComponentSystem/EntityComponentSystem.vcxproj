@@ -47,11 +47,8 @@
     <ClCompile Include="TransformManager_Interface.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Renderer\Renderer\Renderer\Renderer.vcxproj">
-      <Project>{ff7b443e-8ce6-45f7-892c-b4f2a67fef18}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\ResourceHandler\ResourceHandler\ResourceHandler\ResourceHandler.vcxproj">
-      <Project>{d4cccf45-cbb6-406f-8b19-53666ae769b2}</Project>
+    <ProjectReference Include="..\..\..\Utilities\Utilities\Profiler\Profiler.vcxproj">
+      <Project>{bae4cf46-4926-4052-a0b5-290947489c07}</Project>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -109,28 +106,28 @@
     <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
     <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
     <TargetExt>.dll</TargetExt>
-    <IncludePath>$(SolutionDir)../../Utilities/Utilities/Include/;$(SolutionDir)../../Renderer/Renderer\Include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../../Utilities/Utilities/Include;$(SolutionDir)../../Renderer/Renderer\Include/;$(SolutionDir)../../Resource-Handler\ResourceHandler/include/;$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/Include/;$(IncludePath)</IncludePath>
     <TargetName>ECS</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
     <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
     <TargetExt>.dll</TargetExt>
-    <IncludePath>$(SolutionDir)../../Utilities/Utilities/Include/;$(SolutionDir)../../Renderer/Renderer\Include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../../Utilities/Utilities/Include;$(SolutionDir)../../Renderer/Renderer\Include/;$(SolutionDir)../../Resource-Handler\ResourceHandler/include/;$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/Include/;$(IncludePath)</IncludePath>
     <TargetName>ECS</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
     <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
     <TargetExt>.dll</TargetExt>
-    <IncludePath>$(SolutionDir)../../Utilities/Utilities/Include/;$(SolutionDir)../../Renderer/Renderer\Include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../../Utilities/Utilities/Include;$(SolutionDir)../../Renderer/Renderer\Include/;$(SolutionDir)../../Resource-Handler\ResourceHandler/include/;$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/Include/;$(IncludePath)</IncludePath>
     <TargetName>ECS</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
     <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
     <TargetExt>.dll</TargetExt>
-    <IncludePath>$(SolutionDir)../../Utilities/Utilities/Include/;$(SolutionDir)../../Renderer/Renderer\Include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../../Utilities/Utilities/Include;$(SolutionDir)../../Renderer/Renderer\Include/;$(SolutionDir)../../Resource-Handler\ResourceHandler/include/;$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/Include/;$(IncludePath)</IncludePath>
     <TargetName>ECS</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

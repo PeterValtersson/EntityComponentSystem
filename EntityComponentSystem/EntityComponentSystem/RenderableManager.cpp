@@ -25,7 +25,7 @@ namespace ECS
 
 	void RenderableManager::Create(Entity entity, ResourceHandler::Resource mesh, ResourceHandler::Resource defaultMesh, ResourceHandler::Resource shader, ResourceHandler::Resource defaultShader)noexcept
 	{
-		StartProfile;
+		PROFILE;
 		if (auto find = entries.find(entity); find.has_value())
 			return;
 		
@@ -42,7 +42,7 @@ namespace ECS
 	}
 	void RenderableManager::CreateFromResource(Entity entity, ResourceHandler::Resource resource)
 	{
-		StartProfile;
+		PROFILE;
 		if (auto find = entries.find(entity); find.has_value())
 			return;
 
@@ -69,13 +69,13 @@ namespace ECS
 	}
 	void RenderableManager::Destroy(Entity entity)noexcept
 	{
-		StartProfile;
+		PROFILE;
 		ToggleActive(entity, false);
 		entries.erase(entity);
 	}
 	void RenderableManager::DestroyEntities(const Entity entities[], uint32_t numEntities)noexcept
 	{
-		StartProfile;
+		PROFILE;
 		for (uint32_t i = 0; i < numEntities; i++) {
 			ToggleActive(entities[i], false);
 			entries.erase(entities[i]);
@@ -87,7 +87,7 @@ namespace ECS
 	}	
 	void RenderableManager::ToggleActive(Entity entity, bool active)noexcept
 	{
-		StartProfile;
+		PROFILE;
 		if (auto find = entries.find(entity); find.has_value())
 		{
 			if (entries.get<EntryNames::Visible>(find->second) == active)
@@ -128,7 +128,7 @@ namespace ECS
 
 	void RenderableManager::ToggleActive(const Entity entities[], uint32_t numEntites, bool active)noexcept
 	{
-		StartProfile;
+		PROFILE;
 		for (uint32_t i = 0; i < numEntites; ++i)
 		{
 			if (auto find = entries.find(entities[i]); find.has_value())

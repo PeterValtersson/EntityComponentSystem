@@ -1,6 +1,6 @@
 #include <Managers\SceneManager_Interface.h>
-#include "SceneManager.h"
-DECLDIR_ECS_C ECS::SceneManager_Interface * SceneManager_CreateSceneManager_C(ECS::SceneManager_InitializationInfo ii)
+#include "SceneManager.h"/*
+DECLDIR_ECS_C ECS::SceneManager_Interface * SceneManager_CreateSceneManager_C(ECS::SceneManager_Init_Info ii)
 {
 	return new ECS::SceneManager(ii);
 }
@@ -73,4 +73,9 @@ DECLDIR_ECS_C uint32_t SceneManager_GetNumberOfChildResourcesOfSceneResource_C(E
 DECLDIR_ECS_C void SceneManager_GetChildResourcesOfSceneResource_C(ECS::SceneManager_Interface * sm, uint32_t guid, uint32_t * resources, uint32_t numResources)
 {
 	sm->GetChildResourcesOfSceneResource(ResourceHandler::Resource(guid, sm->GetManagerType()), (Utilities::GUID*)resources, numResources);
+}*/
+
+DECLDIR_ECS std::shared_ptr<ECS::SceneManager_Interface> ECS::SceneManager_Interface::create( SceneManager_Init_Info init_info )
+{
+	return std::make_shared<SceneManager_Interface>( init_info );
 }

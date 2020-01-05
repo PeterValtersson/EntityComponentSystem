@@ -665,7 +665,7 @@ namespace Tests
 
 				auto em = EntityManager_CreateEntityManager_C();
 
-				TransformManager_InitializationInfo tmii;
+				TransformManager_Init_Info tmii;
 				tmii.entityManager = em;
 				auto tm = TransformManager_CreateTransformManager_C(tmii);
 

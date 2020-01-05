@@ -1,5 +1,5 @@
 #include <EntityManager_Interface.h>
-#include "EntityManager.h"
+#include "EntityManager.h"/*
 ECS::EntityManager_Interface * EntityManager_CreateEntityManager_C()
 {
 	return new ECS::EntityManager();
@@ -58,4 +58,9 @@ DECLDIR_ECS_C void EntityManager_RegisterManagerForDestroyNow_C(ECS::EntityManag
 DECLDIR_ECS_C void EntityManager_UnregisterManagerForDestroyNow_C(ECS::EntityManager_Interface * em, ECS::Manager_Base * manager)
 {
 	em->UnregisterManagerForDestroyNow(manager);
+}*/
+
+DECLDIR_ECS_C std::shared_ptr<ECS::EntityManager_Interface> ECS::EntityManager_Interface::create()
+{
+	return std::make_shared<EntityManager>();
 }
