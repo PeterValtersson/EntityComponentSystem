@@ -23,10 +23,10 @@ namespace ECS
 		generation.push_back( 0 );
 		return Entity( 0, index );
 	}
-	void EntityManager::CreateMultiple( Entity entities[], uint32_t numEntities )noexcept
+	void EntityManager::CreateMultiple( Entity entities[], size_t numEntities )noexcept
 	{
 		PROFILE;
-		for ( uint32_t i = 0; i < numEntities; i++ )
+		for ( size_t i = 0; i < numEntities; i++ )
 		{
 			if ( freeIndices.size() )
 			{
@@ -39,6 +39,11 @@ namespace ECS
 			generation.push_back( 0 );
 			entities[i] = Entity( 0, index );
 		}
+	}
+
+	void EntityManager::CreateMultiple( std::vector<Entity>& entities ) noexcept
+	{
+		CreateMultiple( entities.data(), entities.size() );
 	}
 
 	bool EntityManager::IsAlive( Entity entity )noexcept
@@ -61,10 +66,10 @@ namespace ECS
 	}
 
 
-	void EntityManager::DestroyMultiple( const Entity entities[], uint32_t numEntities )noexcept
+	void EntityManager::DestroyMultiple( const Entity entities[], size_t numEntities )noexcept
 	{
 		PROFILE;
-		for ( uint32_t i = 0; i < numEntities; i++ )
+		for ( size_t i = 0; i < numEntities; i++ )
 		{
 			if ( generation.size() <= entities[i].Index() )
 				continue;
@@ -75,12 +80,13 @@ namespace ECS
 			}
 		}
 	}
-	void EntityManager::DestroyMultipleNow( const Entity entities[], uint32_t numEntities )noexcept
+	void EntityManager::DestroyMultipleNow( const Entity entities[], size_t numEntities )noexcept
 	{
 		PROFILE;
 		for ( auto m : managers )
-			m->DestroyEntities( entities, numEntities );
-		for ( uint32_t i = 0; i < numEntities; i++ )
+			if ( auto ml = m.lock() )
+				ml->DestroyMultiple( entities, numEntities );
+		for ( size_t i = 0; i < numEntities; i++ )
 		{
 			if ( generation.size() <= entities[i].Index() )
 				continue;
@@ -92,6 +98,14 @@ namespace ECS
 				freeIndices.push( entities[i].Index() );
 			}
 		}
+	}
+	void EntityManager::DestroyMultiple( const std::vector<Entity>& entities ) noexcept
+	{
+		DestroyMultiple( entities.data(), entities.size() );
+	}
+	void EntityManager::DestroyMultipleNow( const std::vector<Entity>& entities ) noexcept
+	{
+		DestroyMultipleNow( entities.data(), entities.size() );
 	}
 	void EntityManager::DestroyNow( Entity entity )noexcept
 	{
@@ -101,7 +115,8 @@ namespace ECS
 		if ( generation[entity.Index()] == entity.Gen() )
 		{
 			for ( auto m : managers )
-				m->Destroy( entity );
+				if ( auto ml = m.lock() )
+					ml->Destroy( entity );
 			generation[entity.Index()]++;
 			freeIndices.push( entity.Index() );
 		}
@@ -112,33 +127,41 @@ namespace ECS
 		if ( immediate )
 		{
 			for ( auto m : managers )
-				m->DestroyAll();
+				if ( auto ml = m.lock() )
+					ml->DestroyAll();
 
 		}
 		generation.clear();
 		freeIndices = std::stack<decltype( Entity::id )>();
 	}
-	uint32_t EntityManager::GetNumberOfAliveEntities() const noexcept
+	size_t EntityManager::GetNumberOfAliveEntities() const noexcept
 	{
-		return static_cast< uint32_t >( generation.size() ) - static_cast< uint32_t >( freeIndices.size() );
+		return  generation.size() - freeIndices.size();
 	}
-	void EntityManager::RegisterManagerForDestroyNow( Manager_Base* manager )noexcept
+	void EntityManager::RegisterManagerForDestroyNow( std::weak_ptr<Manager_Base> manager )noexcept
 	{
 		PROFILE;
-		for ( auto& m : managers )
-			if ( m == manager )
-				return;
-		managers.push_back( manager );
+		if ( auto manager_lock = manager.lock() )
+		{
+			for ( auto& m : managers )
+				if ( auto ml = m.lock(); ml && ml->GetManagerType() == manager_lock->GetManagerType() )
+					return;
+			managers.push_back( manager );
+		}
 	}
-	void EntityManager::UnregisterManagerForDestroyNow( Manager_Base* manager )noexcept
+	void EntityManager::UnregisterManagerForDestroyNow( Utilities::GUID manager )noexcept
 	{
 		PROFILE;
+
 		for ( size_t i = 0; i < managers.size(); i++ )
-			if ( managers[i] == manager )
+			if ( auto ml = managers[i].lock(); ml && ml->GetManagerType() == manager )
 			{
 				managers[i] = managers[managers.size() - 1];
 				managers.pop_back();
+				return;
 			}
+
+
 	}
 	uint64_t EntityManager::get_memory_usage() const noexcept
 	{
@@ -176,7 +199,7 @@ namespace ECS
 		Utilities::Binary_Stream::write( stream, fi.data(), size * sizeof( decltype( Entity::id ) ) );
 	}
 
-	void EntityManager::create_from_stream( std::istream& stream )
+	void EntityManager::read_from_stream( std::istream& stream )
 	{
 		PROFILE;
 		uint32_t size = 0;

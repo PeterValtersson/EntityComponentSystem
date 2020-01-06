@@ -79,25 +79,25 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
     <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
-    <IncludePath>$(SolutionDir)../../Renderer/Renderer/Include/;$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/OBJParser\FlexLexer;$(SolutionDir)../../Utilities/Utilities/Include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../../Renderer/Renderer/Include/;$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/OBJParser\FlexLexer;$(SolutionDir)../../Utilities/Utilities/Include;$(SolutionDir)../../Resource-Handler\ResourceHandler/include/;$(SolutionDir)Include/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
     <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
-    <IncludePath>$(SolutionDir)../../Renderer/Renderer/Include/;$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/OBJParser\FlexLexer;$(SolutionDir)../../Utilities/Utilities/Include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../../Renderer/Renderer/Include/;$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/OBJParser\FlexLexer;$(SolutionDir)../../Utilities/Utilities/Include;$(SolutionDir)../../Resource-Handler\ResourceHandler/include/;$(SolutionDir)Include/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
     <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
-    <IncludePath>$(SolutionDir)../../Renderer/Renderer/Include/;$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/OBJParser\FlexLexer;$(SolutionDir)../../Utilities/Utilities/Include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../../Renderer/Renderer/Include/;$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/OBJParser\FlexLexer;$(SolutionDir)../../Utilities/Utilities/Include;$(SolutionDir)../../Resource-Handler\ResourceHandler/include/;$(SolutionDir)Include/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Build/$(Configuration)/$(Platform)/</OutDir>
     <IntDir>$(ProjectDir)Intermediate/$(Configuration)/$(Platform)/</IntDir>
-    <IncludePath>$(SolutionDir)../../Renderer/Renderer/Include/;$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/OBJParser\FlexLexer;$(SolutionDir)../../Utilities/Utilities/Include/;$(SolutionDir)../../ResourceHandler\ResourceHandler\Include/;$(SolutionDir)Include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)../../Renderer/Renderer/Include/;$(SolutionDir)../../EntityComponentSystem/EntityComponentSystem/OBJParser\FlexLexer;$(SolutionDir)../../Utilities/Utilities/Include;$(SolutionDir)../../Resource-Handler\ResourceHandler/include/;$(SolutionDir)Include/;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -107,6 +107,8 @@
       <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UseFullPaths>true</UseFullPaths>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -121,6 +123,8 @@
       <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UseFullPaths>true</UseFullPaths>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -137,6 +141,8 @@
       <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UseFullPaths>true</UseFullPaths>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -155,6 +161,8 @@
       <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UseFullPaths>true</UseFullPaths>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -181,17 +189,8 @@
     <ClCompile Include="EntityManagerTest.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Renderer\Renderer\Renderer\Renderer.vcxproj">
-      <Project>{ff7b443e-8ce6-45f7-892c-b4f2a67fef18}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\ResourceHandler\ResourceHandler\ResourceHandler\ResourceHandler.vcxproj">
-      <Project>{d4cccf45-cbb6-406f-8b19-53666ae769b2}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\EntityComponentSystem\EntityComponentSystem.vcxproj">
       <Project>{70e14de8-7ff0-4249-9b02-ed33116c837d}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\OBJParser\OBJParser.vcxproj">
-      <Project>{64a37052-155c-41c3-8967-caadb39d3e23}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

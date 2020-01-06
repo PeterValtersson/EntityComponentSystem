@@ -15,7 +15,7 @@ DECLDIR_ECS_C void SceneManager_AddEntityToScene_C(ECS::SceneManager_Interface *
 	sm->AddEntityToScene(scene, entity);
 }
 
-DECLDIR_ECS_C void SceneManager_AddEntitiesToScene_C(ECS::SceneManager_Interface * sm, uint32_t scene, uint32_t * entities, uint32_t numEntities)
+DECLDIR_ECS_C void SceneManager_AddEntitiesToScene_C(ECS::SceneManager_Interface * sm, uint32_t scene, uint32_t * entities, size_t numEntities)
 {
 	sm->AddEntitiesToScene(scene, (ECS::Entity*)entities, numEntities);
 }
@@ -75,7 +75,9 @@ DECLDIR_ECS_C void SceneManager_GetChildResourcesOfSceneResource_C(ECS::SceneMan
 	sm->GetChildResourcesOfSceneResource(ResourceHandler::Resource(guid, sm->GetManagerType()), (Utilities::GUID*)resources, numResources);
 }*/
 
-DECLDIR_ECS std::shared_ptr<ECS::SceneManager_Interface> ECS::SceneManager_Interface::create( SceneManager_Init_Info init_info )
+std::shared_ptr<ECS::SceneManager_Interface> ECS::SceneManager_Interface::create_manager( SceneManager_Init_Info init_info )
 {
-	return std::make_shared<SceneManager_Interface>( init_info );
+	auto m = std::make_shared<SceneManager>( init_info );
+	init_info.entityManager->RegisterManagerForDestroyNow( m );
+	return m;
 }

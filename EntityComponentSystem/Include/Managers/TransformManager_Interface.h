@@ -3,31 +3,32 @@
 #include <DLLExport.h>
 #include <Managers\Manager_Base.h>
 #include <Utilities/Flags.h>
+#include <algorithm>
 
 namespace ECS
 {
-	enum class TransformFlags : uint8_t
-	{
+	enum class TransformFlags : uint8_t {
 		NONE = 0,
 		INHERIT_TRANSLATION = 1 << 0,
 		INHERIT_SCALE = 1 << 1,
 		INHERIT_ROTATION = 1 << 2,
-		KEEP_CURRENT_POSITION = 1 << 3,
+		KEEP_CURRENT_POSITION_ON_BIND = 1 << 3,
 		INHERIT_ALL = INHERIT_TRANSLATION | INHERIT_SCALE | INHERIT_ROTATION,
 	};
-	struct TransformManager_Init_Info
-	{
+	ENUM_FLAGS( ECS::TransformFlags );
+	struct TransformManager_Init_Info {
 		std::shared_ptr<EntityManager_Interface> entityManager;
 		void* pNext = nullptr;
 	};
-	struct Vector
-	{
-		float x = 0.0f, y = 0.0f, z= 0.0f;
+	struct Vector {
+		float x = 0.0f, y = 0.0f, z = 0.0f;
 	};
-
-	struct Matrix
+	inline bool operator==( const Vector& l, const Vector& r )
 	{
-		float m[4][4] = 
+		return ( std::abs( l.x - r.x ) < 0.001f ) && ( std::abs( l.y - r.y ) < 0.001f ) && ( std::abs( l.z - r.z ) < 0.001f );
+	}
+	struct Matrix {
+		float m[4][4] =
 		{
 			{1.0f, 0.0f, 0.0f, 0.0f},
 			{0.0f, 1.0f, 0.0f, 0.0f},
@@ -35,55 +36,64 @@ namespace ECS
 			{0.0f, 0.0f, 0.0f, 1.0f}
 		};
 	};
-
-	class Manager_TransformUser
+	inline bool operator==( const Matrix& a, const Matrix& b )
 	{
+		for ( int y = 0; y < 4; y++ )
+			for ( int x = 0; x < 4; x++ )
+				if ( std::abs( a.m[y][x] - b.m[y][x] ) > 0.001f )
+					return false;
+		return true;
+	}
+	class Manager_TransformUser {
 	public:
-		virtual void UpdateEntityTransforms(const Matrix transforms[], const Entity entities[], uint32_t numEntities)noexcept = 0;
+		virtual void UpdateEntityTransforms( const Matrix transforms[], const Entity entities[], size_t numEntities )noexcept = 0;
 	};
 
-	class TransformManager_Interface : public Manager_Base
-	{
+	class TransformManager_Interface : public Manager_Base {
 	public:
-		DECLDIR_ECS static std::shared_ptr<TransformManager_Interface> create( TransformManager_Init_Info init_info );
+		DECLDIR_ECS static std::shared_ptr<TransformManager_Interface> create_manager( TransformManager_Init_Info init_info );
 
 
 
 		virtual ~TransformManager_Interface() {};
-		
-		virtual void Create(Entity entity,
-			const Vector& position = Vector(), 
-			const Vector& rotaiton = Vector(), 
-			const Vector& scale = { 1.0f, 1.0f, 1.0f })noexcept = 0;
-		
-		virtual void BindChild(Entity parent, Entity child, TransformFlags flags)noexcept = 0;
-		virtual void UnbindParent(Entity entity, TransformFlags flags)noexcept = 0;
-		virtual void UnbindAllChildren(Entity entity, TransformFlags flags)noexcept = 0;
-		virtual Entity GetParent(Entity entity)const noexcept = 0;
-		virtual uint32_t GetNumberOfChildren(Entity entity)const noexcept = 0;
-		virtual void GetChildren(Entity parent, Entity children[])const noexcept = 0;
 
-		virtual void SetPosition(Entity entity, const Vector& position)noexcept = 0;
-		virtual Vector GetPosition(Entity entity)const noexcept = 0;
+		virtual void Create( Entity entity,
+							 const Vector& position = Vector(),
+							 const Vector& rotation = Vector(),
+							 const Vector& scale = { 1.0f, 1.0f, 1.0f } )noexcept = 0;
+		virtual void CreateMultiple( const std::vector<Entity>& entities,
+									 const std::vector<Vector>& positions = {},
+									 const std::vector<Vector>& rotations = {},
+									 const std::vector<Vector>& scales = {} )noexcept = 0;
 
-		virtual void SetRotation(Entity entity, const Vector& rotation)noexcept = 0;
-		virtual Vector GetRotation(Entity entity)const noexcept = 0;
+		virtual void BindChild( Entity parent, Entity child, TransformFlags flags = TransformFlags::KEEP_CURRENT_POSITION_ON_BIND | TransformFlags::INHERIT_ALL )noexcept = 0;
+		virtual void UnbindParent( Entity entity )noexcept = 0;
+		virtual void UnbindAllChildren( Entity entity )noexcept = 0;
+		virtual Entity GetParent( Entity entity )const noexcept = 0;
+		virtual size_t GetNumberOfChildren( Entity entity )const noexcept = 0;
+		virtual void GetChildren( Entity parent, Entity children[] )const noexcept = 0;
+		virtual std::vector<Entity> GetChildren( Entity parent )const noexcept = 0;
 
-		virtual void SetScale(Entity entity, const Vector& scale)noexcept = 0;
-		virtual Vector GetScale(Entity entity)const noexcept = 0;
+		virtual void SetPosition( Entity entity, const Vector& position )noexcept = 0;
+		virtual Vector GetPosition( Entity entity )const noexcept = 0;
 
-		virtual void SetTransform(Entity entity, const Matrix& transform)noexcept = 0;
-		virtual Matrix GetTransform(Entity entity)noexcept = 0;
+		virtual void SetRotation( Entity entity, const Vector& rotation )noexcept = 0;
+		virtual Vector GetRotation( Entity entity )const noexcept = 0;
 
-		virtual void RegisterTransformUser(Manager_TransformUser* tUser)noexcept = 0;
-		virtual void UnregisterTransformUser(Manager_TransformUser* tUser)noexcept = 0;
-		
+		virtual void SetScale( Entity entity, const Vector& scale )noexcept = 0;
+		virtual Vector GetScale( Entity entity )const noexcept = 0;
+
+		virtual void SetTransform( Entity entity, const Matrix& transform )noexcept = 0;
+		virtual Matrix GetTransform( Entity entity )noexcept = 0;
+
+		virtual void RegisterTransformUser( Manager_TransformUser* tUser )noexcept = 0;
+		virtual void UnregisterTransformUser( Manager_TransformUser* tUser )noexcept = 0;
+
 	protected:
 		TransformManager_Interface() {};
 	};
 }
 
-ENUM_FLAGS(ECS::TransformFlags);
 
 //DECLDIR_ECS_C ECS::TransformManager_Interface* TransformManager_CreateTransformManager_C(ECS::TransformManager_Init_Info init_info);
 //DECLDIR_ECS_C void TransformManager_Create_C(ECS::TransformManager_Interface* tm, uint32_t entity, ECS::Vector position, ECS::Vector rotation, ECS::Vector scale);

@@ -107,7 +107,9 @@
 //	tm->SetRotation(entity, rotation);
 //}
 
-std::shared_ptr<ECS::TransformManager_Interface> ECS::TransformManager_Interface::create( TransformManager_Init_Info init_info )
+std::shared_ptr<ECS::TransformManager_Interface> ECS::TransformManager_Interface::create_manager( TransformManager_Init_Info init_info )
 {
-	return std::make_shared<TransformManager>( init_info );
+	auto m = std::make_shared<TransformManager>( init_info );
+	init_info.entityManager->RegisterManagerForDestroyNow( m );
+	return m;
 }

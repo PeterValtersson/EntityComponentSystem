@@ -19,19 +19,15 @@ namespace ECS
 	TransformManager::TransformManager( ECS::TransformManager_Init_Info initInfo )
 		: initInfo( initInfo )
 	{
-		_ASSERT_EXPR( initInfo.entityManager, L"Transform manager must have an entity manager" );
-		initInfo.entityManager->RegisterManagerForDestroyNow( this );
+		if ( !initInfo.entityManager )
+			throw CouldNotCreateManager( "Transform manager must have an entity manager" );
 	}
 	TransformManager::~TransformManager()
 	{
-		initInfo.entityManager->UnregisterManagerForDestroyNow( this );
+		initInfo.entityManager->UnregisterManagerForDestroyNow( GetManagerType() );
 	}
 
-
-
-
-
-	void TransformManager::Create( Entity entity, const Vector& position, const Vector& rotaiton, const Vector& scale )noexcept
+	void TransformManager::Create( Entity entity, const Vector& position, const Vector& rotation, const Vector& scale )noexcept
 	{
 		PROFILE;
 		if ( auto find = entries.find( entity ); find.has_value() )
@@ -42,7 +38,7 @@ namespace ECS
 
 		auto index = entries.add( entity );
 		entries.get<Entries::Position>( index ) = ToXMFLOAT3( position );
-		auto quat = XMQuaternionRotationRollPitchYawFromVector( XMLoadFloat3( ( XMFLOAT3* )&rotaiton ) );
+		auto quat = XMQuaternionRotationRollPitchYawFromVector( XMLoadFloat3( ( XMFLOAT3* )&rotation ) );
 		XMStoreFloat4( &entries.get<Entries::Rotation>( index ), quat );
 		entries.get<Entries::Scale>( index ) = ToXMFLOAT3( scale );
 		XMStoreFloat4x4( &entries.get<Entries::Transform>( index ), XMMatrixIdentity() );
@@ -51,6 +47,47 @@ namespace ECS
 		entries.get<Entries::Child>( index ) = -1;
 		entries.get<Entries::Sibling>( index ) = -1;
 		entries.get<Entries::Flags>( index ) = TransformFlags::NONE;
+	}
+	void TransformManager::CreateMultiple( const std::vector<Entity>& entities, const std::vector<Vector>& positions, const std::vector<Vector>& rotations, const std::vector<Vector>& scales ) noexcept
+	{
+		PROFILE;
+		for ( size_t i = 0; i < entities.size(); i++ )
+		{
+			if ( auto find = entries.find( entities[i] ); find.has_value() )
+				continue;
+
+			if ( !initInfo.entityManager->IsAlive( entities[i] ) )
+				continue;
+
+			auto index = entries.add( entities[i] );
+			if ( i < positions.size() )
+				entries.get<Entries::Position>( index ) = ToXMFLOAT3( positions[i] );
+			else
+				entries.get<Entries::Position>( index ) = ToXMFLOAT3( {} );
+			if ( i < rotations.size() )
+			{
+				auto quat = XMQuaternionRotationRollPitchYawFromVector( XMLoadFloat3( ( XMFLOAT3* )&rotations[i] ) );
+				XMStoreFloat4( &entries.get<Entries::Rotation>( index ), quat );
+			}
+			else
+			{
+				auto quat = XMQuaternionRotationRollPitchYawFromVector( XMVectorSet( 0, 0, 0, 0 ) );
+				XMStoreFloat4( &entries.get<Entries::Rotation>( index ), quat );
+			}
+
+			if ( i < scales.size() )
+				entries.get<Entries::Scale>( index ) = ToXMFLOAT3( scales[i] );
+			else
+				entries.get<Entries::Scale>( index ) = ToXMFLOAT3( {} );
+
+			XMStoreFloat4x4( &entries.get<Entries::Transform>( index ), XMMatrixIdentity() );
+			entries.get<Entries::Dirty>( index ) = true;
+			entries.get<Entries::Parent>( index ) = -1;
+			entries.get<Entries::Child>( index ) = -1;
+			entries.get<Entries::Sibling>( index ) = -1;
+			entries.get<Entries::Flags>( index ) = TransformFlags::NONE;
+		}
+
 	}
 	void TransformManager::BindChild( Entity parent, Entity child, TransformFlags flags )noexcept
 	{
@@ -65,6 +102,7 @@ namespace ECS
 			{
 				entries.get<Entries::Dirty>( *findChild ) = true;
 				entries.get<Entries::Parent>( *findChild ) = static_cast< uint32_t >( *findParent );
+				entries.get<Entries::Flags>( *findChild ) = flags;
 				auto parentChild = entries.get<Entries::Child>( *findParent );
 				if ( parentChild == -1 )
 				{
@@ -100,7 +138,24 @@ namespace ECS
 		}
 	}
 
-	uint32_t TransformManager::GetNumberOfChildren( Entity entity ) const noexcept
+	std::vector<Entity> TransformManager::GetChildren( Entity parent ) const noexcept
+	{
+		PROFILE;
+		auto find = entries.find( parent );
+		_ASSERT_EXPR( find.has_value(), L"Can't get children from non exitent parent" );
+
+		auto childIndex = entries.peek<Entries::Child>( *find );
+		size_t i = 0;
+		std::vector<Entity> children;
+		while ( childIndex != -1 )
+		{
+			children.push_back( entries.peek<Entries::Entity>( childIndex ) );
+			childIndex = entries.peek<Entries::Sibling>( childIndex );
+		}
+		return children;
+	}
+
+	size_t TransformManager::GetNumberOfChildren( Entity entity ) const noexcept
 	{
 		PROFILE;
 		if ( auto find = entries.find( entity ); !find.has_value() )
@@ -108,7 +163,7 @@ namespace ECS
 		else
 		{
 			auto childIndex = entries.peek<Entries::Child>( *find );
-			uint32_t i = 0;
+			size_t i = 0;
 
 			while ( childIndex != -1 )
 			{
@@ -133,7 +188,7 @@ namespace ECS
 		}
 	}
 
-	void TransformManager::UnbindAllChildren( Entity entity, TransformFlags flags )noexcept
+	void TransformManager::UnbindAllChildren( Entity entity )noexcept
 	{
 		PROFILE;
 		if ( auto find = entries.find( entity ); !find.has_value() )
@@ -153,7 +208,7 @@ namespace ECS
 		}
 	}
 
-	void TransformManager::UnbindParent( Entity entity, TransformFlags flags )noexcept
+	void TransformManager::UnbindParent( Entity entity )noexcept
 	{
 		PROFILE;
 		if ( auto find = entries.find( entity ); !find.has_value() )
@@ -314,12 +369,23 @@ namespace ECS
 		else
 			entries.erase( *find );
 	}
-	void TransformManager::DestroyEntities( const Entity entities[], uint32_t numEntities )noexcept
+	void TransformManager::DestroyMultiple( const Entity entities[], size_t numEntities ) noexcept
 	{
 		PROFILE;
-		for ( uint32_t i = 0; i < numEntities; i++ )
+		for ( size_t i = 0; i < numEntities; i++ )
 		{
 			if ( auto find = entries.find( entities[i] ); !find.has_value() )
+				return;
+			else
+				entries.erase( *find );
+		}
+	}
+	void TransformManager::DestroyMultiple( const std::vector<Entity>& entities ) noexcept
+	{
+		PROFILE;
+		for ( auto e : entities )
+		{
+			if ( auto find = entries.find( e ); !find.has_value() )
 				return;
 			else
 				entries.erase( *find );
@@ -329,21 +395,26 @@ namespace ECS
 	{
 		return entries.get_memory_usage() + sizeof( *this );
 	}
-	void TransformManager::shrink_to_fit()noexcept
+	void TransformManager::shrink_to_fit()
 	{
 		PROFILE;
 		entries.shrink_to_fit();
 	}
 
-	uint32_t TransformManager::GetNumberOfRegisteredEntities() const noexcept
+	size_t TransformManager::GetNumberOfRegisteredEntities() const noexcept
 	{
-		return static_cast< uint32_t >( entries.size() );
+		return  entries.size();
 	}
-	void TransformManager::GetRegisteredEntities( Entity entities[], uint32_t numEntities ) const noexcept
+	void TransformManager::GetRegisteredEntities( Entity entities[], size_t numEntities ) const noexcept
 	{
 		if ( numEntities != entries.size() )
 			return;
 		memcpy( entities, entries.peek<Entries::Entity>(), sizeof( Entity ) * numEntities );
+	}
+
+	std::vector<Entity> TransformManager::GetRegisteredEntities() const noexcept
+	{
+		return std::vector<Entity>( entries.peek<Entries::Entity>(), entries.peek<Entries::Entity>() + entries.size() );
 	}
 
 	void TransformManager::Frame()noexcept
@@ -353,7 +424,7 @@ namespace ECS
 		UpdateDirtyEntities();
 	}
 
-	uint64_t TransformManager::GetDataWriter( Entity entity, std::function<bool( std::ostream& stream )>& writer )const noexcept
+	uint64_t TransformManager::GetDataWriter( Entity entity, std::function<bool( std::ostream & stream )>& writer )const noexcept
 	{
 
 		if ( auto findF = entries.find( entity ); !findF.has_value() )
@@ -408,8 +479,8 @@ namespace ECS
 				entries.get<Entries::Scale>( index ) = data.peek<Component>().scale;
 
 			} );
-			
-			
+
+
 			XMStoreFloat4x4( &entries.get<Entries::Transform>( index ), XMMatrixIdentity() );
 			entries.get<Entries::Dirty>( index ) = true;
 			entries.get<Entries::Parent>( index ) = -1;
@@ -421,7 +492,7 @@ namespace ECS
 
 	Utilities::GUID TransformManager::GetManagerType() const noexcept
 	{
-		return "Transform";
+		return Utilities::GUID( "TransformManager" );
 	}
 
 	void TransformManager::DestroyAll()noexcept
@@ -433,16 +504,19 @@ namespace ECS
 	void TransformManager::ToggleActive( Entity entity, bool active )noexcept
 	{}
 
-	void TransformManager::ToggleActive( const Entity entities[], uint32_t numEntites, bool active )noexcept
+	void TransformManager::ToggleActive( const Entity entities[], size_t numEntities, bool active )noexcept
+	{}
+
+	void TransformManager::ToggleActive( const std::vector<Entity>& entities, bool active ) noexcept
 	{}
 
 	void TransformManager::write_to_stream( std::ostream& stream ) const
 	{
 		PROFILE;
-		Utilities::Binary_Stream::read( stream, version );
+		Utilities::Binary_Stream::write( stream, version );
 		entries.writeToFile( stream );
 	}
-	void TransformManager::create_from_stream( std::istream& file )
+	void TransformManager::read_from_stream( std::istream& file )
 	{
 		PROFILE;
 		uint32_t ver = 0;
@@ -450,7 +524,7 @@ namespace ECS
 		entries.readFromFile( file );
 		auto diry = entries.get<Entries::Dirty>();
 		auto transforms = entries.get<Entries::Transform>();
-		for ( uint32_t i = 0; i < entries.size(); i++ )
+		for ( size_t i = 0; i < entries.size(); i++ )
 		{
 			diry[i] = true;
 			XMStoreFloat4x4( &transforms[i], XMMatrixIdentity() );
@@ -523,7 +597,7 @@ namespace ECS
 			alive_in_row = 0;
 			if ( entries.get<Entries::Parent>( i ) != -1 )
 			{
-				UnbindParent( entries.get<Entries::Entity>( i ), TransformFlags::NONE );
+				UnbindParent( entries.get<Entries::Entity>( i ) );
 			}
 			entries.erase( i );
 		}

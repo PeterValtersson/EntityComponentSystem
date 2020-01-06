@@ -2,310 +2,336 @@
 #include "CppUnitTest.h"
 #include <EntityManager_Interface.h>
 #include <Managers\TransformManager_Interface.h>
-#include <ResourceHandler\ResourceHandler_Interface.h>
 #include <filesystem>
-#include <ThreadPool.h>
 
 namespace fs = std::experimental::filesystem;
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace ECS;
 #include <vector>
+
 namespace Tests
 {
-	TEST_CLASS(TransformManagerTest)
+	TEST_CLASS( TransformManagerTest ) {
+public:
+	TEST_METHOD( CreateManager )
 	{
-	public:
+		auto em = EntityManager_Interface::create_manager();
 
-		TEST_METHOD(TransformManager_CreateAndDestroy)
+		Assert::ExpectException<CouldNotCreateManager>( []()
 		{
-			auto em = EntityManager_CreateEntityManager_C();
-			
 			TransformManager_Init_Info tmii;
-			tmii.entityManager = em;
-			auto tm = TransformManager_CreateTransformManager_C(tmii);
-			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilities::GUID("Transform").id);
-			std::vector<Entity> ents;
-			ents.resize(10000);
-			EntityManager_CreateMultiple_C(em, (uint32_t*)ents.data(), (uint32_t)ents.size());
-			Assert::AreEqual(EntityManager_GetNumberOfAliveEntities_C(em), 10000u, L"Could not create 10000 entities", LINE_INFO());
+			auto tm = TransformManager_Interface::create_manager( tmii );
+		}, L"No Enitity Manager exception thrown", LINE_INFO() );
 
-			for (size_t i = 0; i < ents.size(); i++)
-				TransformManager_Create_C(tm, ents[i], {}, {}, {});
-			Assert::AreEqual(Manager_Base_GetNumberOfRegisteredEntities_C(tm), 10000u, L"Could not create transforms", LINE_INFO());
-			EntityManager_DestroyMultiple_C(em, (uint32_t*) ents.data(), uint32_t(ents.size()));
+		TransformManager_Init_Info tmii;
+		tmii.entityManager = em;
+		auto tm = TransformManager_Interface::create_manager( tmii );
+		Assert::AreEqual( tm->GetManagerType().id, Utilities::GUID( "TransformManager" ).id, L"Incorrect Manager Type", LINE_INFO() );
+	}
 
-			uint32_t count = 0;
-			while (Manager_Base_GetNumberOfRegisteredEntities_C(tm) > 0)
-			{
-				Manager_Base_Frame_C(tm);
-				count++;
-				Assert::AreNotEqual(count, 33u, L"Entities not destroyed with 33 calls to Frame", LINE_INFO());
-			}
+	TEST_METHOD( Create )
+	{
+		auto em = EntityManager_Interface::create_manager();
+		TransformManager_Init_Info tmii;
+		tmii.entityManager = em;
+		auto tm = TransformManager_Interface::create_manager( tmii );
 
-			Delete_C(tm);
-			Delete_C(em);
+		std::vector<Entity> ents( 10000 );
+		em->CreateMultiple( ents );
+
+		for ( size_t i = 0; i < ents.size(); i++ )
+			tm->Create( ents[i] );
+		Assert::AreEqual<size_t>( 10000u, tm->GetNumberOfRegisteredEntities(), L"Could not create transforms", LINE_INFO() );
+	}
+	TEST_METHOD( CreateMultiple )
+	{
+		auto em = EntityManager_Interface::create_manager();
+		TransformManager_Init_Info tmii;
+		tmii.entityManager = em;
+		auto tm = TransformManager_Interface::create_manager( tmii );
+
+		std::vector<Entity> ents( 10000 );
+		em->CreateMultiple( ents );
+
+		tm->CreateMultiple( ents );
+		Assert::AreEqual<size_t>( 10000u, tm->GetNumberOfRegisteredEntities(), L"Could not create transforms", LINE_INFO() );
+	}
+	TEST_METHOD( Destroy )
+	{
+		auto em = EntityManager_Interface::create_manager();
+		TransformManager_Init_Info tmii;
+		tmii.entityManager = em;
+		auto tm = TransformManager_Interface::create_manager( tmii );
+
+		std::vector<Entity> ents( 10000 );
+		em->CreateMultiple( ents );
+		tm->CreateMultiple( ents );
+
+		for ( auto e : ents )
+			tm->Destroy( e );
+		Assert::AreEqual<size_t>( 0u, tm->GetNumberOfRegisteredEntities(), L"Could not destroy transforms", LINE_INFO() );
+	}
+	TEST_METHOD( DestroyMultiple )
+	{
+		auto em = EntityManager_Interface::create_manager();
+		TransformManager_Init_Info tmii;
+		tmii.entityManager = em;
+		auto tm = TransformManager_Interface::create_manager( tmii );
+
+		std::vector<Entity> ents( 10000 );
+		em->CreateMultiple( ents );
+		tm->CreateMultiple( ents );
+
+		tm->DestroyMultiple( ents.data(), ents.size() );
+		Assert::AreEqual<size_t>( 0u, tm->GetNumberOfRegisteredEntities(), L"Could not destroy transforms", LINE_INFO() );
+	}
+	TEST_METHOD( DestroyMultipleVector )
+	{
+		auto em = EntityManager_Interface::create_manager();
+		TransformManager_Init_Info tmii;
+		tmii.entityManager = em;
+		auto tm = TransformManager_Interface::create_manager( tmii );
+
+		std::vector<Entity> ents( 10000 );
+		em->CreateMultiple( ents );
+		tm->CreateMultiple( ents );
+
+		tm->DestroyMultiple( ents );
+		Assert::AreEqual<size_t>( 0u, tm->GetNumberOfRegisteredEntities(), L"Could not destroy transforms", LINE_INFO() );
+	}
+	TEST_METHOD( GarbageCollection )
+	{
+		auto em = EntityManager_Interface::create_manager();
+		TransformManager_Init_Info tmii;
+		tmii.entityManager = em;
+		auto tm = TransformManager_Interface::create_manager( tmii );
+
+		std::vector<Entity> ents( 10000 );
+		em->CreateMultiple( ents );
+		tm->CreateMultiple( ents );
+		em->DestroyMultiple( ents );
+		int count = 0;
+		while ( em->GetNumberOfAliveEntities() > 0 )
+		{
+			tm->Frame();
+			count++;
+			Assert::AreNotEqual( count, 33, L"Entities not destroyed within 33 calls to Frame", LINE_INFO() );
+		}
+	}
+
+	TEST_METHOD( DestroyNow )
+	{
+		auto em = EntityManager_Interface::create_manager();
+		TransformManager_Init_Info tmii;
+		tmii.entityManager = em;
+		auto tm = TransformManager_Interface::create_manager( tmii );
+
+		std::vector<Entity> ents( 10000 );
+		em->CreateMultiple( ents );
+		tm->CreateMultiple( ents );
+		em->DestroyMultipleNow( ents );
+	}
+
+	TEST_METHOD( PosRotScale )
+	{
+		auto em = EntityManager_Interface::create_manager();
+		TransformManager_Init_Info tmii;
+		tmii.entityManager = em;
+		auto tm = TransformManager_Interface::create_manager( tmii );
+		std::vector<Entity> ents( 10000 );
+		em->CreateMultiple( ents );
+
+		for ( size_t i = 0; i < ents.size(); i++ )
+			tm->Create( ents[i], { float( i ), float( i ), float( i ) }, { 0, float( i ) }, { 0, 0, float( i ) } );
+
+		tm->Frame();
+
+		for ( size_t i = 0; i < ents.size(); i++ )
+		{
+			Assert::AreEqual( float( i ), tm->GetPosition( ents[i] ).x, L"Position not the same", LINE_INFO() );
+			Assert::AreEqual( float( i ), tm->GetPosition( ents[i] ).y, L"Position not the same", LINE_INFO() );
+			Assert::AreEqual( float( i ), tm->GetPosition( ents[i] ).z, L"Position not the same", LINE_INFO() );
+			//Assert::AreEqual(TransformManager_GetRotation_C(tm, ents[i]).x, float(i), L"Rotation not the same", LINE_INFO());
+			Assert::AreEqual( float( i ), tm->GetScale( ents[i] ).z, L"Scale not the same", LINE_INFO() );
+
+			tm->SetPosition( ents[i], { float( i + 1 ), float( i + 1 ), float( i + 1 ) } );
+			tm->SetRotation( ents[i], { 0, float( i + 1 ) } );
+			tm->SetScale( ents[i], { float( i + 1 ) } );
 		}
 
-		TEST_METHOD(TransformManager_CreateAndDestroyNow)
+		tm->Frame();
+
+		for ( size_t i = 0; i < ents.size(); i++ )
 		{
-			auto em = EntityManager_CreateEntityManager_C();
-			TransformManager_Init_Info tmii;
-			tmii.entityManager = em;
-			auto tm = TransformManager_CreateTransformManager_C(tmii);
-			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilities::GUID("Transform").id);
-			std::vector<Entity> ents;
-			ents.resize(10000);
-			EntityManager_CreateMultiple_C(em, (uint32_t*)ents.data(), (uint32_t)ents.size());
-			Assert::AreEqual(EntityManager_GetNumberOfAliveEntities_C(em), 10000u, L"Could not create 10000 entities", LINE_INFO());
-
-			for (size_t i = 0; i < ents.size(); i++)
-				TransformManager_Create_C(tm, ents[i], {}, {}, {});
-			Assert::AreEqual(Manager_Base_GetNumberOfRegisteredEntities_C(tm), 10000u, L"Could not create transforms", LINE_INFO());
-			EntityManager_DestroyMultipleNow_C(em, (uint32_t*)ents.data(), uint32_t(ents.size()));
-		
-			Assert::AreEqual(0u, Manager_Base_GetNumberOfRegisteredEntities_C(tm), L"DestroyNow did not work", LINE_INFO());
-
-			Delete_C(tm);
-			Delete_C(em);
+			Assert::AreEqual( float( i + 1 ), tm->GetPosition( ents[i] ).x, L"Position not the same", LINE_INFO() );
+			Assert::AreEqual( float( i + 1 ), tm->GetPosition( ents[i] ).y, L"Position not the same", LINE_INFO() );
+			Assert::AreEqual( float( i + 1 ), tm->GetPosition( ents[i] ).z, L"Position not the same", LINE_INFO() );
+			Assert::AreEqual( float( i + 1 ), tm->GetScale( ents[i] ).x, L"Scale not the same", LINE_INFO() );
 		}
 
-		TEST_METHOD(TransformManager_PosRotScale)
+	}
+
+	TEST_METHOD( BindChild )
+	{
+		auto em = EntityManager_Interface::create_manager();
+		TransformManager_Init_Info tmii;
+		tmii.entityManager = em;
+		auto tm = TransformManager_Interface::create_manager( tmii );
+		std::vector<Entity> ents( 10000 );
+		em->CreateMultiple( ents );
+
+		for ( size_t i = 0; i < ents.size(); i++ )
+			tm->Create( ents[i], { float( i ) }, { float( i ) }, { float( i ) } );
+
+		tm->Frame();
+
+		for ( size_t i = 1; i < 1001; i++ )
+			tm->BindChild( ents[0], ents[i], TransformFlags::NONE );
+
+		Assert::AreEqual<size_t>( 1000u, tm->GetNumberOfChildren( ents[0] ), L"Entity did not have 1000 children", LINE_INFO() );
+		Entity children[10000];
+		tm->GetChildren( ents[0], children );
+		for ( uint32_t i = 0; i < tm->GetNumberOfChildren( ents[0] ); i++ )
+			Assert::AreEqual( ( uint32_t )ents[i + 1], ( uint32_t )children[i], ( L"Child " + std::to_wstring( i ) + L" was not correct" ).c_str(), LINE_INFO() );
+
+		auto childrenV = tm->GetChildren( ents[0] );
+		for ( uint32_t i = 0; i < childrenV.size(); i++ )
+			Assert::AreEqual( ( uint32_t )ents[i + 1], ( uint32_t )childrenV[i], ( L"Child " + std::to_wstring( i ) + L" was not correct (Vector)" ).c_str(), LINE_INFO() );
+	}
+
+	TEST_METHOD( UnbindParent )
+	{
+		auto em = EntityManager_Interface::create_manager();
+		TransformManager_Init_Info tmii;
+		tmii.entityManager = em;
+		auto tm = TransformManager_Interface::create_manager( tmii );
+		auto parent = em->Create();
+		tm->Create( parent );
+		std::vector<Entity> ents( 10000 );
+		em->CreateMultiple( ents );
+		tm->CreateMultiple( ents );
+
+		for ( auto c : ents )
+			tm->BindChild( parent, c, TransformFlags::NONE );
+
+
+		tm->UnbindParent( ents.back() );
+		ents.pop_back();
+		Assert::AreEqual<size_t>( 9999u, tm->GetNumberOfChildren( parent ), L"Entity did not have 999 children", LINE_INFO() );
+
+		auto childrenV = tm->GetChildren( parent );
+		for ( uint32_t i = 0; i < childrenV.size(); i++ )
+			Assert::AreEqual( ( uint32_t )ents[i], ( uint32_t )childrenV[i], ( L"Child " + std::to_wstring( i ) + L" was not correct" ).c_str(), LINE_INFO() );
+
+		tm->UnbindParent( ents.front() );
+		ents.erase( ents.begin() );
+		Assert::AreEqual<size_t>( 9998u, tm->GetNumberOfChildren( parent ), L"Entity did not have 998 children", LINE_INFO() );
+
+		auto childrenV2 = tm->GetChildren( parent );
+		for ( uint32_t i = 0; i < childrenV2.size(); i++ )
+			Assert::AreEqual( ents[i].id, childrenV2[i].id, ( L"Child " + std::to_wstring( i ) + L" was not correct" ).c_str(), LINE_INFO() );
+
+		tm->UnbindParent( ents[200] );
+		ents.erase( ents.begin() + 200 );
+		Assert::AreEqual<size_t>( 9997u, tm->GetNumberOfChildren( parent ), L"Entity did not have 997 children", LINE_INFO() );
+
+		auto childrenV3 = tm->GetChildren( parent );
+		for ( uint32_t i = 0; i < childrenV3.size(); i++ )
+			Assert::AreEqual( ents[i].id, childrenV3[i].id, ( L"Child " + std::to_wstring( i ) + L" was not correct" ).c_str(), LINE_INFO() );
+	}
+	TEST_METHOD( UnbindAllChildren )
+	{
+		auto em = EntityManager_Interface::create_manager();
+		TransformManager_Init_Info tmii;
+		tmii.entityManager = em;
+		auto tm = TransformManager_Interface::create_manager( tmii );
+		auto parent = em->Create();
+		tm->Create( parent );
+		std::vector<Entity> ents( 10000 );
+		em->CreateMultiple( ents );
+		tm->CreateMultiple( ents );
+
+
+		for ( auto c : ents )
+			tm->BindChild( parent, c, TransformFlags::NONE );
+
+		tm->UnbindAllChildren( parent );
+		Assert::AreEqual<size_t>( 0u, tm->GetNumberOfChildren( parent ), L"Entity did not have 0 children", LINE_INFO() );
+
+	}
+
+
+	TEST_METHOD( InheritedTransforms )
+	{
+
+		auto em = EntityManager_Interface::create_manager();
+		TransformManager_Init_Info tmii;
+		tmii.entityManager = em;
+		auto tm = TransformManager_Interface::create_manager( tmii );
+
+		auto ent1 = em->Create();
+		tm->Create( ent1 );
+
+		auto ent2 = em->Create();
+		tm->Create( ent2 );
+
+		tm->BindChild( ent1, ent2 );
+
+		tm->SetPosition( ent1, { 1.0f } );
+
+		tm->Frame();
+
+		Assert::AreEqual( 1.0f, tm->GetPosition( ent1 ).x, L"Ent1 Position not correct" );
+		Assert::AreEqual( 0.0f, tm->GetPosition( ent2 ).x, L"Ent2 Position not correct" );
+		auto parentTransform = tm->GetTransform( ent1 );
+		Assert::IsTrue( parentTransform == tm->GetTransform( ent2 ), L"Translations not Equal" );
+	}
+
+	TEST_METHOD( EntityManager_FileExport )
+	{
+		std::stringstream ss;
 		{
-			auto em = EntityManager_CreateEntityManager_C();
+			auto em = ECS::EntityManager_Interface::create_manager();
 			TransformManager_Init_Info tmii;
 			tmii.entityManager = em;
-			auto tm = TransformManager_CreateTransformManager_C(tmii);
-			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilities::GUID("Transform").id);
-			std::vector<Entity> ents;
-			ents.resize(10000);
-			EntityManager_CreateMultiple_C(em, (uint32_t*)ents.data(), (uint32_t)ents.size());
-			Assert::AreEqual(EntityManager_GetNumberOfAliveEntities_C(em), 10000u, L"Could not create 10000 entities", LINE_INFO());
+			auto tm = TransformManager_Interface::create_manager( tmii );
 
-			for (size_t i = 0; i < ents.size(); i++)
-				TransformManager_Create_C(tm, ents[i], {float(i)}, {float(i)}, {float(i)});
+			std::vector<Entity> ents( 10000 );
+			em->CreateMultiple( ents );
 
-			Manager_Base_Frame_C(tm);
+			for ( size_t i = 0; i < ents.size(); i++ )
+				tm->Create( ents[i], { float( i ), float( i ), float( i ) }, { 0, float( i ) }, { 0, 0, float( i ) } );
 
-			for (size_t i = 0; i < ents.size(); i++)
+			tm->Frame();
+			em->shrink_to_fit();
+			em->write_to_stream( ss );
+
+			auto usage = tm->get_memory_usage();
+			tm->shrink_to_fit();
+			Assert::IsTrue( tm->get_memory_usage() <= usage, L"Shink failed", LINE_INFO() );
+			tm->write_to_stream( ss );
+		}
+		ss.seekg( 0 );
+		{
+			auto em = ECS::EntityManager_Interface::create_manager();
+			TransformManager_Init_Info tmii;
+			tmii.entityManager = em;
+			auto tm = TransformManager_Interface::create_manager( tmii );
+			em->read_from_stream( ss );
+			Assert::AreEqual<size_t>( 0u, tm->GetNumberOfRegisteredEntities(), L"Not empty", LINE_INFO() );
+			tm->read_from_stream( ss );
+			Assert::AreEqual<size_t>( 10000u, tm->GetNumberOfRegisteredEntities(), L"Could not read from stream", LINE_INFO() );
+			auto ents = tm->GetRegisteredEntities();
+			Assert::AreEqual<size_t>( 10000, ents.size(), L"Could not read from stream", LINE_INFO() );
+			for ( size_t i = 0; i < ents.size(); i++ )
 			{
-				Assert::AreEqual(TransformManager_GetPosition_C(tm, ents[i]).x, float(i), L"Position not the same", LINE_INFO());
+				Assert::AreEqual( float( i ), tm->GetPosition( ents[i] ).x, L"Position not the same", LINE_INFO() );
+				Assert::AreEqual( float( i ), tm->GetPosition( ents[i] ).y, L"Position not the same", LINE_INFO() );
+				Assert::AreEqual( float( i ), tm->GetPosition( ents[i] ).z, L"Position not the same", LINE_INFO() );
 				//Assert::AreEqual(TransformManager_GetRotation_C(tm, ents[i]).x, float(i), L"Rotation not the same", LINE_INFO());
-				Assert::AreEqual(TransformManager_GetScale_C(tm, ents[i]).x, float(i), L"Scale not the same", LINE_INFO());
-
-				TransformManager_SetPosition_C(tm, ents[i], { float(i + 1) });
-				TransformManager_SetRotation_C(tm, ents[i], { float(i + 1) });
-				TransformManager_SetScale_C(tm, ents[i], { float(i + 1) });
+				Assert::AreEqual( float( i ), tm->GetScale( ents[i] ).z, L"Scale not the same", LINE_INFO() );
 			}
-			Manager_Base_Frame_C(tm);
-			for (size_t i = 0; i < ents.size(); i++)
-			{
-				Assert::AreEqual(TransformManager_GetPosition_C(tm, ents[i]).x, float(i+1), L"Position not the same", LINE_INFO());
-				//Assert::AreEqual(TransformManager_GetRotation_C(tm, ents[i]).x, float(i+1), L"Rotation not the same", LINE_INFO());
-				Assert::AreEqual(TransformManager_GetScale_C(tm, ents[i]).x, float(i+1), L"Scale not the same", LINE_INFO());
-
-			}
-
-			Delete_C(tm);
-			Delete_C(em);
 		}
-	
-		TEST_METHOD(TransformManager_ParentChild)
-		{
-			auto em = EntityManager_CreateEntityManager_C();
-			TransformManager_Init_Info tmii;
-			tmii.entityManager = em;
-			auto tm = TransformManager_CreateTransformManager_C(tmii);
-			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilities::GUID("Transform").id);
-			std::vector<Entity> ents;
-			ents.resize(10000);
-			EntityManager_CreateMultiple_C(em, (uint32_t*)ents.data(), (uint32_t)ents.size());
-			Assert::AreEqual(EntityManager_GetNumberOfAliveEntities_C(em), 10000u, L"Could not create 10000 entities", LINE_INFO());
-
-			for (size_t i = 0; i < ents.size(); i++)
-				TransformManager_Create_C(tm, ents[i], { float(i) }, { float(i) }, { float(i) });
-
-			Manager_Base_Frame_C(tm);
-
-			for (size_t i = 1; i < 1001; i++)
-				TransformManager_BindChild_C(tm, ents[0], ents[i], 0);
-
-			Assert::AreEqual(1000u, TransformManager_GetNumberOfChildren_C(tm, ents[0]), L"Entity did not have 1000 children", LINE_INFO());
-			Entity children[10000];
-			TransformManager_GetChildren_C(tm, ents[0], (uint32_t*)children);
-			for (uint32_t i = 0; i < TransformManager_GetNumberOfChildren_C(tm, ents[0]); i++)
-			{
-				Assert::AreEqual((uint32_t)ents[i+1], (uint32_t)children[i], L"A child was not correct", LINE_INFO());
-			}
-			
-			TransformManager_UnbindParent_C(tm, children[999], 0);
-			Assert::AreEqual(999u, TransformManager_GetNumberOfChildren_C(tm, ents[0]), L"Entity did not have 999 children", LINE_INFO());
-
-			TransformManager_GetChildren_C(tm, ents[0], (uint32_t*)children);
-			for (uint32_t i = 0; i < TransformManager_GetNumberOfChildren_C(tm, ents[0]); i++)
-			{
-				Assert::AreEqual((uint32_t)ents[i + 1], (uint32_t)children[i], L"A child was not correct", LINE_INFO());
-			}
-
-			TransformManager_UnbindParent_C(tm, children[0], 0);
-			Assert::AreEqual(998u, TransformManager_GetNumberOfChildren_C(tm, ents[0]), L"Entity did not have 998 children", LINE_INFO());
-			TransformManager_GetChildren_C(tm, ents[0], (uint32_t*)children);
-			for (uint32_t i = 0; i < TransformManager_GetNumberOfChildren_C(tm, ents[0]); i++)
-			{
-				Assert::AreEqual((uint32_t)ents[i + 2], (uint32_t)children[i], L"A child was not correct", LINE_INFO());
-			}
-
-			TransformManager_UnbindParent_C(tm, children[200], 0);
-			Assert::AreEqual(997u, TransformManager_GetNumberOfChildren_C(tm, ents[0]), L"Entity did not have 998 children", LINE_INFO());
-			TransformManager_GetChildren_C(tm, ents[0], (uint32_t*)children);
-			uint32_t add = 2;
-			for (uint32_t i = 0; i < TransformManager_GetNumberOfChildren_C(tm, ents[0]); i++)
-			{
-				if (i == 200)
-					add++;
-				Assert::AreEqual((uint32_t)ents[i + add], (uint32_t)children[i], L"A child was not correct", LINE_INFO());
-			}
-
-			TransformManager_UnbindAllChildren_C(tm, ents[0], 0);
-			Assert::AreEqual(0u, TransformManager_GetNumberOfChildren_C(tm, ents[0]), L"Entity did not have 0 children", LINE_INFO());
-
-
-			Delete_C(tm);
-			Delete_C(em);
-		}
-		bool MatE(const Matrix& a, const Matrix& b)
-		{
-			for (int y = 0; y < 4; y++)
-				for (int x = 0; x < 4; x++)
-					if (std::abs(a.m[y][x] - b.m[y][x]) > 0.001f)
-						return false;
-		return true;
-		}
-		TEST_METHOD(TransformManager_InheritedTransforms)
-		{
-
-			auto em = EntityManager_CreateEntityManager_C();
-			TransformManager_Init_Info tmii;
-			tmii.entityManager = em;
-			auto tm = TransformManager_CreateTransformManager_C(tmii);
-			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilities::GUID("Transform").id);
-			std::vector<Entity> ents;
-			ents.resize(1000);
-			EntityManager_CreateMultiple_C(em, (uint32_t*)ents.data(), (uint32_t)ents.size());
-			Assert::AreEqual(EntityManager_GetNumberOfAliveEntities_C(em), 1000u, L"Could not create 10000 entities", LINE_INFO());
-
-			for (size_t i = 0; i < ents.size(); i++)
-				TransformManager_Create_C(tm, ents[i], {}, {}, {1.0f,1.0f,1.0f});
-
-			Manager_Base_Frame_C(tm);
-
-			Entity parentEnt = EntityManager_Create_C(em);
-			TransformManager_Create_C(tm, parentEnt, {}, {}, {1.0f, 1.0f, 1.0f});
-
-			for (size_t i = 0; i < ents.size(); i++)
-				TransformManager_BindChild_C(tm, parentEnt, ents[i], 0);
-
-			Assert::AreEqual(1000u, TransformManager_GetNumberOfChildren_C(tm, parentEnt), L"Entity did not have 1000 children", LINE_INFO());
-			Manager_Base_Frame_C(tm);
-
-			auto parentTransform = TransformManager_GetTransform_C(tm, parentEnt);
-			for (size_t i = 0; i < ents.size(); i++)
-				Assert::IsTrue(MatE(parentTransform, TransformManager_GetTransform_C(tm, ents[i])), L"Transforms not equal", LINE_INFO());
-
-			Entity parentEnt2 = EntityManager_Create_C(em);
-			TransformManager_Create_C(tm, parentEnt2, { 1.0f }, {1.0f}, {2.0f, 2.0f, 2.0f});
-			TransformManager_BindChild_C(tm, parentEnt2, parentEnt, 0);
-			//TransformManager_SetPosition_C(tm, parentEnt, { 1.0f });
-
-			Manager_Base_Frame_C(tm);
-
-			parentTransform = TransformManager_GetTransform_C(tm, parentEnt2);
-			auto parentTransform2 = TransformManager_GetTransform_C(tm, parentEnt);
-			Assert::IsTrue(MatE(parentTransform, parentTransform2), L"Transforms not equal", LINE_INFO());
-
-			for (size_t i = 0; i < ents.size(); i++)
-				Assert::IsTrue(MatE(parentTransform, TransformManager_GetTransform_C(tm, ents[i])), L"Transforms not equal", LINE_INFO());
-
-			Delete_C(tm);
-			Delete_C(em);
-		}
-
-		TEST_METHOD(TransformManager_WriteReadComponent)
-		{
-			auto em = EntityManager_CreateEntityManager_C();
-
-			TransformManager_Init_Info tmii;
-			tmii.entityManager = em;
-			auto tm = TransformManager_CreateTransformManager_C(tmii);
-			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilities::GUID("Transform").id);
-			
-			auto ent = em->Create();
-			tm->Create(ent, { 1.0f }, {});
-			tm->Frame();
-
-			Assert::AreEqual(1.0f, tm->GetPosition(ent).x);
-			Assert::AreEqual(0.0f, tm->GetPosition(ent).y);
-			Assert::AreEqual(0.0f, tm->GetPosition(ent).z);
-
-			std::function<bool(std::ostream* file)> writer;
-			auto size = tm->GetDataWriter(ent, writer);
-			Assert::AreNotEqual(0Ui64, size);
-			std::stringstream ss;
-			bool result = writer(&ss);
-			Assert::IsTrue(result);
-			tm->Destroy(ent);
-			ss.seekg(0);
-			tm->CreateFromStream(ent, &ss);
-
-			Assert::AreEqual(1.0f, tm->GetPosition(ent).x);
-			Assert::AreEqual(0.0f, tm->GetPosition(ent).y);
-			Assert::AreEqual(0.0f, tm->GetPosition(ent).z);
-
-			Delete_C(tm);
-			Delete_C(em);
-		}
-		TEST_METHOD(TransformManager_WriteReadComponentResource)
-		{
-			std::error_code err;
-			fs::remove("wrcr.dat", err);
-			auto bl = CreateFileSystem(ResourceHandler::FileSystemType::Binary);
-			bl->Init("wrcr.dat", ResourceHandler::Mode::EDIT);
-			Utilities::ThreadPool pool(4);
-			auto rh = CreateResourceHandler(bl, &pool);
-
-
-			auto em = EntityManager_CreateEntityManager_C();
-
-
-
-			TransformManager_Init_Info tmii;
-			tmii.entityManager = em;
-			auto tm = TransformManager_CreateTransformManager_C(tmii);
-			Assert::AreEqual(Manager_Base_GetManagerType_C(tm), Utilities::GUID("Transform").id);
-
-			auto ent = em->Create();
-			tm->Create(ent, { 1.0f }, {});
-			tm->Frame();
-
-			Assert::AreEqual(1.0f, tm->GetPosition(ent).x);
-			Assert::AreEqual(0.0f, tm->GetPosition(ent).y);
-			Assert::AreEqual(0.0f, tm->GetPosition(ent).z);
-
-			Assert::AreEqual("Success"_hash, Manager_Base_WriteComponent_C(tm, bl, ent, "Dog", "Transform").hash);
-			tm->Destroy(ent);
-			Manager_Base_CreateFromResource_C(tm, ent, "Dog", "Transform");
-
-
-			Assert::AreEqual(1.0f, tm->GetPosition(ent).x);
-			Assert::AreEqual(0.0f, tm->GetPosition(ent).y);
-			Assert::AreEqual(0.0f, tm->GetPosition(ent).z);
-
-			Delete_C(tm);
-			Delete_C(em);
-
-			delete rh;
-			bl->Shutdown();
-			delete bl;
-			fs::remove("wrcr.dat", err);
-		}
+	}
 	};
 }

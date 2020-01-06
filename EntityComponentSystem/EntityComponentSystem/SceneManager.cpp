@@ -4,15 +4,18 @@
 
 ECS::SceneManager::SceneManager( SceneManager_Init_Info ii ) : initInfo( ii )
 {
-	_ASSERT_EXPR( initInfo.entityManager, L"SceneManager must have entitymanager" );
-	_ASSERT_EXPR( initInfo.transformManager, L"SceneManager must have transform manager" );
-
+	if ( !initInfo.entityManager )
+		throw CouldNotCreateManager( "SceneManager must have entitymanager" );
+	if ( !initInfo.transformManager )
+		throw CouldNotCreateManager( "SceneManager must have transform manager" );
 }
 
 ECS::SceneManager::~SceneManager()
-{}
+{
+	initInfo.entityManager->UnregisterManagerForDestroyNow( GetManagerType() );
+}
 
-uint32_t ECS::SceneManager::GetNumberOfChildResourcesOfSceneResource( Resources::Resource resource ) const
+size_t ECS::SceneManager::GetNumberOfChildResourcesOfSceneResource( Resources::Resource resource ) const
 {
 	PROFILE;
 	uint32_t numCS = 0;
@@ -101,7 +104,7 @@ std::string ECS::SceneManager::GetNameOfEntityInScene( Entity scene, Entity enti
 {
 	PROFILE;
 	if ( auto find = entries.find( scene ); !find.has_value() )
-		return;
+		return "";
 	else
 	{
 		auto& map = entries.peek<Entries::EntityToEntityInScene>( *find );
@@ -143,7 +146,7 @@ void ECS::SceneManager::RegisterManager( Manager_Base* manager )noexcept
 void ReadComponents( ECS::SceneManager* sm, const std::string& name, ECS::Entity entity, std::istream& stream, uint32_t componentCount, const std::vector<ECS::Manager_Base*>& managers )
 {
 	PROFILE;
-	/*for ( uint32_t i = 0; i < componentCount; i++ )
+	/*for ( size_t i = 0; i < componentCount; i++ )
 	{
 		Utilities::GUID type;
 		Utilities::Binary_Stream::read( stream, type );
@@ -192,7 +195,7 @@ void ECS::SceneManager::CreateFromResource( Entity entity, Resources::Resource r
 		entries.entitiesInScene[index].resize( numEnts );
 		entries.entityNamesInScene[index].resize( numEnts );
 		initInfo.entityManager->CreateMultiple( entries.entitiesInScene[index].data(), uint32_t( entries.entitiesInScene[index].size() ) );
-		for ( uint32_t i = 0; i < numEnts; i++ )
+		for ( size_t i = 0; i < numEnts; i++ )
 		{
 			entries.entityToEntityInScene[index][entries.entitiesInScene[index][i]] = i;
 			Utilities::readString( stream, entries.entityNamesInScene[index][i] );
@@ -371,48 +374,16 @@ uint64_t ECS::SceneManager::GetDataWriter( Entity entity, std::function<bool( st
 void ECS::SceneManager::Create( Entity entity, const std::string& name )noexcept
 {
 	PROFILE;
-	if ( auto find = entries.find( entity ); !find.has_value() )
+	if ( auto find = entries.find( entity ); find.has_value() )
 		return;
 
 	if ( !initInfo.entityManager->IsAlive( entity ) )
 		return;
 
-	auto index = entries.add( entity );
-	entries.set<Entries::Name>( index, name );
-
+	entries.add( entity, name, {}, {}, {} );
 	initInfo.transformManager->Create( entity );
 }
 void ECS::SceneManager::AddEntityToScene( Entity scene, Entity entity, const std::string& name )noexcept
-{
-	PROFILE;
-	if ( !initInfo.entityManager->IsAlive( entity ) )
-		return;
-
-	if ( auto find = entries.find( scene ); !find.has_value() )
-		return;
-	else
-	{
-		auto& sceneMap = entries.get<Entries::EntityToEntityInScene>( *find );
-		if ( auto findInScene = sceneMap.find( entity ); findInScene != sceneMap.end() )
-		{
-			auto& names = entries.get<Entries::EntitiesInSceneNames>( *find );
-			names[findInScene->second] = name;
-		}
-		else
-		{
-			auto& entities = entries.get<Entries::EntitiesInScene>( *find );
-			auto& names = entries.get<Entries::EntitiesInSceneNames>( *find );
-			uint32_t index = static_cast< uint32_t >( entities.size() );
-			entities.push_back( entity );
-			names.push_back( name );
-			sceneMap[entity] = index;
-		}
-		initInfo.transformManager->Create( entity );
-		initInfo.transformManager->BindChild( scene, entity, TransformFlags::INHERIT_ALL );
-
-	}
-}
-void ECS::SceneManager::AddEntityToScene( Entity scene, Entity entity )noexcept
 {
 	PROFILE;
 	if ( !initInfo.entityManager->IsAlive( entity ) )
@@ -430,18 +401,37 @@ void ECS::SceneManager::AddEntityToScene( Entity scene, Entity entity )noexcept
 		auto& names = entries.get<Entries::EntitiesInSceneNames>( *find );
 		uint32_t index = static_cast< uint32_t >( entities.size() );
 		entities.push_back( entity );
-		if ( auto findChild = entries.find( entity ); !findChild.has_value() )
-			names.push_back( entries.peek<Entries::Name>( *findChild ) );
-		else
-			names.push_back( "Entity_" + std::to_string( entity ) );
+		names.push_back( name );
 		sceneMap[entity] = index;
 
 		initInfo.transformManager->Create( entity );
-		initInfo.transformManager->BindChild( scene, entity, TransformFlags::INHERIT_ALL );
+		initInfo.transformManager->BindChild( scene, entity );
+
+	}
+}
+void ECS::SceneManager::AddEntityToScene( Entity scene, Entity entity )noexcept
+{
+	PROFILE;
+	if ( !initInfo.entityManager->IsAlive( entity ) )
+		return;
+
+	if ( auto find = entries.find( scene ); !find.has_value() )
+		return;
+	else
+	{
+		auto& sceneMap = entries.get<Entries::EntityToEntityInScene>( *find );
+		if ( auto findInScene = sceneMap.find( entity ); findInScene != sceneMap.end() )
+			return;
+
+		auto& names = entries.get<Entries::EntitiesInSceneNames>( *find );
+		if ( auto findChild = entries.find( entity ); !findChild.has_value() )
+			AddEntityToScene( scene, entity, entries.peek<Entries::Name>( *findChild ) );
+		else
+			AddEntityToScene( scene, entity, "Entity_" + std::to_string( entity ) );
 	}
 }
 
-void ECS::SceneManager::AddEntitiesToScene( Entity scene, const Entity entities[], uint32_t numEntities )noexcept
+void ECS::SceneManager::AddEntitiesToScene( Entity scene, const Entity entities[], size_t numEntities )noexcept
 {
 	PROFILE;
 
@@ -450,9 +440,9 @@ void ECS::SceneManager::AddEntitiesToScene( Entity scene, const Entity entities[
 	else
 	{
 		auto& sceneMap = entries.get<Entries::EntityToEntityInScene>( *find );
-		auto& entities = entries.get<Entries::EntitiesInScene>( *find );
+		auto& _entities = entries.get<Entries::EntitiesInScene>( *find );
 		auto& names = entries.get<Entries::EntitiesInSceneNames>( *find );
-		for ( uint32_t i = 0; i < numEntities; i++ )
+		for ( size_t i = 0; i < numEntities; i++ )
 		{
 			if ( !initInfo.entityManager->IsAlive( entities[i] ) )
 				continue;
@@ -461,11 +451,11 @@ void ECS::SceneManager::AddEntitiesToScene( Entity scene, const Entity entities[
 			if ( auto findInScene = sceneMap.find( entities[i] ); findInScene != sceneMap.end() )
 				continue;
 
-			
-			uint32_t index = static_cast< uint32_t >( entities.size() );
-			entities.push_back( entities[i] );
-			if ( auto findChild = entries.find( entities[i] ); !findChild.has_value() )
-				names.push_back( entries.peek<Entries::Name>( *findChild ) );
+
+			uint32_t index = static_cast< uint32_t >( _entities.size() );
+			_entities.push_back( entities[i] );
+			if ( auto findChild = entries.find( entities[i] ); findChild.has_value() )
+				names.push_back( names[*findChild] );
 			else
 				names.push_back( "Entity_" + std::to_string( entities[i] ) );
 			sceneMap[entities[i]] = index;
@@ -475,7 +465,12 @@ void ECS::SceneManager::AddEntitiesToScene( Entity scene, const Entity entities[
 	}
 }
 
-uint32_t ECS::SceneManager::GetNumberOfEntitiesInScene( Entity scene )const noexcept
+void ECS::SceneManager::AddEntitiesToScene( Entity scene, const std::vector<Entity>& entities ) noexcept
+{
+	AddEntitiesToScene( scene, entities.data(), entities.size() );
+}
+
+size_t ECS::SceneManager::GetNumberOfEntitiesInScene( Entity scene )const noexcept
 {
 	PROFILE;
 
@@ -483,19 +478,30 @@ uint32_t ECS::SceneManager::GetNumberOfEntitiesInScene( Entity scene )const noex
 		return 0;
 	else
 	{
-		return static_cast< uint32_t >( entries.peek<Entries::EntitiesInScene>( *find ).size());
+		return entries.peek<Entries::EntitiesInScene>( *find ).size();
 	}
 }
 
-void ECS::SceneManager::GetEntitiesInScene( Entity scene, Entity entities[] )const noexcept
+void ECS::SceneManager::GetEntitiesInScene( Entity scene, Entity entities[], size_t numEntities )const noexcept
 {
 	PROFILE;
 
 	if ( auto find = entries.find( scene ); !find.has_value() )
 		return;
+	else if ( size_t( numEntities ) == entries.peek<Entries::EntitiesInScene>( *find ).size() )
+	{
+		memcpy( entities, entries.peek<Entries::EntitiesInScene>( *find ).data(), sizeof( Entity ) * numEntities );
+	}
+}
+
+std::vector<ECS::Entity> ECS::SceneManager::GetEntitiesInScene( Entity scene ) const noexcept
+{
+	PROFILE;
+	if ( auto find = entries.find( scene ); !find.has_value() )
+		return {};
 	else
 	{
-		memcpy( entities, entries.peek<Entries::EntitiesInScene>( *find ).data(), sizeof( Entity ) * entries.peek<Entries::EntitiesInScene>( *find ).size() );
+		return entries.peek<Entries::EntitiesInScene>( *find );
 	}
 }
 
@@ -511,10 +517,10 @@ void ECS::SceneManager::Destroy( Entity entity )noexcept
 	}
 }
 
-void ECS::SceneManager::DestroyEntities( const Entity entities[], uint32_t numEntities )noexcept
+void ECS::SceneManager::DestroyMultiple( const Entity entities[], size_t numEntities )noexcept
 {
 	PROFILE;
-	for ( uint32_t i = 0; i < numEntities; i++ )
+	for ( size_t i = 0; i < numEntities; i++ )
 	{
 		if ( auto find = entries.find( entities[i] ); !find.has_value() )
 			continue;
@@ -526,17 +532,27 @@ void ECS::SceneManager::DestroyEntities( const Entity entities[], uint32_t numEn
 	}
 }
 
-uint32_t ECS::SceneManager::GetNumberOfRegisteredEntities() const noexcept
+void ECS::SceneManager::DestroyMultiple( const std::vector<Entity>& entities ) noexcept
 {
-	return static_cast< uint32_t >( entries.size() );
+	DestroyMultiple( entities.data(), entities.size() );
 }
 
-void ECS::SceneManager::GetRegisteredEntities( Entity entities[], uint32_t numEntities ) const noexcept
+size_t ECS::SceneManager::GetNumberOfRegisteredEntities() const noexcept
+{
+	return  entries.size();
+}
+
+void ECS::SceneManager::GetRegisteredEntities( Entity entities[], size_t numEntities ) const noexcept
 {
 	PROFILE;
 	if ( numEntities != entries.size() )
 		return;
-	memcpy( entities, entries.peek<Entries::Entity>( ).data(), sizeof( Entity ) * numEntities );
+	memcpy( entities, entries.peek<Entries::Entity>().data(), sizeof( Entity ) * numEntities );
+}
+
+std::vector<ECS::Entity> ECS::SceneManager::GetRegisteredEntities() const noexcept
+{
+	return entries.peek<Entries::Entity>();
 }
 
 void ECS::SceneManager::Frame()noexcept
@@ -544,17 +560,17 @@ void ECS::SceneManager::Frame()noexcept
 	PROFILE;
 }
 
-uint64_t ECS::SceneManager::get_memory_usage() const noexcept
+size_t ECS::SceneManager::get_memory_usage() const noexcept
 {
 	return uint64_t();
 }
 
-void ECS::SceneManager::shrink_to_fit() noexcept
+void ECS::SceneManager::shrink_to_fit()
 {
 	PROFILE;
 	for ( size_t i = 0; i < entries.size(); i++ )
 	{
-		entries.get<Entries::EntitiesInScene>(i).shrink_to_fit();
+		entries.get<Entries::EntitiesInScene>( i ).shrink_to_fit();
 		entries.get<Entries::EntitiesInSceneNames>( i ).shrink_to_fit();
 	}
 
@@ -570,13 +586,13 @@ bool ECS::SceneManager::is_registered( Entity entity ) const noexcept
 
 Utilities::GUID ECS::SceneManager::GetManagerType() const noexcept
 {
-	return "Scene";
+	return Utilities::GUID( "SceneManager" );
 }
 
 void ECS::SceneManager::DestroyAll()noexcept
 {
 	PROFILE;
-	for ( uint32_t i = 0; i < entries.size(); i++ )
+	for ( size_t i = 0; i < entries.size(); i++ )
 		initInfo.entityManager->DestroyMultiple( entries.peek<Entries::EntitiesInScene>( i ).data(), uint32_t( entries.peek<Entries::EntitiesInScene>( i ).size() ) );
 
 	entries.clear();
@@ -585,13 +601,16 @@ void ECS::SceneManager::DestroyAll()noexcept
 void ECS::SceneManager::ToggleActive( Entity entity, bool active )noexcept
 {}
 
-void ECS::SceneManager::ToggleActive( const Entity entities[], uint32_t numEntites, bool active )noexcept
+void ECS::SceneManager::ToggleActive( const Entity entities[], size_t numEntities, bool active )noexcept
+{}
+
+void ECS::SceneManager::ToggleActive( const std::vector<Entity>& entities, bool active ) noexcept
 {}
 
 void ECS::SceneManager::write_to_stream( std::ostream& stream ) const
 {}
 
-void ECS::SceneManager::create_from_stream( std::istream& stream )
+void ECS::SceneManager::read_from_stream( std::istream& stream )
 {}
 
 void ECS::SceneManager::GarbageCollection()noexcept

@@ -12,17 +12,19 @@ namespace ECS
 		virtual ~SceneManager();
 		virtual	void Create( Entity entity, const std::string& name )noexcept override;
 		virtual void AddEntityToScene( Entity scene, Entity entity )noexcept override;
-		virtual void AddEntitiesToScene( Entity scene, const Entity entities[], uint32_t numEntities )noexcept override;
+		virtual void AddEntitiesToScene( Entity scene, const Entity entities[], size_t numEntities )noexcept override;
+		virtual void AddEntitiesToScene( Entity scene, const std::vector<Entity>& entities )noexcept override;
 		virtual void AddEntityToScene( Entity scene, Entity entity, const std::string& name )noexcept override;
 		virtual void RemoveEntityFromScene( Entity scene, Entity entity )noexcept override;
-		virtual uint32_t GetNumberOfEntitiesInScene( Entity scene )const noexcept override;
-		virtual void GetEntitiesInScene( Entity scene, Entity entities[] )const noexcept override;
+		virtual size_t GetNumberOfEntitiesInScene( Entity scene )const noexcept override;
+		virtual void GetEntitiesInScene( Entity scene, Entity entities[], size_t numEntities )const noexcept override;
+		virtual std::vector<Entity> GetEntitiesInScene( Entity scene )const noexcept override;
 		virtual void RegisterManager( Manager_Base* manager )noexcept override;
 		virtual void SetNameOfScene( Entity scene, const std::string& name )noexcept override;
 		virtual std::string GetNameOfScene( Entity scene )const noexcept override;
 		virtual void SetNameOfEntityInScene( Entity scene, Entity entity, const std::string& name )noexcept override;
 		virtual std::string GetNameOfEntityInScene( Entity scene, Entity entity )const noexcept override;
-		virtual uint32_t GetNumberOfChildResourcesOfSceneResource( Resources::Resource resource )const override;
+		virtual size_t GetNumberOfChildResourcesOfSceneResource( Resources::Resource resource )const override;
 		virtual void GetChildResourcesOfSceneResource( Resources::Resource resource, Utilities::GUID resources[], uint32_t num )const override;
 
 
@@ -31,22 +33,25 @@ namespace ECS
 
 		virtual bool is_registered( Entity entity )const noexcept override;
 		virtual void Destroy( Entity entity )noexcept override;
-		virtual void DestroyEntities( const Entity entities[], uint32_t numEntities )noexcept override;
+		virtual void DestroyMultiple( const Entity entities[], size_t numEntities )noexcept override;
+		virtual void DestroyMultiple( const std::vector<Entity>& entities )noexcept override;
 		virtual void DestroyAll()noexcept override;
 
 		virtual void ToggleActive( Entity entity, bool active )noexcept override;
-		virtual void ToggleActive( const Entity entities[], uint32_t numEntites, bool active )noexcept override;
+		virtual void ToggleActive( const Entity entities[], size_t numEntities, bool active )noexcept override;
+		virtual void ToggleActive( const std::vector<Entity>& entities, bool active )noexcept override;
 
-		virtual uint32_t GetNumberOfRegisteredEntities()const noexcept override;
-		virtual void GetRegisteredEntities( Entity entities[], uint32_t numEntities )const noexcept override;
+		virtual size_t GetNumberOfRegisteredEntities()const noexcept override;
+		virtual void GetRegisteredEntities( Entity entities[], size_t numEntities )const noexcept override;
+		virtual std::vector<Entity> GetRegisteredEntities()const noexcept override;
 
 		virtual void Frame()noexcept override;
 		virtual Utilities::GUID GetManagerType()const noexcept override;
 
-		virtual uint64_t get_memory_usage()const noexcept override;
+		virtual size_t get_memory_usage()const noexcept override;
 		virtual void shrink_to_fit() override;
 		virtual void write_to_stream( std::ostream& stream )const override;
-		virtual void create_from_stream( std::istream& stream )override;
+		virtual void read_from_stream( std::istream& stream )override;
 	protected:
 		virtual void GarbageCollection()noexcept override;
 

@@ -47,6 +47,9 @@
     <ClCompile Include="TransformManager_Interface.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Resource-Handler\ResourceHandler\ResourceHandler\ResourceHandler.vcxproj">
+      <Project>{bed7b51d-7499-4f9e-a74f-3d66d316dbab}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Utilities\Utilities\Profiler\Profiler.vcxproj">
       <Project>{bae4cf46-4926-4052-a0b5-290947489c07}</Project>
     </ProjectReference>
@@ -139,6 +142,7 @@
       <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);DLL_EXPORT_ECS</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
@@ -153,6 +157,7 @@
       <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);DLL_EXPORT_ECS</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
@@ -169,6 +174,7 @@
       <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);DLL_EXPORT_ECS</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -187,6 +193,7 @@
       <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions);DLL_EXPORT_ECS</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>

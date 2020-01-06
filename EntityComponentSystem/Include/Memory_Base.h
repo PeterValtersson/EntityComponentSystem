@@ -14,7 +14,7 @@ namespace ECS
 		virtual size_t get_memory_usage()const noexcept = 0;
 		virtual void shrink_to_fit() = 0;
 		virtual void write_to_stream(std::ostream& stream)const = 0;
-		virtual void create_from_stream(std::istream& stream) = 0;
+		virtual void read_from_stream(std::istream& stream) = 0;
 	protected:
 		Memory_Base() {}
 	};

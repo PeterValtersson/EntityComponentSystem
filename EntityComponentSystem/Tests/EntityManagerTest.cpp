@@ -5,78 +5,100 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace ECS;
 #include <vector>
 namespace Tests
-{		
-	TEST_CLASS(EntityManagerTest)
+{
+	TEST_CLASS( EntityManagerTest ) {
+public:
+
+	TEST_METHOD( Create )
 	{
-	public:
-		
-		TEST_METHOD(EntityManager_CreateAndDestroy)
+		auto em = ECS::EntityManager_Interface::create_manager();
+		std::vector<Entity> ents;
+		for ( int i = 0; i < 10000; i++ )
 		{
-			auto em = EntityManager_CreateEntityManager_C();
-			std::vector<Entity> ents;
-			for (int i = 0; i < 10000; i++)
-			{
-				ents.push_back(EntityManager_Create_C(em));
-			}
-			Assert::AreEqual(EntityManager_GetNumberOfAliveEntities_C(em),10000u, L"Could not create 10000 entities", LINE_INFO());
-			int j = 0;
-			for (; j < 5000; j++)
-			{
-				EntityManager_Destroy_C(em, ents[j]);
-			}
-			Assert::AreEqual(EntityManager_GetNumberOfAliveEntities_C(em), 5000u, L"Not 5000 alive left", LINE_INFO());
-
-			EntityManager_DestroyMultiple_C(em, (uint32_t*)&ents[j], 5000u);
-			Assert::AreEqual(EntityManager_GetNumberOfAliveEntities_C(em), 0u, L"Not 0 alive left", LINE_INFO());
-		
-			Delete_C(em);
+			ents.push_back( em->Create() );
 		}
-		TEST_METHOD(EntityManager_CreateAndDestroyAll)
+		Assert::AreEqual<size_t>( 10000u, em->GetNumberOfAliveEntities(), L"Could not create 10000 entities", LINE_INFO() );
+	}
+	TEST_METHOD( CreateMultiple )
+	{
+		auto em = ECS::EntityManager_Interface::create_manager();
+		std::vector<Entity> ents( 10000 );
+		em->CreateMultiple( ents.data(), ents.size() );
+		Assert::AreEqual<size_t>( 10000u, em->GetNumberOfAliveEntities(), L"Could not create 10000 entities", LINE_INFO() );
+	}
+	TEST_METHOD( CreateMultipleVector )
+	{
+		auto em = ECS::EntityManager_Interface::create_manager();
+		std::vector<Entity> ents( 10000 );
+		em->CreateMultiple( ents );
+		Assert::AreEqual<size_t>( 10000u, em->GetNumberOfAliveEntities(), L"Could not create 10000 entities", LINE_INFO() );
+	}
+	TEST_METHOD( Destroy )
+	{
+		auto em = ECS::EntityManager_Interface::create_manager();
+		std::vector<Entity> ents( 10000 );
+		em->CreateMultiple( ents );
+		int j = 0;
+		for ( ; j < 5000; j++ )
 		{
-			auto em = EntityManager_CreateEntityManager_C();
-			std::vector<Entity> ents;
-			ents.resize(10000);
-			EntityManager_CreateMultiple_C(em, (uint32_t*)ents.data(), (uint32_t) ents.size());
-			Assert::AreEqual(EntityManager_GetNumberOfAliveEntities_C(em), 10000u, L"Could not create 10000 entities", LINE_INFO());
-			EntityManager_DestroyMultiple_C(em, (uint32_t*)ents.data(), (uint32_t)ents.size());
-			Assert::AreEqual(EntityManager_GetNumberOfAliveEntities_C(em), 0u, L"Could not destroy all entities", LINE_INFO());
-
-			Delete_C(em);
-
+			em->Destroy( ents[j] );
 		}
-
-		TEST_METHOD(EntityManager_FileExport)
+		Assert::AreEqual<size_t>( 5000u, em->GetNumberOfAliveEntities(), L"Not 5000 alive left", LINE_INFO() );
+		for ( ; j < 10000; j++ )
 		{
-			auto em = EntityManager_CreateEntityManager_C();
-			std::vector<Entity> ents;
-			ents.resize(10000);
-			EntityManager_CreateMultiple_C(em, (uint32_t*)ents.data(), (uint32_t)ents.size());
-			Assert::AreEqual(EntityManager_GetNumberOfAliveEntities_C(em), 10000u, L"Could not create 10000 entities", LINE_INFO());
-			
-			
-			std::ofstream fileout("file.test", std::ios::binary);
-			Assert::IsTrue(fileout.is_open(), L"File not open", LINE_INFO());
-
-			auto usage = Memory_Base_GetMemoryUsage_C(em);
-			Memory_Base_ShrinkToFit_C(em);
-			Assert::IsTrue(Memory_Base_GetMemoryUsage_C(em) <= usage, L"Shink failed", LINE_INFO());
-			Memory_Base_WriteToFile_C(em, &fileout);
-			fileout.close();
-
-			Delete_C(em);
-
-			em = EntityManager_CreateEntityManager_C();
-			std::ifstream filein("file.test", std::ios::binary);
-			Assert::IsTrue(filein.is_open(), L"Could not open file", LINE_INFO());
-			Memory_Base_CreateFromFile_C(em, &filein);
-			Assert::AreEqual(EntityManager_GetNumberOfAliveEntities_C(em), 10000u, L"Not 10000 entities alive", LINE_INFO());
-			
-			
-			EntityManager_DestroyMultiple_C(em, (uint32_t*)ents.data(),(uint32_t) ents.size());
-			Assert::AreEqual(EntityManager_GetNumberOfAliveEntities_C(em), 0u, L"Could not destroy all entities", LINE_INFO());
-
-
-			Delete_C(em);
+			em->Destroy( ents[j] );
 		}
+		Assert::AreEqual<size_t>( 0u, em->GetNumberOfAliveEntities(), L"Not 0 alive left", LINE_INFO() );
+	}
+	TEST_METHOD( DestroyMultiple )
+	{
+		auto em = ECS::EntityManager_Interface::create_manager();
+		std::vector<Entity> ents( 10000 );
+		em->CreateMultiple( ents );
+		em->DestroyMultiple( ents.data(), 5000 );
+		Assert::AreEqual<size_t>( 5000u, em->GetNumberOfAliveEntities(), L"Not 5000 alive left", LINE_INFO() );
+
+		em->DestroyMultiple( &ents[5000], 5000 );
+		Assert::AreEqual<size_t>( 0u, em->GetNumberOfAliveEntities(), L"Not 0 alive left", LINE_INFO() );
+	}
+	TEST_METHOD( DestroyMultipleVector )
+	{
+		auto em = ECS::EntityManager_Interface::create_manager();
+		std::vector<Entity> ents( 10000 );
+		em->CreateMultiple( ents );
+		em->DestroyMultiple( ents );
+		Assert::AreEqual<size_t>( 0u, em->GetNumberOfAliveEntities(), L"Not 0 alive left", LINE_INFO() );
+
+	}
+	TEST_METHOD( DestroyAll )
+	{
+		auto em = ECS::EntityManager_Interface::create_manager();
+		std::vector<Entity> ents( 10000 );
+		em->CreateMultiple( ents );
+		em->DestroyAll();
+		Assert::AreEqual<size_t>( 0u, em->GetNumberOfAliveEntities(), L"Could not destroy all entities", LINE_INFO() );
+	}
+
+	TEST_METHOD( FileExport )
+	{
+		std::stringstream ss;
+		{
+			auto em = ECS::EntityManager_Interface::create_manager();
+			std::vector<Entity> ents( 10000 );
+			em->CreateMultiple( ents );
+
+			auto usage = em->get_memory_usage();
+			em->shrink_to_fit();
+			Assert::AreEqual( usage, em->get_memory_usage(), L"Shink failed", LINE_INFO() );
+			em->write_to_stream( ss );
+		}
+		ss.seekg( 0 );
+		{
+			auto em = ECS::EntityManager_Interface::create_manager();
+			Assert::AreEqual<size_t>( 0u, em->GetNumberOfAliveEntities(), L"Not 0 entities alive", LINE_INFO() );
+			em->read_from_stream( ss );
+			Assert::AreEqual<size_t>( 10000u, em->GetNumberOfAliveEntities(), L"Could not create 10000 entities", LINE_INFO() );
+		}
+	}
 	};
 }
