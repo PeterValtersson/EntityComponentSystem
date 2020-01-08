@@ -4,6 +4,7 @@
 #include "Manager_Base.h"
 #include <variant>
 #include <string>
+#include <vector>
 
 namespace ECS
 {
@@ -16,16 +17,17 @@ namespace ECS
 	public:
 		DECLDIR_ECS static std::shared_ptr<DataManager_Interface> create_manager( DataManager_Init_Info init_info);
 		
-		virtual void create( Entity entity )noexcept = 0;
-		virtual void create_multiple( Entity entity )noexcept = 0;
+		virtual void Create( Entity entity )noexcept = 0;
+		virtual void CreateMultiple( const std::vector<Entity>& entities )noexcept = 0;
 
-		virtual void set_data( Entity entity, Utilities::GUID key, Data data )noexcept = 0;
-		virtual void remove_data( Entity enitity, Utilities::GUID key )noexcept = 0;
-		virtual Data get_data( Entity entity, Utilities::GUID key )const noexcept = 0;
+		virtual void CreateData( Entity entity, std::string_view key, Data data )noexcept = 0;
+		virtual void SetData( Entity entity, Utilities::GUID key, Data data )noexcept = 0;
+		virtual void RemoveData( Entity enitity, Utilities::GUID key )noexcept = 0;
+		virtual Data GetData( Entity entity, Utilities::GUID key )const noexcept = 0;
 		template <typename T>
-		inline T get_data( Entity entity, Utilities::GUID key )const
+		inline T GetData( Entity entity, Utilities::GUID key )const
 		{
-			return get_data<T>( entity, key );
+			return GetData<T>( entity, key );
 		}
 	};
 }
