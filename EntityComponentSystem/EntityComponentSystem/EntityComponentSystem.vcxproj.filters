@@ -20,6 +20,9 @@
     <Filter Include="Managers\RenderableManager">
       <UniqueIdentifier>{330cdea4-bb2b-43f7-ba97-e7f2a3ecef1c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Managers\DataManager">
+      <UniqueIdentifier>{293b95ee-9271-426d-b0a7-70fcc799f376}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Entity.h">
@@ -57,6 +60,12 @@
     <ClInclude Include="..\Include\Managers\MeshLibrary.h">
       <Filter>Managers\RenderableManager</Filter>
     </ClInclude>
+    <ClInclude Include="DataManager.h">
+      <Filter>Managers\DataManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Managers\DataManager_Interface.h">
+      <Filter>Managers\DataManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EntityManager.cpp">
@@ -90,5 +99,11 @@
       <Filter>Managers</Filter>
     </ClCompile>
     <ClCompile Include="Memory_Base.cpp" />
+    <ClCompile Include="DataManager.cpp">
+      <Filter>Managers\DataManager</Filter>
+    </ClCompile>
+    <ClCompile Include="DataManager_Interface.cpp">
+      <Filter>Managers\DataManager</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
