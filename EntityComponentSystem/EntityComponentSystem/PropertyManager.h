@@ -1,23 +1,27 @@
 #ifndef _DATA_MANAGER_H_
 #define _DATA_MANAGER_H_
 #pragma once
-#include <Managers/DataManager_Interface.h>
+#include <Managers/PropertyManager_Interface.h>
 #include <Utilities/Memory/Sofa.h>
 
 namespace ECS
 {
 
-	class DataManager : public DataManager_Interface{
+	class PropertyManager : public PropertyManager_Interface{
 	public:
-		/*DataManager Methods*/
+		PropertyManager( PropertyManager_Init_Info init_info );
+
+		/*PropertyManager Methods*/
 		virtual void Create( Entity entity )noexcept override;
 		virtual void CreateMultiple( const std::vector<Entity>& entities )noexcept override;
 
-		virtual void CreateData( Entity entity, std::string_view key, Data data )noexcept override;
-		virtual void SetData( Entity entity, Utilities::GUID key, Data data )noexcept override;
-		virtual void RemoveData( Entity enitity, Utilities::GUID key )noexcept override;
-		virtual Data GetData( Entity entity, Utilities::GUID key )const noexcept override;
+		virtual void CreateProperty( Entity entity, std::string_view key, EntityProperty data )noexcept override;
+		virtual void SetProperty( Entity entity, Utilities::GUID key, EntityProperty data )noexcept override;
+		virtual void RemoveProperty( Entity entity, Utilities::GUID key )noexcept override;
 
+		virtual EntityProperty GetProperty( Entity entity, Utilities::GUID key )const noexcept override;
+		virtual std::string GetPropertyKey( Entity entity, Utilities::GUID key )const noexcept override;
+		virtual size_t GetNumProperties( Entity entity )const noexcept override;
 
 		/* Manager Base Methods */
 		virtual bool is_registered( Entity entity )const noexcept override;
@@ -48,6 +52,33 @@ namespace ECS
 		virtual void read_from_stream( std::istream& stream ) override;
 	private:
 
+		/* Manager Base Methods */
+		virtual void GarbageCollection()noexcept override;
+
+
+
+	private:
+		PropertyManager_Init_Info init_info;
+
+		struct EntityProperties : public Utilities::Memory::SofV<
+			Utilities::GUID, Utilities::GUID::Hasher,
+			std::string,
+			EntityProperty>{
+			enum{
+				Key,
+				KeyString,
+				Property
+			};
+		};
+
+		struct Entries : public Utilities::Memory::SofV<
+			Entity, Entity::Hasher,
+			EntityProperties>{
+			enum{
+				Entity,
+				Properties
+			};
+		} entries;
 	};
 
 }
