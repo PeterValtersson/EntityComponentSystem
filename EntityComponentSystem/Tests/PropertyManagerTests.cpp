@@ -38,12 +38,12 @@ public:
 		dmii.entity_manager = em;
 		auto dm = PropertyManager_Interface::create_manager( dmii );
 
-		std::vector<Entity> ents( 10000 );
+		std::vector<Entity> ents( 1000 );
 		em->CreateMultiple( ents );
 
 		for ( size_t i = 0; i < ents.size(); i++ )
 			dm->Create( ents[i] );
-		Assert::AreEqual<size_t>( 10000u, dm->GetNumberOfRegisteredEntities(), L"Could not create", LINE_INFO() );
+		Assert::AreEqual<size_t>( 1000u, dm->GetNumberOfRegisteredEntities(), L"Could not create", LINE_INFO() );
 	}
 	TEST_METHOD( CreateMultiple )
 	{
@@ -52,11 +52,11 @@ public:
 		dmii.entity_manager = em;
 		auto dm = PropertyManager_Interface::create_manager( dmii );
 
-		std::vector<Entity> ents( 10000 );
+		std::vector<Entity> ents( 1000 );
 		em->CreateMultiple( ents );
 
 		dm->CreateMultiple( ents );
-		Assert::AreEqual<size_t>( 10000u, dm->GetNumberOfRegisteredEntities(), L"Could not create", LINE_INFO() );
+		Assert::AreEqual<size_t>( 1000u, dm->GetNumberOfRegisteredEntities(), L"Could not create", LINE_INFO() );
 	}
 	TEST_METHOD( Destroy )
 	{
@@ -65,7 +65,7 @@ public:
 		dmii.entity_manager = em;
 		auto dm = PropertyManager_Interface::create_manager( dmii );
 
-		std::vector<Entity> ents( 10000 );
+		std::vector<Entity> ents( 1000 );
 		em->CreateMultiple( ents );
 		dm->CreateMultiple( ents );
 
@@ -80,7 +80,7 @@ public:
 		dmii.entity_manager = em;
 		auto dm = PropertyManager_Interface::create_manager( dmii );
 
-		std::vector<Entity> ents( 10000 );
+		std::vector<Entity> ents( 1000 );
 		em->CreateMultiple( ents );
 		dm->CreateMultiple( ents );
 
@@ -94,7 +94,7 @@ public:
 		dmii.entity_manager = em;
 		auto dm = PropertyManager_Interface::create_manager( dmii );
 
-		std::vector<Entity> ents( 10000 );
+		std::vector<Entity> ents( 1000 );
 		em->CreateMultiple( ents );
 		dm->CreateMultiple( ents );
 
@@ -108,7 +108,7 @@ public:
 		dmii.entity_manager = em;
 		auto dm = PropertyManager_Interface::create_manager( dmii );
 
-		std::vector<Entity> ents( 10000 );
+		std::vector<Entity> ents( 1000 );
 		em->CreateMultiple( ents );
 		dm->CreateMultiple( ents );
 		em->DestroyMultiple( ents );
@@ -128,7 +128,7 @@ public:
 		dmii.entity_manager = em;
 		auto dm = PropertyManager_Interface::create_manager( dmii );
 
-		std::vector<Entity> ents( 10000 );
+		std::vector<Entity> ents( 1000 );
 		em->CreateMultiple( ents );
 		dm->CreateMultiple( ents );
 		em->DestroyMultipleNow( ents );
@@ -142,7 +142,7 @@ public:
 		auto dm = PropertyManager_Interface::create_manager( dmii );
 
 
-		std::vector<Entity> ents( 10000 );
+		std::vector<Entity> ents( 1000 );
 		em->CreateMultiple( ents );
 
 		for ( int i = 0; i < ents.size(); i++ )
@@ -179,7 +179,7 @@ public:
 			auto dm = PropertyManager_Interface::create_manager( dmii );
 
 
-			std::vector<Entity> ents( 10000 );
+			std::vector<Entity> ents( 1000 );
 			em->CreateMultiple( ents );
 
 			for ( int i = 0; i < ents.size(); i++ )
@@ -207,9 +207,9 @@ public:
 			em->read_from_stream( ss );
 			Assert::AreEqual<size_t>( 0u, dm->GetNumberOfRegisteredEntities(), L"Not empty", LINE_INFO() );
 			dm->read_from_stream( ss );
-			Assert::AreEqual<size_t>( 10000u, dm->GetNumberOfRegisteredEntities(), L"Could not read from stream", LINE_INFO() );
+			Assert::AreEqual<size_t>( 1000u, dm->GetNumberOfRegisteredEntities(), L"Could not read from stream", LINE_INFO() );
 			auto ents = dm->GetRegisteredEntities();
-			Assert::AreEqual<size_t>( 10000, ents.size(), L"Could not read from stream", LINE_INFO() );
+			Assert::AreEqual<size_t>( 1000, ents.size(), L"Could not read from stream", LINE_INFO() );
 			for ( int i = 0; i < ents.size(); i++ )
 			{
 				Assert::AreEqual<size_t>( 2, dm->GetNumProperties( ents[i] ), ( L"Could not create properties for " + std::to_wstring( i ) ).c_str(), LINE_INFO() );
