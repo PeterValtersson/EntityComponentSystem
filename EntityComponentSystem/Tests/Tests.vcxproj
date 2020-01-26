@@ -176,6 +176,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="PropertyManagerTests.cpp" />
     <ClCompile Include="OBJParserTest.cpp" />
     <ClCompile Include="RenderableManagerTest.cpp" />
     <ClCompile Include="SceneManagerTest.cpp" />

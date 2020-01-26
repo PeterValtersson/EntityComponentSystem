@@ -39,8 +39,6 @@ namespace ECS
 
 		virtual Utilities::GUID GetManagerType()const noexcept = 0;
 	protected:
-		Manager_Base(){}
-
 		virtual void GarbageCollection()noexcept = 0;
 	};
 }

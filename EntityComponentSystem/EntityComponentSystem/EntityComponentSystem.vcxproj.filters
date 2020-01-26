@@ -60,10 +60,10 @@
     <ClInclude Include="..\Include\Managers\MeshLibrary.h">
       <Filter>Managers\RenderableManager</Filter>
     </ClInclude>
-    <ClInclude Include="DataManager.h">
+    <ClInclude Include="..\Include\Managers\PropertyManager_Interface.h">
       <Filter>Managers\DataManager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\Managers\DataManager_Interface.h">
+    <ClInclude Include="PropertyManager.h">
       <Filter>Managers\DataManager</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Managers\CameraManager_Interface.h">
@@ -103,10 +103,10 @@
       <Filter>Managers\RenderableManager</Filter>
     </ClCompile>
     <ClCompile Include="Memory_Base.cpp" />
-    <ClCompile Include="DataManager.cpp">
+    <ClCompile Include="PropertyManager_Interface.cpp">
       <Filter>Managers\DataManager</Filter>
     </ClCompile>
-    <ClCompile Include="DataManager_Interface.cpp">
+    <ClCompile Include="PropertyManager.cpp">
       <Filter>Managers\DataManager</Filter>
     </ClCompile>
     <ClCompile Include="CameraManager_Interface.cpp">
