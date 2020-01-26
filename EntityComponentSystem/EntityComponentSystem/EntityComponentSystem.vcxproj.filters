@@ -23,6 +23,9 @@
     <Filter Include="Managers\DataManager">
       <UniqueIdentifier>{293b95ee-9271-426d-b0a7-70fcc799f376}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Managers\CameraManager">
+      <UniqueIdentifier>{bbefd064-f959-4b38-8cfc-d9c6e0d40143}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Entity.h">
@@ -36,9 +39,6 @@
     </ClInclude>
     <ClInclude Include="..\Include\DLLExport.h" />
     <ClInclude Include="..\Include\Memory_Base.h" />
-    <ClInclude Include="..\Include\Managers\Manager_Base.h">
-      <Filter>Managers</Filter>
-    </ClInclude>
     <ClInclude Include="TransformManager.h">
       <Filter>Managers\TransformManager</Filter>
     </ClInclude>
@@ -65,6 +65,13 @@
     </ClInclude>
     <ClInclude Include="..\Include\Managers\DataManager_Interface.h">
       <Filter>Managers\DataManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Managers\CameraManager_Interface.h">
+      <Filter>Managers\CameraManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Managers\Manager_Base.h" />
+    <ClInclude Include="CameraManager.h">
+      <Filter>Managers\CameraManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -95,15 +102,19 @@
     <ClCompile Include="MeshLibrary.cpp">
       <Filter>Managers\RenderableManager</Filter>
     </ClCompile>
-    <ClCompile Include="Manager_Base.cpp">
-      <Filter>Managers</Filter>
-    </ClCompile>
     <ClCompile Include="Memory_Base.cpp" />
     <ClCompile Include="DataManager.cpp">
       <Filter>Managers\DataManager</Filter>
     </ClCompile>
     <ClCompile Include="DataManager_Interface.cpp">
       <Filter>Managers\DataManager</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraManager_Interface.cpp">
+      <Filter>Managers\CameraManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager_Base.cpp" />
+    <ClCompile Include="CameraManager.cpp">
+      <Filter>Managers\CameraManager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -22,6 +22,7 @@
     <ClInclude Include="..\Include\DLLExport.h" />
     <ClInclude Include="..\Include\Entity.h" />
     <ClInclude Include="..\Include\EntityManager_Interface.h" />
+    <ClInclude Include="..\Include\Managers\CameraManager_Interface.h" />
     <ClInclude Include="..\Include\Managers\DataManager_Interface.h" />
     <ClInclude Include="..\Include\Managers\Manager_Base.h" />
     <ClInclude Include="..\Include\Managers\MeshLibrary.h" />
@@ -29,6 +30,7 @@
     <ClInclude Include="..\Include\Managers\SceneManager_Interface.h" />
     <ClInclude Include="..\Include\Managers\TransformManager_Interface.h" />
     <ClInclude Include="..\Include\Memory_Base.h" />
+    <ClInclude Include="CameraManager.h" />
     <ClInclude Include="DataManager.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="RenderableManager.h" />
@@ -36,6 +38,8 @@
     <ClInclude Include="TransformManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CameraManager.cpp" />
+    <ClCompile Include="CameraManager_Interface.cpp" />
     <ClCompile Include="DataManager.cpp" />
     <ClCompile Include="DataManager_Interface.cpp" />
     <ClCompile Include="EntityManager.cpp" />
