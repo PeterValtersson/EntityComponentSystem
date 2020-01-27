@@ -111,7 +111,7 @@ public:
 		tm->CreateMultiple( ents );
 		em->DestroyMultiple( ents );
 		int count = 0;
-		while ( em->GetNumberOfAliveEntities() > 0 )
+		while ( tm->GetNumberOfRegisteredEntities() > 0 )
 		{
 			tm->Frame();
 			count++;

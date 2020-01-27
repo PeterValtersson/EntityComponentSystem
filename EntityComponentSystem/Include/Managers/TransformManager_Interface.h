@@ -28,12 +28,14 @@ namespace ECS
 		return ( std::abs( l.x - r.x ) < 0.001f ) && ( std::abs( l.y - r.y ) < 0.001f ) && ( std::abs( l.z - r.z ) < 0.001f );
 	}
 	struct Matrix {
-		float m[4][4] =
-		{
-			{1.0f, 0.0f, 0.0f, 0.0f},
-			{0.0f, 1.0f, 0.0f, 0.0f},
-			{0.0f, 0.0f, 1.0f, 0.0f},
-			{0.0f, 0.0f, 0.0f, 1.0f}
+		union{
+			struct{
+				float _11, _12, _13, _14;
+				float _21, _22, _23, _24;
+				float _31, _32, _33, _34;
+				float _41, _42, _43, _44;
+			};
+			float m[4][4];
 		};
 	};
 	inline bool operator==( const Matrix& a, const Matrix& b )
@@ -89,6 +91,7 @@ namespace ECS
 		virtual void RegisterTransformUser( Manager_TransformUser* tUser )noexcept = 0;
 		virtual void UnregisterTransformUser( Manager_TransformUser* tUser )noexcept = 0;
 
+		virtual std::vector<Matrix>& GetCleanedTransforms()const noexcept = 0;
 	protected:
 		TransformManager_Interface() {};
 	};

@@ -3,20 +3,23 @@
 
 #pragma once
 #include <Managers/CameraManager_Interface.h>
-
+#include <Utilities/Memory/Sofa.h>
+#include <DirectXMath.h>
 namespace ECS
 {
 	class CameraManager : public CameraManager_Interface {
-		/* Camera manager methods*/
-		virtual void Create( const Entity& entity, const Camera_Create_Info& info ) override;
-		virtual void UpdateCamera( const Entity& entity, const Camera_Create_Info& info ) override;
-		virtual void Delete( const Entity& entitity ) override;
+		CameraManager( const CameraManager_Init_Info& ii );
+		virtual ~CameraManager()noexcept;
 
-		virtual Matrix GetView( const Entity& entity )const override;
-		virtual Matrix GetViewInv( const Entity& entity )const override;
-		virtual Matrix GetProjection( const Entity& entity )const override;
-		virtual Matrix GetViewProjection( const Entity& entity )const override;
-		virtual void WorldSpaceRayFromScreenPos( int x, int y, int screenWidth, int screenHeight, Vector& origin, Vector& direction ) const override;
+		/* Camera manager methods*/
+		virtual void Create( const Entity& entity, const Camera_Create_Info& info )noexcept override;
+		virtual void UpdateCamera( const Entity& entity, const Camera_Create_Info& info )noexcept override;
+
+		virtual Matrix GetView( const Entity& entity )const noexcept override;
+		virtual Matrix GetViewInv( const Entity& entity )const noexcept override;
+		virtual Matrix GetProjection( const Entity& entity )const noexcept override;
+		virtual Matrix GetViewProjection( const Entity& entity )const noexcept override;
+		virtual Ray WorldSpaceRayFromScreenPos( const Entity& entity, int x, int y, int screenWidth, int screenHeight ) const noexcept override;
 
 
 		/* Manager Base Methods*/
@@ -45,6 +48,34 @@ namespace ECS
 		virtual void shrink_to_fit() override;
 		virtual void write_to_stream( std::ostream& stream )const override;
 		virtual void read_from_stream( std::istream& stream ) override;
+
+	private:
+		/* Manager Base Methods */
+		virtual void GarbageCollection()noexcept override;
+
+	private:
+		std::default_random_engine generator;
+		CameraManager_Init_Info init_info;
+
+		struct Entries : public Utilities::Memory::SofA <
+			Entity, Entity::Hasher,
+			size_t, // Index to cleaned transform != ~0 if dirty.
+			float, // FoV
+			float, // Aspect Ratio
+			float, // Near plane
+			float, // Far plane
+			DirectX::XMFLOAT4X4 // View
+		>{
+			enum Keys{
+				Entity,
+				Dirty,
+				FoV,
+				AspectRatio,
+				NearPlane,
+				FarPlane,
+				View
+			};
+		}entries;
 	};
 }
 #endif

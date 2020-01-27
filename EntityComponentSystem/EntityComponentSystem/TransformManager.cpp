@@ -426,6 +426,7 @@ namespace ECS
 
 	uint64_t TransformManager::GetDataWriter( Entity entity, std::function<bool( std::ostream & stream )>& writer )const noexcept
 	{
+		PROFILE;
 
 		if ( auto findF = entries.find( entity ); !findF.has_value() )
 			return 0;
@@ -455,6 +456,7 @@ namespace ECS
 
 	void TransformManager::CreateFromResource( Entity entity, Resources::Resource resource )
 	{
+		PROFILE;
 		struct Component {
 			decltype( version ) ver;
 			XMFLOAT3 pos;
@@ -529,6 +531,10 @@ namespace ECS
 			diry[i] = true;
 			XMStoreFloat4x4( &transforms[i], XMMatrixIdentity() );
 		}
+	}
+	std::vector<Matrix>& TransformManager::GetCleanedTransforms() const noexcept
+	{
+		// TODO: insert return statement here
 	}
 	void TransformManager::UpdateDirtyEntities()noexcept
 	{

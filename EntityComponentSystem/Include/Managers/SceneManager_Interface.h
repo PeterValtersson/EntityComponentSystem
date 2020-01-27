@@ -10,7 +10,6 @@ namespace ECS
 {
 	struct SceneManager_Init_Info {
 		std::shared_ptr <EntityManager_Interface> entityManager;
-		std::shared_ptr <TransformManager_Interface> transformManager;
 		void* pNext = nullptr;
 	};
 	class SceneManager_Interface : public Manager_Base {

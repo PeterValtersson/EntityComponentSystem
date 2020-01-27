@@ -59,6 +59,7 @@ namespace ECS
 
 	private:
 		PropertyManager_Init_Info init_info;
+		std::default_random_engine generator;
 
 		struct EntityProperties : public Utilities::Memory::SofV<
 			Utilities::GUID, Utilities::GUID::Hasher,
