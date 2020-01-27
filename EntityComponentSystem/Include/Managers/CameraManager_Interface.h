@@ -7,6 +7,10 @@
 
 namespace ECS
 {
+	struct Ray{
+		Vector origin;
+		Vector direction;
+	};
 	struct CameraManager_Init_Info {
 		std::shared_ptr<EntityManager_Interface> entity_manager;
 		std::shared_ptr<TransformManager_Interface> transform_manager;
@@ -16,22 +20,21 @@ namespace ECS
 		float aspectRatio = ( 800.0f / 640.0f );
 		float fov = 1.570796f;
 		float nearPlane = 0.01f;
-		float farPlance = 100.0f;
+		float farPlane = 100.0f;
 		Vector position = { 0.f, 0.f, 0.f };
 		Vector rotation = { 0.f, 0.f, 0.f };
 	};
 
 	class CameraManager_Interface : Manager_Base{
 	public:
-		virtual void Create( const Entity& entity, const Camera_Create_Info& info ) = 0;
-		virtual void UpdateCamera( const Entity& entity, const Camera_Create_Info& info ) = 0;
-		virtual void Delete( const Entity& entitity ) = 0;
-
-		virtual Matrix GetView( const Entity& entity )const = 0;
-		virtual Matrix GetViewInv( const Entity& entity )const = 0;
-		virtual Matrix GetProjection( const Entity& entity )const = 0;
-		virtual Matrix GetViewProjection( const Entity& entity )const = 0;
-		virtual void WorldSpaceRayFromScreenPos( int x, int y, int screenWidth, int screenHeight, Vector& origin, Vector& direction ) const = 0;
+		virtual void Create( const Entity& entity, const Camera_Create_Info& info )noexcept = 0;
+		virtual void UpdateCamera( const Entity& entity, const Camera_Create_Info& info )noexcept = 0;
+		
+		virtual Matrix GetView( const Entity& entity )const noexcept = 0;
+		virtual Matrix GetViewInv( const Entity& entity )const noexcept = 0;
+		virtual Matrix GetProjection( const Entity& entity )const noexcept = 0;
+		virtual Matrix GetViewProjection( const Entity& entity )const noexcept = 0;
+		virtual Ray WorldSpaceRayFromScreenPos( const Entity& entity, int x, int y, int screenWidth, int screenHeight ) const noexcept = 0;
 	};
 }
 #endif

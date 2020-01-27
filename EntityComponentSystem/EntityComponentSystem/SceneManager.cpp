@@ -6,8 +6,6 @@ ECS::SceneManager::SceneManager( SceneManager_Init_Info ii ) : initInfo( ii )
 {
 	if ( !initInfo.entityManager )
 		throw CouldNotCreateManager( "SceneManager must have entitymanager" );
-	if ( !initInfo.transformManager )
-		throw CouldNotCreateManager( "SceneManager must have transform manager" );
 }
 
 ECS::SceneManager::~SceneManager()
@@ -381,7 +379,7 @@ void ECS::SceneManager::Create( Entity entity, const std::string& name )noexcept
 		return;
 
 	entries.add( entity, name, {}, {}, {} );
-	initInfo.transformManager->Create( entity );
+
 }
 void ECS::SceneManager::AddEntityToScene( Entity scene, Entity entity, const std::string& name )noexcept
 {
@@ -403,10 +401,6 @@ void ECS::SceneManager::AddEntityToScene( Entity scene, Entity entity, const std
 		entities.push_back( entity );
 		names.push_back( name );
 		sceneMap[entity] = index;
-
-		initInfo.transformManager->Create( entity );
-		initInfo.transformManager->BindChild( scene, entity );
-
 	}
 }
 void ECS::SceneManager::AddEntityToScene( Entity scene, Entity entity )noexcept
@@ -459,8 +453,6 @@ void ECS::SceneManager::AddEntitiesToScene( Entity scene, const Entity entities[
 			else
 				names.push_back( "Entity_" + std::to_string( entities[i] ) );
 			sceneMap[entities[i]] = index;
-			initInfo.transformManager->Create( entities[i] );
-			initInfo.transformManager->BindChild( scene, entities[i], TransformFlags::INHERIT_ALL );
 		}
 	}
 }
@@ -558,6 +550,8 @@ std::vector<ECS::Entity> ECS::SceneManager::GetRegisteredEntities() const noexce
 void ECS::SceneManager::Frame()noexcept
 {
 	PROFILE;
+	GarbageCollection();
+
 }
 
 size_t ECS::SceneManager::get_memory_usage() const noexcept
@@ -614,4 +608,27 @@ void ECS::SceneManager::read_from_stream( std::istream& stream )
 {}
 
 void ECS::SceneManager::GarbageCollection()noexcept
-{}
+{
+	PROFILE;
+	uint32_t alive_in_row = 0;
+	const uint32_t quitWhenReached = std::max( uint32_t( entries.size() * 0.1f ), 40U );
+	while ( entries.size() > 0 && alive_in_row < quitWhenReached )
+	{
+		std::uniform_int_distribution<size_t> distribution( 0U, entries.size() - 1U );
+		size_t i = distribution( generator );
+		if ( initInfo.entityManager->IsAlive( entries.get<Entries::Entity>( i ) ) )
+		{
+			alive_in_row++;
+			continue;
+		}
+		alive_in_row = 0;
+		if ( entries.get<Entries::EntitiesInScene>( i ).size() > 0 )
+		{
+			auto& entitiesInScene = entries.get<Entries::EntitiesInScene>( i );
+			for ( auto e : entitiesInScene )
+				if ( !is_registered( e ) )
+					initInfo.entityManager->Destroy( e );
+		}
+		entries.erase( i );
+	}
+}

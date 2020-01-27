@@ -58,8 +58,9 @@ namespace ECS
 	private:
 		uint32_t version = 0;
 		std::vector<Manager_Base*> managers;
-		
+		std::default_random_engine generator;
 		SceneManager_Init_Info initInfo;
+
 		struct Entries : public Utilities::Memory::SofV<
 			Entity, Entity::Hasher,
 			std::string,

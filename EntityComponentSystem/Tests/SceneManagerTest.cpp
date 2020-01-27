@@ -29,10 +29,6 @@ public:
 			auto sm = SceneManager_Interface::create_manager( smii );
 		}, L"No Transform Manager exception thrown", LINE_INFO() );
 
-		TransformManager_Init_Info tmii;
-		tmii.entityManager = em;
-		auto tm = TransformManager_Interface::create_manager( tmii );
-		smii.transformManager = tm;
 
 		auto sm = SceneManager_Interface::create_manager( smii );
 		Assert::AreEqual( sm->GetManagerType().id, Utilities::GUID( "SceneManager" ).id, L"Incorrect Manager Type", LINE_INFO() );
@@ -40,14 +36,8 @@ public:
 	TEST_METHOD( Create )
 	{
 		auto em = EntityManager_Interface::create_manager();
-
-		TransformManager_Init_Info tmii;
-		tmii.entityManager = em;
-		auto tm = TransformManager_Interface::create_manager( tmii );
-
 		SceneManager_Init_Info smii;
 		smii.entityManager = em;
-		smii.transformManager = tm;
 		auto sm = SceneManager_Interface::create_manager( smii );
 
 		auto scene = em->Create();
@@ -73,13 +63,9 @@ public:
 	{
 		auto em = EntityManager_Interface::create_manager();
 
-		TransformManager_Init_Info tmii;
-		tmii.entityManager = em;
-		auto tm = TransformManager_Interface::create_manager( tmii );
 
 		SceneManager_Init_Info smii;
 		smii.entityManager = em;
-		smii.transformManager = tm;
 		auto sm = SceneManager_Interface::create_manager( smii );
 
 		auto scene = em->Create();
@@ -104,13 +90,8 @@ public:
 	{
 		auto em = EntityManager_Interface::create_manager();
 
-		TransformManager_Init_Info tmii;
-		tmii.entityManager = em;
-		auto tm = TransformManager_Interface::create_manager( tmii );
-
 		SceneManager_Init_Info smii;
 		smii.entityManager = em;
-		smii.transformManager = tm;
 		auto sm = SceneManager_Interface::create_manager( smii );
 
 
@@ -129,13 +110,8 @@ public:
 	{
 		auto em = EntityManager_Interface::create_manager();
 
-		TransformManager_Init_Info tmii;
-		tmii.entityManager = em;
-		auto tm = TransformManager_Interface::create_manager( tmii );
-
 		SceneManager_Init_Info smii;
 		smii.entityManager = em;
-		smii.transformManager = tm;
 		auto sm = SceneManager_Interface::create_manager( smii );
 
 
@@ -145,20 +121,36 @@ public:
 			sm->Create( ents[i], std::to_string( i ) );
 
 		sm->DestroyMultiple( ents );
-
+		Assert::AreEqual<size_t>( 0, sm->GetNumberOfRegisteredEntities(), L"Incorrect number of entities registered", LINE_INFO() );
 	}
+	TEST_METHOD( GarbageCollection )
+	{
+		auto em = EntityManager_Interface::create_manager();
 
+		SceneManager_Init_Info smii;
+		smii.entityManager = em;
+		auto sm = SceneManager_Interface::create_manager( smii );
+
+		std::vector<Entity> ents( 10000 );
+		em->CreateMultiple( ents );
+		for ( size_t i = 0; i < ents.size(); i++ )
+			sm->Create( ents[i], std::to_string( i ) );
+		em->DestroyMultiple( ents );
+
+		int count = 0;
+		while ( sm->GetNumberOfRegisteredEntities() > 0 )
+		{
+			sm->Frame();
+			count++;
+			Assert::AreNotEqual( count, 33, L"Entities not destroyed within 33 calls to Frame", LINE_INFO() );
+		}
+	}
 	TEST_METHOD( AddEntityToScene )
 	{
 		auto em = EntityManager_Interface::create_manager();
 
-		TransformManager_Init_Info tmii;
-		tmii.entityManager = em;
-		auto tm = TransformManager_Interface::create_manager( tmii );
-
 		SceneManager_Init_Info smii;
 		smii.entityManager = em;
-		smii.transformManager = tm;
 		auto sm = SceneManager_Interface::create_manager( smii );
 
 		auto scene = em->Create();
@@ -173,13 +165,8 @@ public:
 	{
 		auto em = EntityManager_Interface::create_manager();
 
-		TransformManager_Init_Info tmii;
-		tmii.entityManager = em;
-		auto tm = TransformManager_Interface::create_manager( tmii );
-
 		SceneManager_Init_Info smii;
 		smii.entityManager = em;
-		smii.transformManager = tm;
 		auto sm = SceneManager_Interface::create_manager( smii );
 
 		auto scene = em->Create();
@@ -194,13 +181,8 @@ public:
 	{
 		auto em = EntityManager_Interface::create_manager();
 
-		TransformManager_Init_Info tmii;
-		tmii.entityManager = em;
-		auto tm = TransformManager_Interface::create_manager( tmii );
-
 		SceneManager_Init_Info smii;
 		smii.entityManager = em;
-		smii.transformManager = tm;
 		auto sm = SceneManager_Interface::create_manager( smii );
 
 		auto scene = em->Create();
@@ -215,13 +197,8 @@ public:
 	{
 		auto em = EntityManager_Interface::create_manager();
 
-		TransformManager_Init_Info tmii;
-		tmii.entityManager = em;
-		auto tm = TransformManager_Interface::create_manager( tmii );
-
 		SceneManager_Init_Info smii;
 		smii.entityManager = em;
-		smii.transformManager = tm;
 		auto sm = SceneManager_Interface::create_manager( smii );
 
 		auto scene = em->Create();
@@ -243,13 +220,8 @@ public:
 	{
 		auto em = EntityManager_Interface::create_manager();
 
-		TransformManager_Init_Info tmii;
-		tmii.entityManager = em;
-		auto tm = TransformManager_Interface::create_manager( tmii );
-
 		SceneManager_Init_Info smii;
 		smii.entityManager = em;
-		smii.transformManager = tm;
 		auto sm = SceneManager_Interface::create_manager( smii );
 
 		auto scene = em->Create();
