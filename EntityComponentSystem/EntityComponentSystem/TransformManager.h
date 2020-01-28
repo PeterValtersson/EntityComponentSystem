@@ -69,7 +69,6 @@ namespace ECS
 		virtual void write_to_stream( std::ostream& stream )const override;
 		virtual void read_from_stream( std::istream& stream ) override;
 
-		virtual std::vector<Matrix>& GetCleanedTransforms()const noexcept override;
 	private:
 		virtual void GarbageCollection()noexcept override;
 		void UpdateDirtyEntities()noexcept;

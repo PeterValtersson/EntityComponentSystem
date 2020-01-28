@@ -7,9 +7,12 @@
 #include <DirectXMath.h>
 namespace ECS
 {
-	class CameraManager : public CameraManager_Interface {
+	class CameraManager : public CameraManager_Interface, public Manager_TransformUser {
+	public:
 		CameraManager( const CameraManager_Init_Info& ii );
 		virtual ~CameraManager()noexcept;
+		/* Transform User methods */
+		virtual void UpdateEntityTransforms( const Matrix transforms[], const Entity entities[], size_t numEntities )noexcept;
 
 		/* Camera manager methods*/
 		virtual void Create( const Entity& entity, const Camera_Create_Info& info )noexcept override;
@@ -56,6 +59,7 @@ namespace ECS
 	private:
 		std::default_random_engine generator;
 		CameraManager_Init_Info init_info;
+		const Matrix* cleaned_transforms;
 
 		struct Entries : public Utilities::Memory::SofA <
 			Entity, Entity::Hasher,

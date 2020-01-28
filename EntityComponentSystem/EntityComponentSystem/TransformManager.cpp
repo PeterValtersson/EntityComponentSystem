@@ -7,13 +7,13 @@
 
 namespace ECS
 {
-	XMFLOAT3 ToXMFLOAT3( const Vector& v )
+	inline const XMFLOAT3& ToXMFLOAT3( const Vector& v )
 	{
-		return { v.x,  v.y, v.z };
+		return *(XMFLOAT3*)&v;
 	}
-	Vector ToVector( const XMFLOAT3& f )
+	inline const Vector& ToVector( const XMFLOAT3& f )
 	{
-		return { f.x, f.y, f.z };
+		return *( Vector* )&f;
 	}
 
 	TransformManager::TransformManager( ECS::TransformManager_Init_Info initInfo )
@@ -532,10 +532,7 @@ namespace ECS
 			XMStoreFloat4x4( &transforms[i], XMMatrixIdentity() );
 		}
 	}
-	std::vector<Matrix>& TransformManager::GetCleanedTransforms() const noexcept
-	{
-		// TODO: insert return statement here
-	}
+
 	void TransformManager::UpdateDirtyEntities()noexcept
 	{
 		PROFILE;
@@ -584,7 +581,7 @@ namespace ECS
 
 		auto entities = entries.get<Entries::Entity>();
 		for ( auto tu : transformUsers )
-			tu->UpdateEntityTransforms( ( Matrix* )transforms, entities, static_cast< uint32_t >( entries.size() ) );
+			tu->UpdateEntityTransforms( ( Matrix* )transforms, entities, entries.size() );
 	}
 	void TransformManager::GarbageCollection()noexcept
 	{

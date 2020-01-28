@@ -13,6 +13,17 @@ ECS::CameraManager::CameraManager( const CameraManager_Init_Info& ii ) : init_in
 ECS::CameraManager::~CameraManager() noexcept
 {}
 
+void ECS::CameraManager::UpdateEntityTransforms( const Matrix transforms[], const Entity entities[], size_t numEntities ) noexcept
+{
+	PROFILE;
+	cleaned_transforms = transforms;
+	for ( size_t i = 0; i < numEntities; i++ )
+	{
+		if ( auto find = entries.find( entities[i] ); find.has_value() )
+			entries.set<Entries::Dirty>( *find, i );
+	}
+}
+
 void ECS::CameraManager::Create( const Entity& entity, const Camera_Create_Info& info ) noexcept
 {
 	PROFILE;
@@ -120,14 +131,14 @@ ECS::Ray ECS::CameraManager::WorldSpaceRayFromScreenPos( const Entity& entity, i
 {
 	PROFILE;
 	if ( auto find = entries.find( entity ); !find.has_value() )
-		return { {0, 0, 0}, {1, 0, 0} };
+		return { {0, 0, 0}, {0, 0, 1} };
 	else
 	{
 		DirectX::XMMATRIX proj = DirectX::XMMatrixPerspectiveFovLH( entries.peek<Entries::FoV>( *find ),
 																	entries.peek<Entries::AspectRatio>( *find ),
 																	entries.peek<Entries::NearPlane>( *find ),
 																	entries.peek<Entries::FarPlane>( *find ) );
-		DirectX::XMFLOAT4X4 projF;
+		//DirectX::XMFLOAT4X4 projF;
 		//DirectX::XMStoreFloat4x4( &projF, proj );
 		DirectX::XMMATRIX view = DirectX::XMLoadFloat4x4( &entries.peek<Entries::View>( *find ) );
 		DirectX::XMMATRIX invView = DirectX::XMMatrixInverse( nullptr, view );
@@ -143,6 +154,7 @@ ECS::Ray ECS::CameraManager::WorldSpaceRayFromScreenPos( const Entity& entity, i
 																				   invView ) );
 		DirectX::XMStoreFloat3( ( DirectX::XMFLOAT3* ) & ray.direction, direction );
 		ray.origin = init_info.transform_manager->GetPosition( entity );
+		return ray;
 	}
 }
 
@@ -211,24 +223,23 @@ std::vector<ECS::Entity> ECS::CameraManager::GetRegisteredEntities() const noexc
 
 void ECS::CameraManager::Frame() noexcept
 {
+	using namespace DirectX;
 	PROFILE;
 	GarbageCollection();
 	for(size_t i = 0; i < entries.size(); i++ )
 		if ( entries.peek<Entries::Dirty>( i ) != ~0 )
 		{
-			DirectX::XMMATRIX transform = DirectX::XMLoadFloat4x4( &initInfo.transformManager->GetCleanedTransforms()[cameraData.dirty[currentActive.activeCamera]] );
-			DirectX::XMVECTOR pos = XMVectorSet( 0.0f, 0.0f, 0.0f, 1.0f );// XMLoadFloat3(&transformManager->positions[tindex]);
-															   //	auto rotation = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&transformManager->rotations[tindex]));
-			DirectX::XMVECTOR forward = XMVectorSet( 0.0f, 0.0f, 1.0f, 0.0f );
-			DirectX::XMVECTOR up = XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f );
+			DirectX::XMMATRIX transform = DirectX::XMLoadFloat4x4( (DirectX::XMFLOAT4X4*) &cleaned_transforms[entries.peek<Entries::Dirty>(i)] );
+			DirectX::XMVECTOR pos = DirectX::XMVectorSet( 0.0f, 0.0f, 0.0f, 1.0f );
+			DirectX::XMVECTOR forward = DirectX::XMVectorSet( 0.0f, 0.0f, 1.0f, 0.0f );
+			DirectX::XMVECTOR up = DirectX::XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f );
 			pos = XMVector3TransformCoord( pos, transform );
 			forward = XMVector3TransformNormal( forward, transform );
 			up = XMVector3TransformNormal( up, transform );
-			XMVECTOR lookAt = pos + forward;
+			DirectX::XMVECTOR lookAt = pos + forward;
 
-			XMMATRIX view = XMMatrixLookAtLH( pos, lookAt, up );
-			XMStoreFloat4x4( &cameraData.view[currentActive.activeCamera], view );
-
+			DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH( pos, lookAt, up );
+			DirectX::XMStoreFloat4x4( &entries.get<Entries::View>( i ), view );
 		}
 }
 

@@ -91,7 +91,6 @@ namespace ECS
 		virtual void RegisterTransformUser( Manager_TransformUser* tUser )noexcept = 0;
 		virtual void UnregisterTransformUser( Manager_TransformUser* tUser )noexcept = 0;
 
-		virtual std::vector<Matrix>& GetCleanedTransforms()const noexcept = 0;
 	protected:
 		TransformManager_Interface() {};
 	};

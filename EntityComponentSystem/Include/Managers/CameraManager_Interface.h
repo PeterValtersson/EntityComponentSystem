@@ -27,6 +27,8 @@ namespace ECS
 
 	class CameraManager_Interface : Manager_Base{
 	public:
+		DECLDIR_ECS static std::shared_ptr<CameraManager_Interface> create_manager( const CameraManager_Init_Info& init_info );
+
 		virtual void Create( const Entity& entity, const Camera_Create_Info& info )noexcept = 0;
 		virtual void UpdateCamera( const Entity& entity, const Camera_Create_Info& info )noexcept = 0;
 		
