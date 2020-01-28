@@ -1,7 +1,7 @@
 #include "CameraManager.h"
 #include <Utilities/Profiler/Profiler.h>
 
-ECS::CameraManager::CameraManager( const CameraManager_Init_Info& ii ) : init_info( ii )
+ECS::CameraManager::CameraManager( const CameraManager_Init_Info& ii ) : init_info( ii ), cleaned_transforms( nullptr )
 {
 	if ( !ii.entity_manager )
 		throw CouldNotCreateManager( "Camera manager must have an entity manager" );
@@ -226,10 +226,11 @@ void ECS::CameraManager::Frame() noexcept
 	using namespace DirectX;
 	PROFILE;
 	GarbageCollection();
-	for(size_t i = 0; i < entries.size(); i++ )
+	for ( size_t i = 0; i < entries.size(); i++ )
 		if ( entries.peek<Entries::Dirty>( i ) != ~0 )
 		{
-			DirectX::XMMATRIX transform = DirectX::XMLoadFloat4x4( (DirectX::XMFLOAT4X4*) &cleaned_transforms[entries.peek<Entries::Dirty>(i)] );
+			auto& dirty = entries.get<Entries::Dirty>( i );
+			DirectX::XMMATRIX transform = DirectX::XMLoadFloat4x4( ( DirectX::XMFLOAT4X4* ) & cleaned_transforms[dirty] );
 			DirectX::XMVECTOR pos = DirectX::XMVectorSet( 0.0f, 0.0f, 0.0f, 1.0f );
 			DirectX::XMVECTOR forward = DirectX::XMVectorSet( 0.0f, 0.0f, 1.0f, 0.0f );
 			DirectX::XMVECTOR up = DirectX::XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f );
@@ -240,6 +241,7 @@ void ECS::CameraManager::Frame() noexcept
 
 			DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH( pos, lookAt, up );
 			DirectX::XMStoreFloat4x4( &entries.get<Entries::View>( i ), view );
+			dirty = ~0;
 		}
 }
 
