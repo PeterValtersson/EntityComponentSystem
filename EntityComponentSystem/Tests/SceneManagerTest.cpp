@@ -24,11 +24,6 @@ public:
 
 		auto em = EntityManager_Interface::create_manager();
 		smii.entityManager = em;
-		Assert::ExpectException<CouldNotCreateManager>( [&]()
-		{
-			auto sm = SceneManager_Interface::create_manager( smii );
-		}, L"No Transform Manager exception thrown", LINE_INFO() );
-
 
 		auto sm = SceneManager_Interface::create_manager( smii );
 		Assert::AreEqual( sm->GetManagerType().id, Utilities::GUID( "SceneManager" ).id, L"Incorrect Manager Type", LINE_INFO() );

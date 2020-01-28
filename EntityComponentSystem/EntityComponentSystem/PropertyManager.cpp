@@ -1,7 +1,7 @@
 #include "PropertyManager.h"
 #include <Utilities/Profiler/Profiler.h>
 
-ECS::PropertyManager::PropertyManager( PropertyManager_Init_Info init_info )
+ECS::PropertyManager::PropertyManager( PropertyManager_Init_Info init_info ) : init_info(init_info)
 {
 	if ( !init_info.entity_manager )
 		throw CouldNotCreateManager( "Property Manager must have an entity manager" );
