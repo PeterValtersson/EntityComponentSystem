@@ -16,7 +16,9 @@ namespace ECS
 	class PropertyManager_Interface : public Manager_Base {
 	public:
 		DECLDIR_ECS static std::shared_ptr<PropertyManager_Interface> create_manager( PropertyManager_Init_Info init_info);
-		
+		virtual ~PropertyManager_Interface()
+		{}
+
 		virtual void Create( Entity entity )noexcept = 0;
 		virtual void CreateMultiple( const std::vector<Entity>& entities )noexcept = 0;
 

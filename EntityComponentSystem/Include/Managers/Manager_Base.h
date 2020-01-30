@@ -19,6 +19,8 @@ namespace ECS
 	class Manager_Base : public Memory_Base
 	{
 	public:
+		virtual ~Manager_Base()
+		{}
 		virtual bool is_registered(Entity entity)const noexcept = 0;
 		virtual void CreateFromResource(Entity entity, Resources::Resource resource) = 0;
 		virtual uint64_t GetDataWriter(Entity entity, std::function<bool(std::ostream& stream)>& writer)const noexcept = 0;
