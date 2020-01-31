@@ -13,7 +13,7 @@ ECS::SceneManager::~SceneManager()
 	initInfo.entityManager->UnregisterManagerForDestroyNow( GetManagerType() );
 }
 
-size_t ECS::SceneManager::GetNumberOfChildResourcesOfSceneResource( Resources::Resource resource ) const
+size_t ECS::SceneManager::GetNumberOfChildResourcesOfSceneResource( ResourceHandler::Resource resource ) const
 {
 	PROFILE;
 	uint32_t numCS = 0;
@@ -33,7 +33,7 @@ size_t ECS::SceneManager::GetNumberOfChildResourcesOfSceneResource( Resources::R
 	return numCS;
 }
 
-void ECS::SceneManager::GetChildResourcesOfSceneResource( Resources::Resource resource, Utilities::GUID resources[], uint32_t num ) const
+void ECS::SceneManager::GetChildResourcesOfSceneResource( ResourceHandler::Resource resource, Utilities::GUID resources[], uint32_t num ) const
 {
 	PROFILE;
 	resource.use_data( [&]( const Utilities::Memory::ConstMemoryBlock data )
@@ -149,7 +149,7 @@ void ReadComponents( ECS::SceneManager* sm, const std::string& name, ECS::Entity
 		Utilities::GUID type;
 		Utilities::Binary_Stream::read( stream, type );
 		if ( sm && type == sm->GetManagerType() )
-			sm->CreateFromResource( entity, Resources::Resource( name, sm->GetManagerType() ) );
+			sm->CreateFromResource( entity, ResourceHandler::Resource( name, sm->GetManagerType() ) );
 		else
 			for ( auto& m : managers )
 				if ( m->GetManagerType() == type )
@@ -158,7 +158,7 @@ void ReadComponents( ECS::SceneManager* sm, const std::string& name, ECS::Entity
 	}*/
 };
 
-void ECS::SceneManager::CreateFromResource( Entity entity, Resources::Resource resource )
+void ECS::SceneManager::CreateFromResource( Entity entity, ResourceHandler::Resource resource )
 {
 	PROFILE;
 	/*if ( auto find = entries.find( entity ); !find.has_value() )

@@ -454,7 +454,7 @@ namespace ECS
 		return entries.find( entity ).has_value();
 	}
 
-	void TransformManager::CreateFromResource( Entity entity, Resources::Resource resource )
+	void TransformManager::CreateFromResource( Entity entity, ResourceHandler::Resource resource )
 	{
 		PROFILE;
 		struct Component {

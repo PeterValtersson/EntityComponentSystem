@@ -91,7 +91,7 @@ bool ECS::PropertyManager::is_registered( Entity entity ) const noexcept
 	return entries.find( entity ).has_value();
 }
 
-void ECS::PropertyManager::CreateFromResource( Entity entity, Resources::Resource resource )
+void ECS::PropertyManager::CreateFromResource( Entity entity, ResourceHandler::Resource resource )
 {}
 
 uint64_t ECS::PropertyManager::GetDataWriter( Entity entity, std::function<bool( std::ostream & stream )>& writer ) const noexcept

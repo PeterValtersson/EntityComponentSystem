@@ -163,7 +163,7 @@ bool ECS::CameraManager::is_registered( Entity entity ) const noexcept
 	return entries.find( entity ).has_value();
 }
 
-void ECS::CameraManager::CreateFromResource( Entity entity, Resources::Resource resource )
+void ECS::CameraManager::CreateFromResource( Entity entity, ResourceHandler::Resource resource )
 {}
 
 uint64_t ECS::CameraManager::GetDataWriter( Entity entity, std::function<bool( std::ostream & stream )>& writer ) const noexcept

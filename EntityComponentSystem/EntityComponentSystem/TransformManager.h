@@ -44,7 +44,7 @@ namespace ECS
 		virtual void RegisterTransformUser( Manager_TransformUser* tUser )noexcept override;
 		virtual void UnregisterTransformUser( Manager_TransformUser* tUser )noexcept override;
 
-		virtual void CreateFromResource( Entity entity, Resources::Resource resource ) override;
+		virtual void CreateFromResource( Entity entity, ResourceHandler::Resource resource ) override;
 		virtual uint64_t GetDataWriter( Entity entity, std::function<bool( std::ostream & stream )>& writer )const noexcept override;
 
 		virtual bool is_registered( Entity entity )const noexcept override;

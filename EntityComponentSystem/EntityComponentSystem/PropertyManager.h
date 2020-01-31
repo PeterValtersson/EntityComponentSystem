@@ -25,7 +25,7 @@ namespace ECS
 
 		/* Manager Base Methods */
 		virtual bool is_registered( Entity entity )const noexcept override;
-		virtual void CreateFromResource( Entity entity, Resources::Resource resource ) override;
+		virtual void CreateFromResource( Entity entity, ResourceHandler::Resource resource ) override;
 		virtual uint64_t GetDataWriter( Entity entity, std::function<bool( std::ostream & stream )>& writer )const noexcept override;
 		virtual void Destroy( Entity entity )noexcept override;
 		virtual void DestroyMultiple( const Entity entities[], size_t numEntities )noexcept override;

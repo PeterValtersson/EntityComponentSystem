@@ -22,7 +22,7 @@ namespace ECS
 		virtual ~Manager_Base()
 		{}
 		virtual bool is_registered(Entity entity)const noexcept = 0;
-		virtual void CreateFromResource(Entity entity, Resources::Resource resource) = 0;
+		virtual void CreateFromResource(Entity entity, ResourceHandler::Resource resource) = 0;
 		virtual uint64_t GetDataWriter(Entity entity, std::function<bool(std::ostream& stream)>& writer)const noexcept = 0;
 		virtual void Destroy(Entity entity)noexcept = 0;
 		virtual void DestroyMultiple(const Entity entities[], size_t numEntities )noexcept = 0;
