@@ -9,7 +9,7 @@
 //std::unordered_map<Utilities::GUID, Utilities::GUID::Hasher, MeshInfo> meshes;
 //
 //
-//ECS::MeshLibrary::MeshLibrary(Graphics::PipelineHandler_Interface* pipelineHandler)
+//ECS::MeshLibrary::MeshLibrary(Renderer::PipelineHandler_Interface* pipelineHandler)
 //{
 //	using namespace std::placeholders;
 //	ResourceHandler::Type_Info info;
@@ -26,7 +26,7 @@
 //
 //Utilities::Error ECS::MeshLibrary::Parse(uint32_t guid, void * data, uint64_t size, void ** parsedData, uint64_t * parsedSize)
 //{
-//	//pipelineHandler->CreateBuffer(guid, Graphics::Pipeline::Buffer::)
+//	//pipelineHandler->CreateBuffer(guid, Renderer::Pipeline::Buffer::)
 //
 //
 //

@@ -8,7 +8,7 @@
 //{
 //	struct RenderableManager_InitializationInfo
 //	{
-//		Graphics::Renderer_Interface* renderer = nullptr;
+//		Renderer::Renderer_Interface* renderer = nullptr;
 //		EntityManager_Interface* entityManager = nullptr;
 //		TransformManager_Interface* transformManager = nullptr;
 //		void *pNext;
