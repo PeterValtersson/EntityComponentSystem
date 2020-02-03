@@ -74,7 +74,11 @@ namespace ECS
 		virtual void ToggleShadow( const Entity entity, bool cast_shadow )noexcept = 0;
 		virtual void ToggleShadow( const Entity entity, uint8_t submesh, bool cast_shadow )noexcept = 0;
 
+		virtual void ToggleVisible( const Entity entity, bool visible )noexcept = 0;
+		virtual void ToggleVisible( const Entity entity, uint8_t submesh, bool visible )noexcept = 0;
+
 		virtual std::vector<std::string> GetSubmeshes( const Entity entity )const noexcept = 0;
+
 	protected:
 		RenderableManager_Interface() {  };
 	};
