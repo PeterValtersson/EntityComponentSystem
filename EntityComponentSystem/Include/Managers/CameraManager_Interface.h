@@ -30,14 +30,14 @@ namespace ECS
 		DECLDIR_ECS static std::shared_ptr<CameraManager_Interface> create_manager( const CameraManager_Init_Info& init_info );
 		virtual ~CameraManager_Interface()
 		{}
-		virtual void Create( const Entity& entity, const Camera_Create_Info& info )noexcept = 0;
-		virtual void UpdateCamera( const Entity& entity, const Camera_Create_Info& info )noexcept = 0;
+		virtual void Create( const Entity entity, const Camera_Create_Info& info )noexcept = 0;
+		virtual void UpdateCamera( const Entity entity, const Camera_Create_Info& info )noexcept = 0;
 		
-		virtual Matrix GetView( const Entity& entity )const noexcept = 0;
-		virtual Matrix GetViewInv( const Entity& entity )const noexcept = 0;
-		virtual Matrix GetProjection( const Entity& entity )const noexcept = 0;
-		virtual Matrix GetViewProjection( const Entity& entity )const noexcept = 0;
-		virtual Ray WorldSpaceRayFromScreenPos( const Entity& entity, int x, int y, int screenWidth, int screenHeight ) const noexcept = 0;
+		virtual Matrix GetView( const Entity entity )const noexcept = 0;
+		virtual Matrix GetViewInv( const Entity entity )const noexcept = 0;
+		virtual Matrix GetProjection( const Entity entity )const noexcept = 0;
+		virtual Matrix GetViewProjection( const Entity entity )const noexcept = 0;
+		virtual Ray WorldSpaceRayFromScreenPos( const Entity entity, int x, int y, int screenWidth, int screenHeight ) const noexcept = 0;
 	};
 }
 #endif

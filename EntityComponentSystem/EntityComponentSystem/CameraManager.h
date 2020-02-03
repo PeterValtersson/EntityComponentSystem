@@ -15,14 +15,14 @@ namespace ECS
 		virtual void UpdateEntityTransforms( const Matrix transforms[], const Entity entities[], size_t numEntities )noexcept;
 
 		/* Camera manager methods*/
-		virtual void Create( const Entity& entity, const Camera_Create_Info& info )noexcept override;
-		virtual void UpdateCamera( const Entity& entity, const Camera_Create_Info& info )noexcept override;
+		virtual void Create( const Entity entity, const Camera_Create_Info& info )noexcept override;
+		virtual void UpdateCamera( const Entity entity, const Camera_Create_Info& info )noexcept override;
 
-		virtual Matrix GetView( const Entity& entity )const noexcept override;
-		virtual Matrix GetViewInv( const Entity& entity )const noexcept override;
-		virtual Matrix GetProjection( const Entity& entity )const noexcept override;
-		virtual Matrix GetViewProjection( const Entity& entity )const noexcept override;
-		virtual Ray WorldSpaceRayFromScreenPos( const Entity& entity, int x, int y, int screenWidth, int screenHeight ) const noexcept override;
+		virtual Matrix GetView( const Entity entity )const noexcept override;
+		virtual Matrix GetViewInv( const Entity entity )const noexcept override;
+		virtual Matrix GetProjection( const Entity entity )const noexcept override;
+		virtual Matrix GetViewProjection( const Entity entity )const noexcept override;
+		virtual Ray WorldSpaceRayFromScreenPos( const Entity entity, int x, int y, int screenWidth, int screenHeight ) const noexcept override;
 
 
 		/* Manager Base Methods*/

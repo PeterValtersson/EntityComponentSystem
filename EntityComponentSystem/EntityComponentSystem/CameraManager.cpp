@@ -24,7 +24,7 @@ void ECS::CameraManager::UpdateEntityTransforms( const Matrix transforms[], cons
 	}
 }
 
-void ECS::CameraManager::Create( const Entity& entity, const Camera_Create_Info& info ) noexcept
+void ECS::CameraManager::Create( const Entity entity, const Camera_Create_Info& info ) noexcept
 {
 	PROFILE;
 	if ( auto find = entries.find( entity ); find.has_value() )
@@ -44,7 +44,7 @@ void ECS::CameraManager::Create( const Entity& entity, const Camera_Create_Info&
 	init_info.transform_manager->Create( entity, info.position, info.rotation );
 }
 
-void ECS::CameraManager::UpdateCamera( const Entity& entity, const Camera_Create_Info& info ) noexcept
+void ECS::CameraManager::UpdateCamera( const Entity entity, const Camera_Create_Info& info ) noexcept
 {
 	PROFILE;
 	if ( auto find = entries.find( entity ); !find.has_value() )
@@ -66,7 +66,7 @@ const ECS::Vector& to_ecs_vec( const DirectX::XMFLOAT3& v )
 {
 	return *( ECS::Vector* ) & v;
 }
-ECS::Matrix ECS::CameraManager::GetView( const Entity& entity ) const noexcept
+ECS::Matrix ECS::CameraManager::GetView( const Entity entity ) const noexcept
 {
 	PROFILE;
 	ECS::Matrix mat;
@@ -77,7 +77,7 @@ ECS::Matrix ECS::CameraManager::GetView( const Entity& entity ) const noexcept
 	return mat;
 }
 
-ECS::Matrix ECS::CameraManager::GetViewInv( const Entity& entity ) const noexcept
+ECS::Matrix ECS::CameraManager::GetViewInv( const Entity entity ) const noexcept
 {
 	PROFILE;
 	ECS::Matrix mat;
@@ -92,7 +92,7 @@ ECS::Matrix ECS::CameraManager::GetViewInv( const Entity& entity ) const noexcep
 	return mat;
 }
 
-ECS::Matrix ECS::CameraManager::GetProjection( const Entity& entity ) const noexcept
+ECS::Matrix ECS::CameraManager::GetProjection( const Entity entity ) const noexcept
 {
 	PROFILE;
 	ECS::Matrix mat;
@@ -109,7 +109,7 @@ ECS::Matrix ECS::CameraManager::GetProjection( const Entity& entity ) const noex
 	return mat;
 }
 
-ECS::Matrix ECS::CameraManager::GetViewProjection( const Entity& entity ) const noexcept
+ECS::Matrix ECS::CameraManager::GetViewProjection( const Entity entity ) const noexcept
 {
 	PROFILE;
 	ECS::Matrix mat;
@@ -127,7 +127,7 @@ ECS::Matrix ECS::CameraManager::GetViewProjection( const Entity& entity ) const 
 	return mat;
 }
 
-ECS::Ray ECS::CameraManager::WorldSpaceRayFromScreenPos( const Entity& entity, int x, int y, int screenWidth, int screenHeight ) const noexcept
+ECS::Ray ECS::CameraManager::WorldSpaceRayFromScreenPos( const Entity entity, int x, int y, int screenWidth, int screenHeight ) const noexcept
 {
 	PROFILE;
 	if ( auto find = entries.find( entity ); !find.has_value() )
