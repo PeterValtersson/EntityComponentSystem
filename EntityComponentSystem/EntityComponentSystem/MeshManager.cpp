@@ -1,7 +1,11 @@
 #include "MeshManager.h"
+ECS::MeshManager::MeshManager( const MeshManager_InitializationInfo& ii ) :
+	manager_settings( GetManagerType() + "Settings" ),
+	defaultMesh( manager_settings.get_copy<ManagerSettings>().defaultMesh, ResourceHandler::Flags::Persistent ),
+	defaultShader( manager_settings.get_copy<ManagerSettings>().defaultShader, ResourceHandler::Flags::Persistent )
+{
 
-ECS::MeshManager::MeshManager( const MeshManager_InitializationInfo& ii )
-{}
+}
 
 ECS::MeshManager::~MeshManager()
 {}
@@ -12,22 +16,29 @@ void ECS::MeshManager::Create( Entity entity, ResourceHandler::Resource mesh, Re
 		return;
 	if ( auto find = entries.find( entity ); find.has_value() )
 		return;
+	auto index = entries.add( entity );
+	entries.get<Entries::Mesh>( index ) = mesh;
+	entries.get<Entries::Shader>( index ) = shader;
 }
 
-void ECS::MeshManager::SetDefaultMesh( Utilities::GUID mesh )
-{}
+void ECS::MeshManager::SetDefaultMeshAndShader( Utilities::GUID mesh, Utilities::GUID shader )
+{
+	manager_settings.modify_data( [mesh, shader]( Utilities::Memory::MemoryBlock data )
+	{
+		data.get<ManagerSettings>().defaultMesh = mesh;
+		data.get<ManagerSettings>().defaultShader = shader;
+	} );
+	defaultMesh = mesh;
+	defaultShader = shader;
+}
 
 Utilities::GUID ECS::MeshManager::GetDefaultMesh() const noexcept
 {
-	return Utilities::GUID();
+	return manager_settings.get_copy<ManagerSettings>().defaultMesh;
 }
-
-void ECS::MeshManager::SetDefaultShader( Utilities::GUID shader )
-{}
-
 Utilities::GUID ECS::MeshManager::GetDefaultShader() const noexcept
 {
-	return Utilities::GUID();
+	return manager_settings.get_copy<ManagerSettings>().defaultShader;
 }
 
 void ECS::MeshManager::ToggleWireframe( const Entity entity, bool wireFrame ) noexcept
@@ -67,7 +78,7 @@ bool ECS::MeshManager::is_registered( Entity entity ) const noexcept
 void ECS::MeshManager::CreateFromResource( Entity entity, ResourceHandler::Resource resource )
 {}
 
-uint64_t ECS::MeshManager::GetDataWriter( Entity entity, std::function<bool( std::ostream & stream )> & writer ) const noexcept
+uint64_t ECS::MeshManager::GetDataWriter( Entity entity, std::function<bool( std::ostream & stream )>& writer ) const noexcept
 {
 	return uint64_t();
 }
@@ -78,7 +89,7 @@ void ECS::MeshManager::Destroy( Entity entity ) noexcept
 void ECS::MeshManager::DestroyMultiple( const Entity entities[], size_t numEntities ) noexcept
 {}
 
-void ECS::MeshManager::DestroyMultiple( const std::vector<Entity> & entities ) noexcept
+void ECS::MeshManager::DestroyMultiple( const std::vector<Entity>& entities ) noexcept
 {}
 
 void ECS::MeshManager::DestroyAll() noexcept
@@ -113,10 +124,10 @@ size_t ECS::MeshManager::get_memory_usage() const noexcept
 void ECS::MeshManager::shrink_to_fit()
 {}
 
-void ECS::MeshManager::write_to_stream( std::ostream & stream ) const
+void ECS::MeshManager::write_to_stream( std::ostream& stream ) const
 {}
 
-void ECS::MeshManager::read_from_stream( std::istream & stream )
+void ECS::MeshManager::read_from_stream( std::istream& stream )
 {}
 
 void ECS::MeshManager::GarbageCollection() noexcept

@@ -15,10 +15,8 @@ namespace ECS
 							 RenderableFlags render_flags = RenderableFlags::None,
 							 MeshFlags mesh_flags = MeshFlags::Diffuse_Color )noexcept override;
 
-		virtual void SetDefaultMesh( Utilities::GUID mesh ) override;
+		virtual void SetDefaultMeshAndShader( Utilities::GUID mesh, Utilities::GUID shader ) override;
 		virtual Utilities::GUID GetDefaultMesh()const noexcept override;
-
-		virtual void SetDefaultShader( Utilities::GUID shader ) override;
 		virtual Utilities::GUID GetDefaultShader()const noexcept override;
 
 		virtual void ToggleWireframe( const Entity entity, bool wireFrame )noexcept override;
@@ -58,17 +56,26 @@ namespace ECS
 		virtual void shrink_to_fit() override;
 		virtual void write_to_stream( std::ostream& stream )const override;
 		virtual void read_from_stream( std::istream& stream ) override;
-	protected:
+
+	private:
 		/* Manager base methods */
 		virtual void GarbageCollection()noexcept override;
 
 		MeshManager_InitializationInfo initInfo;
 
+		struct ManagerSettings{
+			Utilities::GUID defaultMesh;
+			Utilities::GUID defaultShader;
+		};
+		ResourceHandler::Resource manager_settings;
+		ResourceHandler::Resource defaultMesh;
+		ResourceHandler::Resource defaultShader;
+
 		struct Entries : public Utilities::Memory::SofV<
 			Entity, Entity::Hasher, // Entity
 			ResourceHandler::Resource, // Mesh
 			ResourceHandler::Resource, // Shader
-			MeshInfo
+			MeshInfo // Cached Mesh Info
 		> {
 			enum {
 				Entity,

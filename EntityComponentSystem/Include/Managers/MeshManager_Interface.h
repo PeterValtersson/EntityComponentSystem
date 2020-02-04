@@ -59,10 +59,8 @@ namespace ECS
 							 RenderableFlags render_flags = RenderableFlags::None,
 							 MeshFlags mesh_flags = MeshFlags::Diffuse_Color )noexcept = 0;
 
-		virtual void SetDefaultMesh( Utilities::GUID mesh ) = 0;
+		virtual void SetDefaultMeshAndShader( Utilities::GUID mesh, Utilities::GUID shader ) = 0;
 		virtual Utilities::GUID GetDefaultMesh()const noexcept = 0;
-
-		virtual void SetDefaultShader( Utilities::GUID shader ) = 0;
 		virtual Utilities::GUID GetDefaultShader()const noexcept = 0;
 
 		virtual void ToggleWireframe( const Entity entity, bool wireFrame )noexcept = 0;
