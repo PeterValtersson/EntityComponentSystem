@@ -51,12 +51,6 @@
     <ClInclude Include="SceneManager.h">
       <Filter>Managers\SceneManager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\Managers\RenderableManager_Interface.h">
-      <Filter>Managers\RenderableManager</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderableManager.h">
-      <Filter>Managers\RenderableManager</Filter>
-    </ClInclude>
     <ClInclude Include="..\Include\Managers\MeshLibrary.h">
       <Filter>Managers\RenderableManager</Filter>
     </ClInclude>
@@ -72,6 +66,12 @@
     <ClInclude Include="..\Include\Managers\Manager_Base.h" />
     <ClInclude Include="CameraManager.h">
       <Filter>Managers\CameraManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Managers\MeshManager_Interface.h">
+      <Filter>Managers\RenderableManager</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshManager.h">
+      <Filter>Managers\RenderableManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -93,12 +93,6 @@
     <ClCompile Include="SceneManager.cpp">
       <Filter>Managers\SceneManager</Filter>
     </ClCompile>
-    <ClCompile Include="RenderableManager_Interface.cpp">
-      <Filter>Managers\RenderableManager</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderableManager.cpp">
-      <Filter>Managers\RenderableManager</Filter>
-    </ClCompile>
     <ClCompile Include="MeshLibrary.cpp">
       <Filter>Managers\RenderableManager</Filter>
     </ClCompile>
@@ -115,6 +109,12 @@
     <ClCompile Include="Manager_Base.cpp" />
     <ClCompile Include="CameraManager.cpp">
       <Filter>Managers\CameraManager</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshManager_Interface.cpp">
+      <Filter>Managers\RenderableManager</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshManager.cpp">
+      <Filter>Managers\RenderableManager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

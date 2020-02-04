@@ -6,7 +6,7 @@
 //#include <Windows.h>
 //#include <Graphics\Renderer_Interface.h>
 //#include <Managers\TransformManager_Interface.h>
-//#include <Managers\RenderableManager_Interface.h>
+//#include <Managers\MeshManager_Interface.h>
 //#include <ResourceHandler\ResourceHandler_Interface.h>
 //#include <ThreadPool.h>
 //#include "../OBJParser/OBJPassthrough.h"
@@ -457,11 +457,11 @@
 //
 //
 //
-//	TEST_CLASS(RenderableManagerTest)
+//	TEST_CLASS(MeshManagerTest)
 //	{
 //	public:
 //
-//		TEST_METHOD(RenderableManagerTest_OBJPassthrough_DLL)
+//		TEST_METHOD(MeshManagerTest_OBJPassthrough_DLL)
 //		{
 //			std::error_code err;
 //			fs::remove("data.dat", err);
@@ -526,7 +526,7 @@
 //			}
 //			fs::remove("data.dat", err);
 //		}
-//		TEST_METHOD(RenderableManagerTest_OBJPassthrough_Static)
+//		TEST_METHOD(MeshManagerTest_OBJPassthrough_Static)
 //		{
 //			std::error_code err;
 //			fs::remove("data.dat", err);
@@ -597,7 +597,7 @@
 //			}
 //			fs::remove("data.dat", err);
 //		}
-//		TEST_METHOD(RenderableManagerTest_CreateDestroy)
+//		TEST_METHOD(MeshManagerTest_CreateDestroy)
 //		{
 //			std::error_code err;
 //			fs::remove("data.dat", err);
@@ -669,11 +669,11 @@
 //				tmii.entityManager = em;
 //				auto tm = TransformManager_CreateTransformManager_C(tmii);
 //
-//				RenderableManager_InitializationInfo rmii;
+//				MeshManager_InitializationInfo rmii;
 //				rmii.entityManager = em;
 //				rmii.renderer = r;
 //				rmii.transformManager = tm;
-//				auto rm = RenderableManager_CreateRenderableManager(rmii);
+//				auto rm = MeshManager_CreateMeshManager(rmii);
 //				//OBJS::tree
 //
 //

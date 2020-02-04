@@ -29,10 +29,6 @@ namespace ECS
 		virtual void DestroyMultiple( const std::vector<Entity>& entities )noexcept = 0;
 		virtual void DestroyAll()noexcept = 0;
 
-		virtual void ToggleActive(Entity entity, bool active)noexcept = 0;
-		virtual void ToggleActive(const Entity entities[], size_t numEntities, bool active)noexcept = 0;
-		virtual void ToggleActive( const std::vector<Entity>& entities, bool active)noexcept = 0;
-
 		virtual size_t GetNumberOfRegisteredEntities()const noexcept = 0;
 		virtual void GetRegisteredEntities(Entity entities[], size_t numEntities)const noexcept = 0;
 		virtual std::vector<Entity> GetRegisteredEntities()const noexcept = 0;

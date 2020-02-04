@@ -125,15 +125,6 @@ void ECS::PropertyManager::DestroyAll() noexcept
 	entries.clear();
 }
 
-void ECS::PropertyManager::ToggleActive( Entity entity, bool active ) noexcept
-{}
-
-void ECS::PropertyManager::ToggleActive( const Entity entities[], size_t numEntities, bool active ) noexcept
-{}
-
-void ECS::PropertyManager::ToggleActive( const std::vector<Entity>& entities, bool active ) noexcept
-{}
-
 size_t ECS::PropertyManager::GetNumberOfRegisteredEntities() const noexcept
 {
 	return entries.size();

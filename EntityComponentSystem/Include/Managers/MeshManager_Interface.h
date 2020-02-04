@@ -10,12 +10,11 @@
 
 namespace ECS
 {
-	struct RenderableManager_InitializationInfo
-	{
+	struct MeshManager_InitializationInfo{
 		std::shared_ptr<Renderer::Renderer_Interface> renderer = nullptr;
 		std::shared_ptr<EntityManager_Interface> entityManager = nullptr;
 		std::shared_ptr<TransformManager_Interface> transformManager = nullptr;
-		void *pNext;
+		void* pNext;
 	};
 
 	enum class MeshFlags : uint32_t{
@@ -43,20 +42,21 @@ namespace ECS
 		None,
 	};
 
-	struct RenderableManager_ResourceInfo
-	{
+	struct MeshManager_ResourceInfo{
 		Utilities::GUID mesh;
 		Utilities::GUID shader[MeshInfo::max_sub_mesh_count];
 		RenderableFlags flags;
 	};
-	class RenderableManager_Interface : public Manager_Base, public Manager_TransformUser
-	{
+	class MeshManager_Interface : public Manager_Base, public Manager_TransformUser{
 	public:
-		virtual ~RenderableManager_Interface() {};
+		DECLDIR_ECS static std::shared_ptr<MeshManager_Interface> Create_Manager( const MeshManager_ResourceInfo& info );
 
-		virtual void Create(Entity entity, 
-							 ResourceHandler::Resource mesh, ResourceHandler::Resource shader, 
-							 RenderableFlags render_flags = RenderableFlags::None, 
+		virtual ~MeshManager_Interface()
+		{};
+
+		virtual void Create( Entity entity,
+							 ResourceHandler::Resource mesh, ResourceHandler::Resource shader,
+							 RenderableFlags render_flags = RenderableFlags::None,
 							 MeshFlags mesh_flags = MeshFlags::Diffuse_Color )noexcept = 0;
 
 		virtual void SetDefaultMesh( Utilities::GUID mesh ) = 0;
@@ -80,11 +80,12 @@ namespace ECS
 		virtual std::vector<std::string> GetSubmeshes( const Entity entity )const noexcept = 0;
 
 	protected:
-		RenderableManager_Interface() {  };
+		MeshManager_Interface()
+		{};
 	};
 }
-//DECLDIR_ECS_C ECS::RenderableManager_Interface* RenderableManager_CreateRenderableManager(ECS::RenderableManager_InitializationInfo ii);
-//DECLDIR_ECS_C void RenderableManager_Create_C(ECS::RenderableManager_Interface* rm, uint32_t entity, 
+//DECLDIR_ECS_C ECS::MeshManager_Interface* MeshManager_CreateMeshManager(ECS::MeshManager_InitializationInfo ii);
+//DECLDIR_ECS_C void MeshManager_Create_C(ECS::MeshManager_Interface* rm, uint32_t entity, 
 //	const char* mesh, const char* meshType,
 //	const char* defaultMesh, const char* defaultMeshType,
 //	const char* shader, const char* shaderType,

@@ -197,15 +197,6 @@ void ECS::CameraManager::DestroyAll() noexcept
 	entries.clear();
 }
 
-void ECS::CameraManager::ToggleActive( Entity entity, bool active ) noexcept
-{}
-
-void ECS::CameraManager::ToggleActive( const Entity entities[], size_t numEntities, bool active ) noexcept
-{}
-
-void ECS::CameraManager::ToggleActive( const std::vector<Entity>& entities, bool active ) noexcept
-{}
-
 size_t ECS::CameraManager::GetNumberOfRegisteredEntities() const noexcept
 {
 	return entries.size();

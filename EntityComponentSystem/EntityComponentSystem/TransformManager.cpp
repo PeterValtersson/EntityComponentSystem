@@ -503,15 +503,6 @@ namespace ECS
 		entries.clear();
 	}
 
-	void TransformManager::ToggleActive( Entity entity, bool active )noexcept
-	{}
-
-	void TransformManager::ToggleActive( const Entity entities[], size_t numEntities, bool active )noexcept
-	{}
-
-	void TransformManager::ToggleActive( const std::vector<Entity>& entities, bool active ) noexcept
-	{}
-
 	void TransformManager::write_to_stream( std::ostream& stream ) const
 	{
 		PROFILE;

@@ -592,15 +592,6 @@ void ECS::SceneManager::DestroyAll()noexcept
 	entries.clear();
 }
 
-void ECS::SceneManager::ToggleActive( Entity entity, bool active )noexcept
-{}
-
-void ECS::SceneManager::ToggleActive( const Entity entities[], size_t numEntities, bool active )noexcept
-{}
-
-void ECS::SceneManager::ToggleActive( const std::vector<Entity>& entities, bool active ) noexcept
-{}
-
 void ECS::SceneManager::write_to_stream( std::ostream& stream ) const
 {}
 
