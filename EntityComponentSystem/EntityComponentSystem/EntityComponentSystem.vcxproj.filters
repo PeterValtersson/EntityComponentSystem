@@ -67,10 +67,10 @@
     <ClInclude Include="CameraManager.h">
       <Filter>Managers\CameraManager</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\Managers\MeshManager_Interface.h">
+    <ClInclude Include="..\Include\Managers\RenderObjectManager_Interface.h">
       <Filter>Managers\RenderableManager</Filter>
     </ClInclude>
-    <ClInclude Include="MeshManager.h">
+    <ClInclude Include="RenderObjectManager.h">
       <Filter>Managers\RenderableManager</Filter>
     </ClInclude>
   </ItemGroup>
@@ -110,10 +110,10 @@
     <ClCompile Include="CameraManager.cpp">
       <Filter>Managers\CameraManager</Filter>
     </ClCompile>
-    <ClCompile Include="MeshManager_Interface.cpp">
+    <ClCompile Include="RenderObjectManager_Interface.cpp">
       <Filter>Managers\RenderableManager</Filter>
     </ClCompile>
-    <ClCompile Include="MeshManager.cpp">
+    <ClCompile Include="RenderObjectManager.cpp">
       <Filter>Managers\RenderableManager</Filter>
     </ClCompile>
   </ItemGroup>

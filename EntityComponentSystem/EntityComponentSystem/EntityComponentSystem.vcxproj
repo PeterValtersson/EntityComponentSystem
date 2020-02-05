@@ -26,14 +26,14 @@
     <ClInclude Include="..\Include\Managers\PropertyManager_Interface.h" />
     <ClInclude Include="..\Include\Managers\Manager_Base.h" />
     <ClInclude Include="..\Include\Managers\MeshLibrary.h" />
-    <ClInclude Include="..\Include\Managers\MeshManager_Interface.h" />
+    <ClInclude Include="..\Include\Managers\RenderObjectManager_Interface.h" />
     <ClInclude Include="..\Include\Managers\SceneManager_Interface.h" />
     <ClInclude Include="..\Include\Managers\TransformManager_Interface.h" />
     <ClInclude Include="..\Include\Memory_Base.h" />
     <ClInclude Include="PropertyManager.h" />
     <ClInclude Include="CameraManager.h" />
     <ClInclude Include="EntityManager.h" />
-    <ClInclude Include="MeshManager.h" />
+    <ClInclude Include="RenderObjectManager.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="TransformManager.h" />
   </ItemGroup>
@@ -47,8 +47,8 @@
     <ClCompile Include="Manager_Base.cpp" />
     <ClCompile Include="Memory_Base.cpp" />
     <ClCompile Include="MeshLibrary.cpp" />
-    <ClCompile Include="MeshManager.cpp" />
-    <ClCompile Include="MeshManager_Interface.cpp" />
+    <ClCompile Include="RenderObjectManager.cpp" />
+    <ClCompile Include="RenderObjectManager_Interface.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SceneManager_Interface.cpp" />
     <ClCompile Include="TransformManager.cpp" />

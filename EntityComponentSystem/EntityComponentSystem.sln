@@ -23,6 +23,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ZipLibs", "ZipLibs", "{78D9
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "bit7z", "..\..\Resource-Handler\bit7z\bit7z.vcxproj", "{0ECEDD47-4EC9-3232-B099-20D54C597639}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Renderer", "..\..\Renderer\Renderer\Renderer\Renderer.vcxproj", "{FF7B443E-8CE6-45F7-892C-B4F2A67FEF18}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -87,6 +89,14 @@ Global
 		{0ECEDD47-4EC9-3232-B099-20D54C597639}.Release|x64.Build.0 = Release|x64
 		{0ECEDD47-4EC9-3232-B099-20D54C597639}.Release|x86.ActiveCfg = Release|Win32
 		{0ECEDD47-4EC9-3232-B099-20D54C597639}.Release|x86.Build.0 = Release|Win32
+		{FF7B443E-8CE6-45F7-892C-B4F2A67FEF18}.Debug|x64.ActiveCfg = Debug|x64
+		{FF7B443E-8CE6-45F7-892C-B4F2A67FEF18}.Debug|x64.Build.0 = Debug|x64
+		{FF7B443E-8CE6-45F7-892C-B4F2A67FEF18}.Debug|x86.ActiveCfg = Debug|Win32
+		{FF7B443E-8CE6-45F7-892C-B4F2A67FEF18}.Debug|x86.Build.0 = Debug|Win32
+		{FF7B443E-8CE6-45F7-892C-B4F2A67FEF18}.Release|x64.ActiveCfg = Release|x64
+		{FF7B443E-8CE6-45F7-892C-B4F2A67FEF18}.Release|x64.Build.0 = Release|x64
+		{FF7B443E-8CE6-45F7-892C-B4F2A67FEF18}.Release|x86.ActiveCfg = Release|Win32
+		{FF7B443E-8CE6-45F7-892C-B4F2A67FEF18}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -98,6 +108,7 @@ Global
 		{8AB5E8D5-4469-480A-86AF-C1486B0733DC} = {1FEEB018-AFBD-483F-94EA-4D4FCC1EA87A}
 		{78D98568-C7C8-47CC-B712-0EAD9D9431DF} = {8AB5E8D5-4469-480A-86AF-C1486B0733DC}
 		{0ECEDD47-4EC9-3232-B099-20D54C597639} = {78D98568-C7C8-47CC-B712-0EAD9D9431DF}
+		{FF7B443E-8CE6-45F7-892C-B4F2A67FEF18} = {1FEEB018-AFBD-483F-94EA-4D4FCC1EA87A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B09339D2-630A-443F-920B-A37F8496486F}

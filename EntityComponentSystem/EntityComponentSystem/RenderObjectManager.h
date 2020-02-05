@@ -1,19 +1,23 @@
 #ifndef _ECS_RENDERABLE_MANAGER_H_
 #define _ECS_RENDERABLE_MANAGER_H_
-#include <Managers\MeshManager_Interface.h>
+#include <Managers\RenderObjectManager_Interface.h>
 #include <Utilities/Memory/Sofa.h>
 namespace ECS
 {
-	class MeshManager : public MeshManager_Interface {
+	class RenderObjectManager : public RenderObjectManager_Interface {
 	public:
-		MeshManager( const MeshManager_InitializationInfo& ii );
-		~MeshManager();
+		RenderObjectManager( const RenderObjectManager_InitializationInfo& ii );
+		~RenderObjectManager();
 
 		/* Renderable manager methods */
 		virtual void Create( Entity entity,
 							 ResourceHandler::Resource mesh, ResourceHandler::Resource shader,
 							 RenderableFlags render_flags = RenderableFlags::None,
 							 MeshFlags mesh_flags = MeshFlags::None )noexcept override;
+
+		virtual void SetMesh( Entity entity, ResourceHandler::Resource mesh )noexcept override;
+		virtual void SetShader( Entity entity, ResourceHandler::Resource shader )noexcept override;
+		virtual void SetShader( Entity entity, uint8_t subMesh, ResourceHandler::Resource shader )noexcept override;
 
 		virtual void ToggleWireframe( const Entity entity, bool wireFrame )noexcept override;
 		virtual void ToggleWireframe( const Entity entity, uint8_t submesh, bool wireFrame )noexcept override;
@@ -27,7 +31,7 @@ namespace ECS
 		virtual void ToggleVisible( const Entity entity, bool visible )noexcept override;
 		virtual void ToggleVisible( const Entity entity, uint8_t submesh, bool visible )noexcept override;
 
-		virtual std::vector<std::string> GetSubmeshes( const Entity entity )const noexcept override;
+		virtual std::vector<std::string> GetSubmeshes( const Entity entity )noexcept override;
 
 		/* Manager base methods */
 		virtual bool is_registered( Entity entity )const noexcept override;
@@ -56,19 +60,24 @@ namespace ECS
 	private:
 		/* Manager base methods */
 		virtual void GarbageCollection()noexcept override;
+		void Force_Load_Mesh( size_t i )noexcept;
 
-		MeshManager_InitializationInfo initInfo;
+		Renderer::RenderJob Create_RenderJob_For_Entity( size_t i )noexcept;
+
+		RenderObjectManager_InitializationInfo initInfo;
 
 		struct Entries : public Utilities::Memory::SofV<
 			Entity, Entity::Hasher, // Entity
 			ResourceHandler::Resource, // Mesh
-			ResourceHandler::Resource, // Shader
+			ResourceHandler::Resource[MeshInfo::max_sub_mesh_count], // Shader
+			bool[MeshInfo::max_sub_mesh_count], // Visible
 			MeshInfo // Cached Mesh Info
 		> {
 			enum {
 				Entity,
 				Mesh,
 				Shader,
+				Visible,
 				MeshInfo
 			};
 		}entries;
