@@ -16,18 +16,22 @@ namespace ECS
 	public:
 		CouldNotCreateManager( std::string_view reason ) : Exception( reason ) {};
 	};
-	class Manager_Base : public Memory_Base
-	{
+	class Manager_Base : public Memory_Base{
 	public:
 		virtual ~Manager_Base()
 		{}
-		virtual bool is_registered(Entity entity)const noexcept = 0;
-		virtual void CreateFromResource(Entity entity, ResourceHandler::Resource resource) = 0;
-		virtual uint64_t GetDataWriter(Entity entity, std::function<bool(std::ostream& stream)>& writer)const noexcept = 0;
-		virtual void Destroy(Entity entity)noexcept = 0;
-		virtual void DestroyMultiple(const Entity entities[], size_t numEntities )noexcept = 0;
+		virtual bool is_registered( Entity entity )const noexcept = 0;
+		virtual void CreateFromResource( Entity entity, ResourceHandler::Resource resource ) = 0;
+		virtual uint64_t GetDataWriter( Entity entity, std::function<bool( std::ostream & stream )>& writer )const noexcept = 0;
+		virtual void Destroy( Entity entity )noexcept = 0;
+		virtual void DestroyMultiple( const Entity entities[], size_t numEntities )noexcept = 0;
 		virtual void DestroyMultiple( const std::vector<Entity>& entities )noexcept = 0;
 		virtual void DestroyAll()noexcept = 0;
+
+		virtual void ToggleVisible( const Entity entity, bool visible )noexcept
+		{};
+		virtual void ToggleVisible( const Entity entity, uint8_t submesh, bool visible )noexcept
+		{};
 
 		virtual size_t GetNumberOfRegisteredEntities()const noexcept = 0;
 		virtual void GetRegisteredEntities(Entity entities[], size_t numEntities)const noexcept = 0;

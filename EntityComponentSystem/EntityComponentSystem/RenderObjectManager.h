@@ -10,28 +10,12 @@ namespace ECS
 		~RenderObjectManager();
 
 		/* Renderable manager methods */
-		virtual void Create( Entity entity,
-							 ResourceHandler::Resource mesh, ResourceHandler::Resource shader,
-							 RenderableFlags render_flags = RenderableFlags::None,
-							 MeshFlags mesh_flags = MeshFlags::None )noexcept override;
+		virtual void Create( Entity entity )noexcept override;
 
-		virtual void SetMesh( Entity entity, ResourceHandler::Resource mesh )noexcept override;
-		virtual void SetShader( Entity entity, ResourceHandler::Resource shader )noexcept override;
-		virtual void SetShader( Entity entity, uint8_t subMesh, ResourceHandler::Resource shader )noexcept override;
-
-		virtual void ToggleWireframe( const Entity entity, bool wireFrame )noexcept override;
-		virtual void ToggleWireframe( const Entity entity, uint8_t submesh, bool wireFrame )noexcept override;
-
-		virtual void ToggleTransparency( const Entity entity, bool transparent )noexcept override;
-		virtual void ToggleTransparency( const Entity entity, uint8_t submesh, bool transparent )noexcept override;
-
-		virtual void ToggleShadow( const Entity entity, bool cast_shadow )noexcept override;
-		virtual void ToggleShadow( const Entity entity, uint8_t submesh, bool cast_shadow )noexcept override;
+		virtual void Edit_Pipeline( Entity entity, const std::function<void( Renderer::Pipeline::Pipeline_Mutable )>& callback )noexcept override;
 
 		virtual void ToggleVisible( const Entity entity, bool visible )noexcept override;
 		virtual void ToggleVisible( const Entity entity, uint8_t submesh, bool visible )noexcept override;
-
-		virtual std::vector<std::string> GetSubmeshes( const Entity entity )noexcept override;
 
 		/* Manager base methods */
 		virtual bool is_registered( Entity entity )const noexcept override;
@@ -60,25 +44,16 @@ namespace ECS
 	private:
 		/* Manager base methods */
 		virtual void GarbageCollection()noexcept override;
-		void Force_Load_Mesh( size_t i )noexcept;
-
-		Renderer::RenderJob Create_RenderJob_For_Entity( size_t i )noexcept;
 
 		RenderObjectManager_InitializationInfo initInfo;
 
 		struct Entries : public Utilities::Memory::SofV<
 			Entity, Entity::Hasher, // Entity
-			ResourceHandler::Resource, // Mesh
-			ResourceHandler::Resource[MeshInfo::max_sub_mesh_count], // Shader
-			bool[MeshInfo::max_sub_mesh_count], // Visible
-			MeshInfo // Cached Mesh Info
+			Renderer::Pipeline::Pipeline // Pipeline
 		> {
 			enum {
 				Entity,
-				Mesh,
-				Shader,
-				Visible,
-				MeshInfo
+				Pipeline
 			};
 		}entries;
 	};

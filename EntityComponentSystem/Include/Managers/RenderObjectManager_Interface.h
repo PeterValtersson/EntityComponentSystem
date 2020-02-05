@@ -53,32 +53,9 @@ namespace ECS
 		virtual ~RenderObjectManager_Interface()
 		{};
 
-		virtual void Create( Entity entity,
-							 ResourceHandler::Resource mesh, ResourceHandler::Resource shader,
-							 RenderableFlags render_flags = RenderableFlags::None,
-							 MeshFlags mesh_flags = MeshFlags::None )noexcept = 0;
+		virtual void Create( Entity entity )noexcept = 0;
 
-		virtual void SetMesh( Entity entity, ResourceHandler::Resource mesh )noexcept = 0;
-		virtual void SetShader( Entity entity, ResourceHandler::Resource shader )noexcept = 0;
-		virtual void SetShader( Entity entity, uint8_t subMesh, ResourceHandler::Resource shader )noexcept = 0;
-
-		virtual void ToggleWireframe( const Entity entity, bool wireFrame )noexcept = 0;
-		virtual void ToggleWireframe( const Entity entity, uint8_t submesh, bool wireFrame )noexcept = 0;
-
-		virtual void ToggleTransparency( const Entity entity, bool transparent )noexcept = 0;
-		virtual void ToggleTransparency( const Entity entity, uint8_t submesh, bool transparent )noexcept = 0;
-
-		virtual void ToggleShadow( const Entity entity, bool cast_shadow )noexcept = 0;
-		virtual void ToggleShadow( const Entity entity, uint8_t submesh, bool cast_shadow )noexcept = 0;
-
-		virtual void ToggleVisible( const Entity entity, bool visible )noexcept = 0;
-		virtual void ToggleVisible( const Entity entity, uint8_t submesh, bool visible )noexcept = 0;
-
-		// This will force the mesh to load.
-		virtual std::vector<std::string> GetSubmeshes( const Entity entity )noexcept = 0;
-
-		// Will force all meshes to update their data or load if they are not loaded immediately.
-		virtual void UpdateMeshes()noexcept = 0;
+		virtual void Edit_Pipeline( Entity entity, const std::function<void( Renderer::Pipeline::Pipeline_Mutable )>& callback )noexcept = 0;
 	protected:
 		RenderObjectManager_Interface()
 		{};

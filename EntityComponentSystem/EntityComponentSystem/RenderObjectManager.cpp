@@ -15,106 +15,34 @@ ECS::RenderObjectManager::RenderObjectManager( const RenderObjectManager_Initial
 ECS::RenderObjectManager::~RenderObjectManager()
 {}
 
-void ECS::RenderObjectManager::Create( Entity entity, ResourceHandler::Resource mesh, ResourceHandler::Resource shader, RenderableFlags render_flags, MeshFlags mesh_flags ) noexcept
+void ECS::RenderObjectManager::Create( Entity entity ) noexcept
 {
 	if ( !initInfo.entityManager->IsAlive( entity ) )
 		return;
+
 	if ( auto find = entries.find( entity ); find.has_value() )
 		return;
+
 	auto index = entries.add( entity );
-	entries.get<Entries::Mesh>( index ) = mesh;
-	mem_set( entries.get<Entries::Shader>( index ), shader );
-	entries.get<Entries::MeshInfo>( index ).sub_mesh_count = 0;
+	entries.get<Entries::Pipeline>( index ) = Renderer::Pipeline::Pipeline();
 }
-void ECS::RenderObjectManager::SetMesh( Entity entity, ResourceHandler::Resource mesh ) noexcept
+
+void ECS::RenderObjectManager::Edit_Pipeline( Entity entity, const std::function<void( Renderer::Pipeline::Pipeline_Mutable )> & callback ) noexcept
 {
 	if ( auto find = entries.find( entity ); find.has_value() )
 	{
-		entries.get<Entries::Mesh>( *find ) = mesh;
+		auto pipeline_copy = entries.peek<Entries::Pipeline>( *find );
+		entries.get<Entries::Pipeline>( *find ).Edit( callback );
 	}
 }
-void ECS::RenderObjectManager::SetShader( Entity entity, ResourceHandler::Resource shader ) noexcept
-{
-	if ( auto find = entries.find( entity ); find.has_value() )
-	{
-		mem_set( entries.get<Entries::Shader>( *find ), shader );
-	}
-}
-void ECS::RenderObjectManager::SetShader( Entity entity, uint8_t subMesh, ResourceHandler::Resource shader ) noexcept
-{
-	if ( auto find = entries.find( entity ); find.has_value() )
-	{
-		if ( subMesh < MeshInfo::max_sub_mesh_count )
-			entries.get<Entries::Shader>( *find )[subMesh] = shader;
-	}
-}
-void ECS::RenderObjectManager::ToggleWireframe( const Entity entity, bool wireFrame ) noexcept
-{}
 
-void ECS::RenderObjectManager::ToggleWireframe( const Entity entity, uint8_t submesh, bool wireFrame ) noexcept
-{}
-
-void ECS::RenderObjectManager::ToggleTransparency( const Entity entity, bool transparent ) noexcept
-{}
-
-void ECS::RenderObjectManager::ToggleTransparency( const Entity entity, uint8_t submesh, bool transparent ) noexcept
-{}
-
-void ECS::RenderObjectManager::ToggleShadow( const Entity entity, bool cast_shadow ) noexcept
-{}
-
-void ECS::RenderObjectManager::ToggleShadow( const Entity entity, uint8_t submesh, bool cast_shadow ) noexcept
-{}
 
 void ECS::RenderObjectManager::ToggleVisible( const Entity entity, bool visible ) noexcept
-{
-	if ( auto find = entries.find( entity ); find.has_value() )
-	{
-		// Check if everything is already visible/invisible
-		auto& sub_visible = entries.get<Entries::Visible>( *find );
-		{
-
-			bool same = true;
-			for ( uint8_t i = 0; i < MeshInfo::max_sub_mesh_count; i++ )
-				if ( sub_visible[i] != visible )
-				{
-					same = false;
-					break;
-				}
-			if ( same )
-				return; // Nothing to do, so return.
-		}
-
-
-		Renderer::RenderJob job;
-
-
-
-
-
-
-		for ( uint8_t i = 0; i < MeshInfo::max_sub_mesh_count; i++ )
-			sub_visible[i] = visible;
-
-
-	}
-}
+{}
 
 void ECS::RenderObjectManager::ToggleVisible( const Entity entity, uint8_t submesh, bool visible ) noexcept
 {}
 
-std::vector<std::string> ECS::RenderObjectManager::GetSubmeshes( const Entity entity ) noexcept
-{
-	std::vector<std::string> sub_meshes;
-	if ( auto find = entries.find( entity ); find.has_value() )
-	{
-		Force_Load_Mesh( *find );
-		auto& mi = entries.peek<Entries::MeshInfo>( *find );
-		for ( size_t i = 0; i < mi.sub_mesh_count; i++ )
-			sub_meshes.push_back( mi.name[i] );
-	}
-	return sub_meshes;
-}
 
 bool ECS::RenderObjectManager::is_registered( Entity entity ) const noexcept
 {
@@ -178,8 +106,3 @@ void ECS::RenderObjectManager::read_from_stream( std::istream& stream )
 
 void ECS::RenderObjectManager::GarbageCollection() noexcept
 {}
-
-void ECS::RenderObjectManager::Force_Load_Mesh( size_t i ) noexcept
-{
-	entries.get<Entries::MeshInfo>( i ) = entries.get<Entries::Mesh>( i ).get_copy<MeshInfo>();
-}
