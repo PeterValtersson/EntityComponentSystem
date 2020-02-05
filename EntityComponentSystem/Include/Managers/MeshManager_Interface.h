@@ -19,10 +19,6 @@ namespace ECS
 
 	enum class MeshFlags : uint32_t{
 		None,
-		Diffuse_Color,
-		Texture,
-		Normal,
-		Tangent,
 		Skinned,
 		Transparent,
 		Cast_Shadow
@@ -57,11 +53,7 @@ namespace ECS
 		virtual void Create( Entity entity,
 							 ResourceHandler::Resource mesh, ResourceHandler::Resource shader,
 							 RenderableFlags render_flags = RenderableFlags::None,
-							 MeshFlags mesh_flags = MeshFlags::Diffuse_Color )noexcept = 0;
-
-		virtual void SetDefaultMeshAndShader( Utilities::GUID mesh, Utilities::GUID shader ) = 0;
-		virtual Utilities::GUID GetDefaultMesh()const noexcept = 0;
-		virtual Utilities::GUID GetDefaultShader()const noexcept = 0;
+							 MeshFlags mesh_flags = MeshFlags::None)noexcept = 0;
 
 		virtual void ToggleWireframe( const Entity entity, bool wireFrame )noexcept = 0;
 		virtual void ToggleWireframe( const Entity entity, uint8_t submesh, bool wireFrame )noexcept = 0;

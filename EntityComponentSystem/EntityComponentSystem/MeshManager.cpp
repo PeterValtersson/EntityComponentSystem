@@ -1,8 +1,5 @@
 #include "MeshManager.h"
-ECS::MeshManager::MeshManager( const MeshManager_InitializationInfo& ii ) :
-	manager_settings( GetManagerType() + "Settings" ),
-	defaultMesh( manager_settings.get_copy<ManagerSettings>().defaultMesh, ResourceHandler::Flags::Persistent ),
-	defaultShader( manager_settings.get_copy<ManagerSettings>().defaultShader, ResourceHandler::Flags::Persistent )
+ECS::MeshManager::MeshManager( const MeshManager_InitializationInfo& ii ) 
 {
 
 }
@@ -20,27 +17,6 @@ void ECS::MeshManager::Create( Entity entity, ResourceHandler::Resource mesh, Re
 	entries.get<Entries::Mesh>( index ) = mesh;
 	entries.get<Entries::Shader>( index ) = shader;
 }
-
-void ECS::MeshManager::SetDefaultMeshAndShader( Utilities::GUID mesh, Utilities::GUID shader )
-{
-	manager_settings.modify_data( [mesh, shader]( Utilities::Memory::MemoryBlock data )
-	{
-		data.get<ManagerSettings>().defaultMesh = mesh;
-		data.get<ManagerSettings>().defaultShader = shader;
-	} );
-	defaultMesh = mesh;
-	defaultShader = shader;
-}
-
-Utilities::GUID ECS::MeshManager::GetDefaultMesh() const noexcept
-{
-	return manager_settings.get_copy<ManagerSettings>().defaultMesh;
-}
-Utilities::GUID ECS::MeshManager::GetDefaultShader() const noexcept
-{
-	return manager_settings.get_copy<ManagerSettings>().defaultShader;
-}
-
 void ECS::MeshManager::ToggleWireframe( const Entity entity, bool wireFrame ) noexcept
 {}
 

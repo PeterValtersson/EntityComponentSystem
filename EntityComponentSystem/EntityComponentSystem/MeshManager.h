@@ -13,11 +13,7 @@ namespace ECS
 		virtual void Create( Entity entity,
 							 ResourceHandler::Resource mesh, ResourceHandler::Resource shader,
 							 RenderableFlags render_flags = RenderableFlags::None,
-							 MeshFlags mesh_flags = MeshFlags::Diffuse_Color )noexcept override;
-
-		virtual void SetDefaultMeshAndShader( Utilities::GUID mesh, Utilities::GUID shader ) override;
-		virtual Utilities::GUID GetDefaultMesh()const noexcept override;
-		virtual Utilities::GUID GetDefaultShader()const noexcept override;
+							 MeshFlags mesh_flags = MeshFlags::None )noexcept override;
 
 		virtual void ToggleWireframe( const Entity entity, bool wireFrame )noexcept override;
 		virtual void ToggleWireframe( const Entity entity, uint8_t submesh, bool wireFrame )noexcept override;
@@ -62,14 +58,6 @@ namespace ECS
 		virtual void GarbageCollection()noexcept override;
 
 		MeshManager_InitializationInfo initInfo;
-
-		struct ManagerSettings{
-			Utilities::GUID defaultMesh;
-			Utilities::GUID defaultShader;
-		};
-		ResourceHandler::Resource manager_settings;
-		ResourceHandler::Resource defaultMesh;
-		ResourceHandler::Resource defaultShader;
 
 		struct Entries : public Utilities::Memory::SofV<
 			Entity, Entity::Hasher, // Entity
