@@ -25,7 +25,7 @@ namespace ECS
 		Vector rotation = { 0.f, 0.f, 0.f };
 	};
 
-	class CameraManager_Interface : Manager_Base{
+	class CameraManager_Interface : public Manager_Base{
 	public:
 		DECLDIR_ECS static std::shared_ptr<CameraManager_Interface> create_manager( const CameraManager_Init_Info& init_info );
 		virtual ~CameraManager_Interface()

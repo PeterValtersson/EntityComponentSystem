@@ -2,8 +2,13 @@
 #define _ECS_RENDERABLE_MANAGER_H_
 #include <Managers\RenderObjectManager_Interface.h>
 #include <Utilities/Memory/Sofa.h>
+#include "RenderObjectInstancing.h"
+
 namespace ECS
 {
+	enum class MeshBitFlags{
+		
+	};
 	class RenderObjectManager : public RenderObjectManager_Interface {
 	public:
 		RenderObjectManager( const RenderObjectManager_InitializationInfo& ii );
@@ -46,14 +51,18 @@ namespace ECS
 		virtual void GarbageCollection()noexcept override;
 
 		RenderObjectManager_InitializationInfo initInfo;
+		std::default_random_engine generator;
+		RenderObjectInstancing instancing;
 
 		struct Entries : public Utilities::Memory::SofV<
 			Entity, Entity::Hasher, // Entity
-			Renderer::Pipeline::Pipeline // Pipeline
+			Renderer::Pipeline::Pipeline, // Pipeline
+			bool // Visible
 		> {
 			enum {
 				Entity,
-				Pipeline
+				Pipeline,
+				Visible
 			};
 		}entries;
 	};

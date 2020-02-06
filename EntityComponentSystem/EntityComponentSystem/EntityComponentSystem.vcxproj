@@ -33,6 +33,7 @@
     <ClInclude Include="PropertyManager.h" />
     <ClInclude Include="CameraManager.h" />
     <ClInclude Include="EntityManager.h" />
+    <ClInclude Include="RenderObjectInstancing.h" />
     <ClInclude Include="RenderObjectManager.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="TransformManager.h" />
@@ -47,6 +48,7 @@
     <ClCompile Include="Manager_Base.cpp" />
     <ClCompile Include="Memory_Base.cpp" />
     <ClCompile Include="MeshLibrary.cpp" />
+    <ClCompile Include="RenderObjectInstancing.cpp" />
     <ClCompile Include="RenderObjectManager.cpp" />
     <ClCompile Include="RenderObjectManager_Interface.cpp" />
     <ClCompile Include="SceneManager.cpp" />

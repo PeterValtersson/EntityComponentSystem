@@ -73,6 +73,9 @@
     <ClInclude Include="RenderObjectManager.h">
       <Filter>Managers\RenderableManager</Filter>
     </ClInclude>
+    <ClInclude Include="RenderObjectInstancing.h">
+      <Filter>Managers\RenderableManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EntityManager.cpp">
@@ -114,6 +117,9 @@
       <Filter>Managers\RenderableManager</Filter>
     </ClCompile>
     <ClCompile Include="RenderObjectManager.cpp">
+      <Filter>Managers\RenderableManager</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderObjectInstancing.cpp">
       <Filter>Managers\RenderableManager</Filter>
     </ClCompile>
   </ItemGroup>
