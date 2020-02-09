@@ -20,7 +20,7 @@
 //		ResourceHandler::Resource(std::string(defaultShader), std::string(defaultShaderType)));
 //}
 
-DECLDIR_ECS std::shared_ptr<RenderObjectManager_Interface> ECS::RenderObjectManager_Interface::Create_Manager( const RenderObjectManager_ResourceInfo& info )
+DECLDIR_ECS std::shared_ptr<ECS::RenderObjectManager_Interface> ECS::RenderObjectManager_Interface::Create_Manager( const RenderObjectManager_ResourceInfo& info )
 {
-	return DECLDIR_ECS std::shared_ptr<RenderObjectManager_Interface>();
+	return std::shared_ptr<RenderObjectManager_Interface>();
 }

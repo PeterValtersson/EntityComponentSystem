@@ -31,8 +31,8 @@ namespace ECS
 	struct MeshInfo{
 		static constexpr uint8_t max_sub_mesh_count = 10;
 		uint8_t sub_mesh_count = 0;
-		size_t vertex_start[max_sub_mesh_count];
-		size_t vertex_count[max_sub_mesh_count];
+		uint32_t vertex_start[max_sub_mesh_count];
+		uint32_t vertex_count[max_sub_mesh_count];
 		MeshFlags flags[max_sub_mesh_count];
 		SubMeshName name[max_sub_mesh_count];
 	};

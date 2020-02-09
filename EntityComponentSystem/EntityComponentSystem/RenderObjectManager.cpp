@@ -48,10 +48,10 @@ void ECS::RenderObjectManager::ToggleVisible( const Entity entity, bool visible 
 {
 	if ( auto find = entries.find( entity ); find.has_value() )
 	{
-		auto& _visible = entries.get<Entries::Visible>( *find );
-		if ( _visible == visible )
+		auto& v = entries.get<Entries::Visible>( *find );
+		if ( v == visible )
 			return;
-		_visible = visible;
+		v = visible;
 
 		if ( visible )
 		{
@@ -116,12 +116,14 @@ size_t ECS::RenderObjectManager::GetNumberOfRegisteredEntities() const noexcept
 
 void ECS::RenderObjectManager::GetRegisteredEntities( Entity entities[], size_t numEntities ) const noexcept
 {
-	memcpy( entities, entries.peek<Entries::Entity>().data(), std::min( numEntities, entries.size() ) );
+	memcpy( entities, entries.peek<Entries::Entity>(), std::min( numEntities, entries.size() ) );
 }
 
 std::vector<ECS::Entity> ECS::RenderObjectManager::GetRegisteredEntities() const noexcept
 {
-	return entries.peek<Entries::Entity>();
+	std::vector<ECS::Entity> v( entries.size());
+	GetRegisteredEntities( v.data(), entries.size() );
+	return v;
 }
 
 void ECS::RenderObjectManager::Frame() noexcept

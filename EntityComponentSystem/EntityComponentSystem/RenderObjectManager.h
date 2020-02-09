@@ -54,14 +54,16 @@ namespace ECS
 		std::default_random_engine generator;
 		RenderObjectInstancing instancing;
 
-		struct Entries : public Utilities::Memory::SofV<
+		struct Entries : public Utilities::Memory::SofA<
 			Entity, Entity::Hasher, // Entity
 			Renderer::Pipeline::Pipeline, // Pipeline
+			Renderer::RenderGroup,
 			bool // Visible
 		> {
 			enum {
 				Entity,
 				Pipeline,
+				RenderGroup,
 				Visible
 			};
 		}entries;
