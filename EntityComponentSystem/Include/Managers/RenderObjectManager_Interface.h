@@ -55,7 +55,11 @@ namespace ECS
 
 		virtual void Create( Entity entity )noexcept = 0;
 
-		virtual void Edit_Pipeline( Entity entity, const std::function<void( Renderer::Pipeline::Pipeline_Mutable )>& callback )noexcept = 0;
+		virtual void Set_Shader( Entity entity, Utilities::GUID shader )noexcept = 0;
+		virtual void Set_Mesh( Entity entity, Utilities::GUID mesh )noexcept = 0;
+
+		virtual Utilities::GUID Get_Shader( Entity entity )noexcept = 0;
+		virtual Utilities::GUID Get_Mesh( Entity entity )noexcept = 0;
 	protected:
 		RenderObjectManager_Interface()
 		{};

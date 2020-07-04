@@ -17,7 +17,11 @@ namespace ECS
 		/* Renderable manager methods */
 		virtual void Create( Entity entity )noexcept override;
 
-		virtual void Edit_Pipeline( Entity entity, const std::function<void( Renderer::Pipeline::Pipeline_Mutable )>& callback )noexcept override;
+		virtual void Set_Shader( Entity entity, Utilities::GUID shader )noexcept override;
+		virtual void Set_Mesh( Entity entity, Utilities::GUID mesh )noexcept override;
+
+		virtual Utilities::GUID Get_Shader( Entity entity )noexcept override;
+		virtual Utilities::GUID Get_Mesh( Entity entity )noexcept override;
 
 		virtual void ToggleVisible( const Entity entity, bool visible )noexcept override;
 		virtual void ToggleVisible( const Entity entity, uint8_t submesh, bool visible )noexcept override;
@@ -54,15 +58,20 @@ namespace ECS
 		std::default_random_engine generator;
 		RenderObjectInstancing instancing;
 
-		struct Entries : public Utilities::Memory::SofA<
+		ResourceHandler::Resource default_mesh;
+		ResourceHandler::Resource default_shader;
+
+		struct Entries : public Utilities::Memory::SofV<
 			Entity, Entity::Hasher, // Entity
-			Renderer::Pipeline::Pipeline, // Pipeline
+			ResourceHandler::Resource, // Mesh
+			ResourceHandler::Resource, // Shader
 			Renderer::RenderGroup,
 			bool // Visible
 		> {
 			enum {
 				Entity,
-				Pipeline,
+				Mesh,
+				Shader,
 				RenderGroup,
 				Visible
 			};

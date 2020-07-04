@@ -8,9 +8,13 @@ void mem_set( T( &dst )[N], const T& src )
 		dst[i] = src;
 }
 
-ECS::RenderObjectManager::RenderObjectManager( const RenderObjectManager_InitializationInfo& ii ) : instancing( ii.renderer )
+ECS::RenderObjectManager::RenderObjectManager( const RenderObjectManager_InitializationInfo& ii )
+	: instancing( ii.renderer ),
+	default_mesh("default_mesh", ResourceHandler::Flags::Persistent),
+	default_shader("default_vertex_shader", ResourceHandler::Flags::Persistent )
 {
-
+	default_mesh.check_in();
+	default_shader.check_in();
 }
 
 ECS::RenderObjectManager::~RenderObjectManager()
@@ -25,22 +29,40 @@ void ECS::RenderObjectManager::Create( Entity entity ) noexcept
 		return;
 
 	auto index = entries.add( entity );
-	entries.get<Entries::Pipeline>( index ) = Renderer::Pipeline::Pipeline();
-	entries.get<Entries::Pipeline>( index ).Edit( []( Renderer::Pipeline::Pipeline_Mutable p )
-	{
-		p.OMStage.renderTargetCount = 1;
-		p.OMStage.renderTargets[0] = Renderer::Default_RenderTarget;
-		p.RStage.viewport = Renderer::Default_Viewport;
-	} );
+	entries.get<Entries::Mesh>( index ) = default_mesh;
+	entries.get<Entries::Shader>( index ) = default_shader;
 }
 
-void ECS::RenderObjectManager::Edit_Pipeline( Entity entity, const std::function<void( Renderer::Pipeline::Pipeline_Mutable )>& callback ) noexcept
+void ECS::RenderObjectManager::Set_Shader( Entity entity, Utilities::GUID shader ) noexcept
 {
 	if ( auto find = entries.find( entity ); find.has_value() )
 	{
-		auto pipeline_copy = entries.peek<Entries::Pipeline>( *find );
-		entries.get<Entries::Pipeline>( *find ).Edit( callback );
+		entries.get<Entries::Shader>( *find ) = shader;
 	}
+}
+
+void ECS::RenderObjectManager::Set_Mesh( Entity entity, Utilities::GUID mesh ) noexcept
+{
+	if ( auto find = entries.find( entity ); find.has_value() )
+	{
+		entries.get<Entries::Mesh>( *find ) = mesh;
+	}
+}
+
+Utilities::GUID ECS::RenderObjectManager::Get_Shader( Entity entity ) noexcept
+{
+	if ( auto find = entries.find( entity ); find.has_value() )
+		return entries.peek<Entries::Shader>( *find );
+	else
+		return Utilities::GUID::invalid;
+}
+
+Utilities::GUID ECS::RenderObjectManager::Get_Mesh( Entity entity ) noexcept
+{
+	if ( auto find = entries.find( entity ); find.has_value() )
+		return entries.peek<Entries::Mesh>( *find );
+	else
+		return Utilities::GUID::invalid;
 }
 
 
@@ -56,7 +78,17 @@ void ECS::RenderObjectManager::ToggleVisible( const Entity entity, bool visible 
 		if ( visible )
 		{
 			Renderer::RenderJob job;
-			job.pipeline = entries.peek<Entries::Pipeline>( *find );
+			job.pipeline = Renderer::Pipeline::Pipeline();
+
+			job.pipeline.Edit( [&]( Renderer::Pipeline::Pipeline_Mutable p )
+			{
+				p.OMStage.renderTargetCount = 1;
+				p.OMStage.renderTargets[0] = Renderer::Default_RenderTarget;
+				p.RStage.viewport = Renderer::Default_Viewport;
+				entries.peek<Entries::Mesh>( *find ).
+				p.IAStage.vertexBuffer = entries.peek<Entries::Mesh>(*find);
+			} );
+
 			ResourceHandler::Resource mesh( job.pipeline.IAStage().vertexBuffer );
 			job.vertexCount = mesh.get_copy<MeshInfo>().vertex_count[0];
 			job.maxInstances = 256;
