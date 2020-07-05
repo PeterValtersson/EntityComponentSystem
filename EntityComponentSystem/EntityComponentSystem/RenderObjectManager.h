@@ -53,7 +53,14 @@ namespace ECS
 	private:
 		/* Manager base methods */
 		virtual void GarbageCollection()noexcept override;
+		void update_mesh_shaders();
+		void add_entity_to_update_mesh( Entity entity );
+		void remove_entity_to_update_mesh( Entity entity );
 
+		void add_entity_to_update_shader( Entity entity );
+		void remove_entity_to_update_shader( Entity entity );
+
+	private:
 		RenderObjectManager_InitializationInfo initInfo;
 		std::default_random_engine generator;
 		RenderObjectInstancing instancing;
@@ -76,6 +83,10 @@ namespace ECS
 				Visible
 			};
 		}entries;
+
+		std::vector<Entity> entities_to_change_mesh;
+		std::vector<Entity> entities_to_change_shader;
+
 	};
 }
 #endif
